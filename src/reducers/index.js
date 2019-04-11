@@ -1,31 +1,50 @@
 import {combineReducers} from 'redux';
-import { RECIEVE_RTE, RECIEVE_TRIP_PLANNING, RECIEVE_ROUTES, RECIEVE_STATIONS, REQUEST_ERROR_ROUTES, REQUEST_ERROR_RTE, REQUEST_ERROR_STATIONS, REQUEST_ERROR_TRAIN_COUNT, REQUEST_ERROR_TRIP_PLANNING, REQUEST_STATIONS } from '../actions/ActionTypes';
+import { 
+	RECIEVE_RTE,
+	RECIEVE_TRIP_PLANNING,
+	RECIEVE_ROUTES,
+	RECIEVE_STATIONS,
+	REQUEST_ERROR_ROUTES,
+	REQUEST_ERROR_RTE,
+	REQUEST_ERROR_STATIONS,
+	REQUEST_ERROR_TRAIN_COUNT,
+	REQUEST_ERROR_TRIP_PLANNING,
+	REQUEST_STATIONS,
+	REQUEST_ROUTES, 
+	REQUEST_TRIP_PLANNING,
+	REQUEST_RTE } from '../actions/ActionTypes';
 
-function rte(state = {},action){
+function rte(state = {isFetching:false},action){
 
 	switch(action.type){
+		case REQUEST_RTE:
+			return {...state, isFetching:true};
 		case RECIEVE_RTE:
-			return action.payload;
+			return {...action.payload,isFetching:false};
 		default:
 			return {...state};
 	}
 }
 
-function tripplanner(state = {},action){
+function tripplanner(state = {isFetching:false},action){
 
 	switch(action.type)
 	{
+		case REQUEST_TRIP_PLANNING:
+			return {...state,isFetching:true};
 		case RECIEVE_TRIP_PLANNING:
-			return action.payload;
+			return {...action.payload,isFetching:false};
 		default:
 			return {...state};
 	}
 }
 
-function routes(state = {}, action){
+function routes(state = {isFetching:false}, action){
 	switch(action.type){
+		case REQUEST_ROUTES:
+			return {...state,isFetching:true};
 		case RECIEVE_ROUTES:
-			return action.payload;
+			return {...action.payload,isFetching:false};
 		default:
 			return {...state};
 	}

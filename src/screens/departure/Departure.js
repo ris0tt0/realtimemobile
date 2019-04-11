@@ -13,19 +13,19 @@ function Departure({isFetching,routes,onRoutes,stations,onTrainCount,onRTE}) {
 
 	if(stations.length > 0)
 	{
-		const items = stations.map((station,index) => <Picker.Item key={index} label={station.name} value={station.abbr} />)
+		// const items = stations.map((station,index) => <Picker.Item key={index} label={station.name} value={station.abbr} />)
 
-		picker = (
-			<Picker
-				selectedValue={staterrere}
-				style={{height: 100, width: '100%',}}
-				onValueChange={(itemValue, itemIndex) =>
-				{
-					staterrere = itemValue;
-					Logger.info(`${itemValue} ${itemIndex}`);
-				}} >
-					{items}
-			</Picker>);
+		// picker = (
+		// 	<Picker
+		// 		selectedValue={staterrere}
+		// 		style={{height: 100, width: '100%',}}
+		// 		onValueChange={(itemValue, itemIndex) =>
+		// 		{
+		// 			staterrere = itemValue;
+		// 			Logger.info(`${itemValue} ${itemIndex}`);
+		// 		}} >
+		// 			{items}
+		// 	</Picker>);
 	}
 
 	return (

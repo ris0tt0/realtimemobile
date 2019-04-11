@@ -1,23 +1,23 @@
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-import DepartureScreen from './screens/departure'
+import HomeScreen from './screens/home/'
 import TripPlannerScreen from './screens/planner/'
 import StationScreen from './screens/station/'
 import { TabBarIcon } from './components/TabBarIcon'
 import { Platform } from 'expo-core'
 import React from 'react'
 
-const DepartureStack = createStackNavigator({
-	Departure:DepartureScreen,
+const HomeStack = createStackNavigator({
+	Home:HomeScreen,
 });
 
-DepartureStack.navigationOptions = {
-	tabBarLabel: 'Departure',
+HomeStack.navigationOptions = {
+	tabBarLabel: 'Home',
 	tabBarIcon: ({focused}) => (
 		<TabBarIcon
 			focused={focused}
 			name={Platform.OS === 'ios'
-				? `ios-information-circle${focused ? '' : '-outline'}` 
-				: 'md-information-circle'
+				? 'ios-home'
+				: 'md-home'
 			}
 		/>
 	),
@@ -33,8 +33,8 @@ TripPlannerStack.navigationOptions = {
 		<TabBarIcon
 			focused={focused}
 			name={Platform.OS === 'ios'
-				? `ios-information-circle${focused ? '' : '-outline'}` 
-				: 'md-information-circle'
+				? 'ios-walk'
+				: 'md-walk'
 			}
 		/>
 	),
@@ -50,15 +50,15 @@ StationStack.navigationOptions = {
 		<TabBarIcon
 			focused={focused}
 			name={Platform.OS === 'ios'
-				? `ios-information-circle${focused ? '' : '-outline'}` 
-				: 'md-information-circle'
+				? `ios-train` 
+				: 'md-train'
 			}
 		/>
 	),
 };
 
 export default createBottomTabNavigator({
-	DepartureStack,
-	TripPlannerStack,
+	HomeStack,
 	StationStack,
+	TripPlannerStack,
 })

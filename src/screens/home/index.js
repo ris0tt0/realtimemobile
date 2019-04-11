@@ -1,6 +1,6 @@
 import {connect} from 'react-redux'
 import Logger from 'js-logger'
-import Homescreen from './Homescreen'
+import Homescreen from './Home'
 
 const mapStateToProps = state =>
 {

@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {View,Text} from 'react-native'
+import {Button,View,Text} from 'react-native'
 
-function Planner(props) {
+function Planner({onClick}) {
 	return (
 		<View>
 			<Text>Planner</Text>
+			<Button onPress={onClick} title='jonathan'>Clicker herer</Button>
 		</View>
 	)
 }

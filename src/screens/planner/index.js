@@ -1,6 +1,7 @@
 import {connect} from 'react-redux'
 import Logger from 'js-logger'
 import Planner from './Planner'
+import { fetchRoutes } from '../../actions';
 
 const mapStateToProps = state =>{
 	return {
@@ -10,7 +11,7 @@ const mapStateToProps = state =>{
 
 const mapDispatchToProps = dispatch => {
 	return{
-		onClick: () => Logger.info('onclick')
+		onClick: () => dispatch( fetchRoutes() )
 	}
 }
 

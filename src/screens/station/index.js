@@ -2,6 +2,7 @@ import {connect} from 'react-redux'
 import Logger from 'js-logger'
 import Station from './Station'
 import { stationsList, stationsIsFetching } from '../../selectors';
+import { fetchRTE } from '../../actions';
 
 const mapStateToProps = state => {
 	const stations = stationsList(state);
@@ -11,10 +12,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-	const onStationSelect = stationAbbr =>
-	{
-		Logger.info(`onStationSelect: ${stationAbbr}`);
-	};
+
+	const onStationSelect = stationAbbr => dispatch(fetchRTE(stationAbbr))
 
 	return{
 		onStationSelect,

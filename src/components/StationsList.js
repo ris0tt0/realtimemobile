@@ -1,29 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Logger from 'js-logger'
-import {Text,View} from 'react-native'
+import {Text,View,TouchableHighlight} from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import style from './styles'
 
-function renderItem({item})
-{
-	return(
-		<View style={style.StationsList__renderItem}>
-			<Text>{item.name}</Text>
-		</View>
-	)
-}
+function StationsList({items,onStation}) {
 
-function StationsList({items}) {
-
-	Logger.info(`StationsList ${items.length} total station items`)
-	
 	return (
 		<View style={style.StationsList}>
 			<FlatList
 				data={items}
-				renderItem={renderItem}
+				renderItem={({item}) => (
+						<TouchableHighlight
+							underlayColor='black'
+							onPress={() => onStation(item.abbr)}>
+							<View style={style.StationsList__renderItem}>
+								<Text>{item.name}</Text>
+							</View>
+						</TouchableHighlight>
+					)}
 				keyExtractor={(item,index) => `${item.abbr}-${index}`}
 			 ></FlatList>
 		</View>

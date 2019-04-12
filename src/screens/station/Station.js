@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
-import { Button, View,Text, TextInput} from 'react-native'
+import { View } from 'react-native'
 import Logger from 'js-logger'
 import {StationSearchInput} from '../../components/StationSearchInput'
 import {StationsList} from '../../components/StationsList'
@@ -9,39 +9,32 @@ import {StationsList} from '../../components/StationsList'
  * Used to display the avaiable BART stations.
  * 
  */
-// function Station({isFetching,stations,onStationSelect}) {
-// 	return (
-// 		<View>
-// 			<StationSearchInput onText={text => Logger.info(`station search ${text}`)}></StationSearchInput>
-// 			<StationsList items={stations}></StationsList>
-// 		</View>
-// 	)
-// }
-
 class Station extends Component {
 	constructor(props)
 	{
 		super(props);
+		
 		this.state = {stations:props.stations.concat()}
 	}
 
 	onInputText = text =>
 	{
-		Logger.info(`onInputText: ${text} ${this.state.stations.length}`);
-
-		const stations = this.props.stations.filter(station => station.name.search(new RegExp(`${text}`)) > 0 );
-
+		const stations = this.props.stations.filter(station => station.name.search(text) > -1 );
 		this.setState({stations})
 	};
 
 	render() {
 
-		const {isFetching,stations,onStationSelect} = this.props;
-
+		const {navigation:{navigate},onStationSelect} = this.props;
+		
+		const onStation = abbr =>{
+			onStationSelect(abbr);
+			navigate('Location');
+		}
 		return (
 			<View>
 				<StationSearchInput onText={this.onInputText}></StationSearchInput>
-				<StationsList items={this.state.stations}></StationsList>
+				<StationsList items={this.state.stations} onStation={onStation}></StationsList>
 			</View>
 		)
 	}

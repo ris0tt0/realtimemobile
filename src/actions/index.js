@@ -1,6 +1,6 @@
 import Logger from 'js-logger'
 import {normalize, schema} from 'normalizr';
-import { REQUEST_ERROR_ROUTES, RECIEVE_ROUTES, REQUEST_ERROR_STATIONS, RECIEVE_STATIONS, REQUEST_ERROR_TRAIN_COUNT, RECIEVE_TRAIN_COUNT, RECIEVE_RTE, REQUEST_ERROR_RTE, REQUEST_STATIONS } from './ActionTypes';
+import { REQUEST_ERROR_ROUTES, RECIEVE_ROUTES, REQUEST_ERROR_STATIONS, RECIEVE_STATIONS, REQUEST_ERROR_TRAIN_COUNT, RECIEVE_TRAIN_COUNT, RECIEVE_RTE, REQUEST_ERROR_RTE, REQUEST_STATIONS, REQUEST_RTE } from './ActionTypes';
 
 const DEV_KEY = 'MW9S-E7SL-26DU-VV8V';
 
@@ -21,7 +21,7 @@ export function recieveRoutes(normalizedData)
 
 export function fetchRoutes()
 {
-	Logger.info('fetch routes');
+	// Logger.info('fetch routes');
 	return dispatch =>
 	{
 		return fetch(`http://api.bart.gov/api/route.aspx?cmd=routes&key=${DEV_KEY}&json=y`)
@@ -35,8 +35,8 @@ export function fetchRoutes()
 
 				const normalized = normalize(json.root,responseSchema);
 
-				Logger.info(json.root);
-				Logger.info(normalized);
+				// Logger.info(json.root);
+				// Logger.info(normalized);
 
 				dispatch(recieveRoutes(normalized));
 			});
@@ -119,6 +119,11 @@ export function fetchTrainCount()
 	}
 }
 
+export function requestRTE()
+{
+	return {type:REQUEST_RTE};
+}
+
 export function requestErrorRTE(error)
 {
 	return {
@@ -139,6 +144,8 @@ export function fetchRTE(station)
 {
 	return (dispatch) =>
 	{
+		dispatch(requestRTE());
+		
 		return fetch(`http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${station}&key=${DEV_KEY}&json=y`)
 			.then( response => response.json(), error => dispatch(requestErrorRTE(error)) )
 			.then( json => {
@@ -155,8 +162,8 @@ export function fetchRTE(station)
 				const responseSchema = new schema.Entity('response',{uri:uriSchema,station:[stationSchema]},{idAttribute:response => response.time});
 				const normalized = normalize(json.root, responseSchema);
 
-				Logger.info(json);
-				Logger.info(normalized);
+				// Logger.info(json);
+				// Logger.info(normalized);
 
 				dispatch(recieveRTE(normalized));
 			} );

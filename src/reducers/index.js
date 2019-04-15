@@ -14,13 +14,15 @@ import {
 	REQUEST_TRIP_PLANNING,
 	REQUEST_RTE } from '../actions/ActionTypes';
 
+	import Logger from 'js-logger';
+
 function rte(state = {isFetching:false},action){
 
 	switch(action.type){
 		case REQUEST_RTE:
-			return {...state, isFetching:true};
+			return {isFetching:true};
 		case RECIEVE_RTE:
-			return {...action.payload,isFetching:false};
+			return {...action.payload, isFetching:false};
 		default:
 			return {...state};
 	}

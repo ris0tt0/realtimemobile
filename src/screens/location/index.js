@@ -1,11 +1,15 @@
 import {connect} from 'react-redux'
 import Logger from 'js-logger'
 import {Location} from './Location'
+import { rteIsFetching,rteResponse, rtePlatformMap } from '../../selectors';
 
 const mapStateToProps = state => {
 
-	const param1 = '1';
-	return {param1};
+	const isFetching = rteIsFetching(state);
+	const response = rteResponse(state);
+	const platformMap = rtePlatformMap(state);
+
+	return {isFetching,response,platformMap};
 }
 
 const mapDispatchToProps = disptach => {

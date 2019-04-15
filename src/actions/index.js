@@ -155,8 +155,8 @@ export function fetchRTE(station)
 				const responseSchema = new schema.Entity('response',{uri:uriSchema,station:[stationSchema]},{idAttribute:response => response.time});
 				const normalized = normalize(json.root, responseSchema);
 
-				// Logger.info(json);
-				// Logger.info(normalized);
+				Logger.info(json);
+				Logger.info(normalized);
 
 				dispatch(recieveRTE(normalized));
 			} );

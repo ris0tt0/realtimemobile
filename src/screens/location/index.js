@@ -1,32 +1,14 @@
 import {connect} from 'react-redux'
 import Logger from 'js-logger'
 import {Location} from './Location'
-import { rteIsFetching,rteResponse, rtePlatformMap } from '../../selectors';
+import { rteIsFetching,rteResponse, rtePlatformMap, rteLocationScreenData } from '../../selectors';
 
 const mapStateToProps = state => {
 
 	const isFetching = rteIsFetching(state);
-	const response = rteResponse(state);
-	const platformMap = rtePlatformMap(state);
+	const locationScreenData = rteLocationScreenData(state);
 
-	const platformSections = [];
-	
-	// TODO fix this in the selector?
-	platformMap.forEach(station =>{
-		station.forEach((stationMap,platformName) =>{
-			const section = {};
-			section.title = `Platform:  ${platformName}`;
-			section.data = [];
-			// iterate over the map
-			for(let destination of stationMap.values()){
-				section.data.push(destination);
-			}
-
-			platformSections.push(section);
-		})
-	});
-
-	return {isFetching,response,platformSections};
+	return {isFetching,locationScreenData,/*platformSections*/};
 }
 
 const mapDispatchToProps = disptach => {

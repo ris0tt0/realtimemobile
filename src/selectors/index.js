@@ -87,6 +87,8 @@ export const rteStation = createSelector([getRealTimeEstimateSelector,rteRespons
 
 export const rtePlatformMap = createSelector([getRealTimeEstimateSelector,rteStation],
 	(rte,station) =>{
+		Logger.info('rtePlatformMap');
+
 		if(rte.entities)
 		{
 			/** TODO: if we ETD in other than platform map, move this bit of code
@@ -95,12 +97,16 @@ export const rtePlatformMap = createSelector([getRealTimeEstimateSelector,rteSta
 			 */
 			// replace ids with data.
 			const stations = station.map( stationData =>{
-				return stationData.etd.map(id =>	{
-					const etd = rte.entities.etd[id];
-					// add the estimates
-					etd.estimate = etd.estimate.map(id => rte.entities.estimate[id]);
-					return etd;
-				});
+				if(stationData.etd) {
+					return stationData.etd.map(id =>	{
+						const etd = rte.entities.etd[id];
+						// add the estimates
+						etd.estimate = etd.estimate.map(id => rte.entities.estimate[id]);
+						return etd;
+					});
+				}
+
+				return [];
 			});
 
 			//array of station maps.
@@ -110,7 +116,6 @@ export const rtePlatformMap = createSelector([getRealTimeEstimateSelector,rteSta
 					// station.abbreviation
 					// station.destination
 					// station.estimate
-
 					return station.estimate.map(etd =>{
 						// etd.bickerflag
 						// etd.color
@@ -120,13 +125,16 @@ export const rtePlatformMap = createSelector([getRealTimeEstimateSelector,rteSta
 						// etd.length
 						// etd.minutes
 						// etd.platform
-						
-						// make sure we have a map for each platform
-						if( !map.has(etd.platform)) map.set(etd.platform,new Map());
-						// map with abbr key and [estimate]
-						if( !map.get(etd.platform).has(station.abbreviation)) map.get(etd.platform).set(station.abbreviation,{...station,estimate:[]});
-						// add the estimate data to the object
-						map.get(etd.platform).get(station.abbreviation).estimate.push({...etd});
+						if(etd.platform){
+							// make sure we have a map for each platform
+							if( !map.has(etd.platform)) map.set(etd.platform,new Map());
+							// map with abbr key and [estimate]
+							if( !map.get(etd.platform).has(station.abbreviation)) map.get(etd.platform).set(station.abbreviation,{...station,estimate:[]});
+							// add the estimate data to the object
+							map.get(etd.platform).get(station.abbreviation).estimate.push({...etd});
+						}
+
+						return etd;
 					});
 				});
 				// sort by platform number

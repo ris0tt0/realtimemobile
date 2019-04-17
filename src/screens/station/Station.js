@@ -32,7 +32,7 @@ class Station extends Component {
 			navigate('Location');
 		}
 		return (
-			<View>
+			<View style={{flex: 1}}>
 				<StationSearchInput onText={this.onInputText}></StationSearchInput>
 				<StationsList items={this.state.stations} onStation={onStation}></StationsList>
 			</View>

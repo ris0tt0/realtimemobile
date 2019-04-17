@@ -3,7 +3,7 @@ import React,{StyleSheet} from 'react-native'
 const style = StyleSheet.create({
 
 	StationsList: {
-		// flex: 1,
+		flex: 1,
 		// paddingTop: 22,
 	 },
 	 StationsList__renderItem: {
@@ -15,13 +15,24 @@ const style = StyleSheet.create({
 	 },
 	 //
 	 StationSearchInput: {
+		//  flex: 1,
 		borderWidth:1,
 		borderColor:'grey',
 		borderStyle:'solid',
 		padding:5,
 		margin:5,
 		fontSize: 16,
-	 }
+	 },
+	 //
+	 LocatoinRenderItem: {
+		color: 'blue',
+		padding: 4,
+  },
+  LocationRenderSectionHeader: {
+		fontWeight: 'bold',
+		color: 'red',
+		backgroundColor: 'white',
+	},
 });
 
 export default style;

@@ -19,6 +19,6 @@ export default class App extends React.Component {
 	}
 
 	render(){
-		return <Provider store={store} ><AppNavigator /></Provider>
+		return <Provider store={store} ><AppNavigator style={{flex:1}} /></Provider>
   }
 }

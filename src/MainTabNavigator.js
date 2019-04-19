@@ -3,6 +3,7 @@ import HomeScreen from './screens/home/'
 import TripPlannerScreen from './screens/planner/'
 import StationScreen from './screens/station/'
 import LocationScreen from './screens/location/'
+import LocationDetails from './screens/locationdetails/'
 import { TabBarIcon } from './components/TabBarIcon'
 import { Platform } from 'expo-core'
 import React from 'react'
@@ -44,6 +45,7 @@ TripPlannerStack.navigationOptions = {
 const StationStack = createStackNavigator({
 	Station:StationScreen,
 	Location:LocationScreen,
+	LocatoinDetails:LocationDetails,
 });
 
 StationStack.navigationOptions = {

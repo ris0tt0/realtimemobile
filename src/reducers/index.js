@@ -63,6 +63,13 @@ function stations(state={isFetching:false},action){
 	}
 }
 
+// function stationsDetail(state={isFetching:false},action){
+// 	switch(action.type)
+// 	{
+// 		case REQUEST_STATIONS_DETAIL:
+// 	}
+// }
+
 function request_error(state = {}, action)
 {
 	switch(action.type)

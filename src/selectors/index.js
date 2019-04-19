@@ -85,10 +85,26 @@ export const rteStation = createSelector([getRealTimeEstimateSelector,rteRespons
 	return [];
 });
 
+const rteStationsAbbr = createSelector([getRealTimeEstimateSelector,rteStation],(rte,stations) =>{
+	if(rte.entities)
+	{
+		return stations.map(item => item.abbr);
+	}
+
+	return [];
+});
+
+export const rteStationsData = createSelector([getStationsSelector,rteStationsAbbr],(stations,abbrs) =>{
+	if(stations.entities)
+	{
+		return abbrs.map(abbr => stations.entities.station[abbr])
+	}
+
+	return [];
+})
+
 export const rtePlatformMap = createSelector([getRealTimeEstimateSelector,rteStation],
 	(rte,station) =>{
-		Logger.info('rtePlatformMap');
-
 		if(rte.entities)
 		{
 			/** TODO: if we ETD in other than platform map, move this bit of code
@@ -155,19 +171,12 @@ export const rteLocationScreenData = createSelector(
 		const {date,time,message} = response;
 		const {name,abbr} = stations[0];
 		
-		Logger.info(stations);
-
 		platformMap.forEach(station =>{
 			station.forEach((stationMap,platformName) =>{
-				const section = {};
-				section.title = `Platform:  ${platformName}`;
-				section.data = [];
-				// iterate over the map
-				for(let destination of stationMap.values()){
-					section.data.push(destination);
-				}
-	
-				platformSections.push(section);
+				platformSections.push({
+					title:`Platform:  ${platformName}`,
+					data:Array.from(stationMap),
+				});
 			})
 		});
 
@@ -176,6 +185,7 @@ export const rteLocationScreenData = createSelector(
 		return {date,time,message,name,abbr,platformSections};
 });
 
+export const rteLocationStationsData = createSelector([]);
 
 
 const getTripPlannerSelector = state => state.tripplanner;

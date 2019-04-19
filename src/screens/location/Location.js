@@ -3,11 +3,12 @@ import PropTypes from 'prop-types'
 import {View, SectionList, StyleSheet, Text} from 'react-native'
 import Logger from 'js-logger'
 import {renderItem,renderSectionHeader} from '../../components/LocationRenderers'
+import { LocationScreenListHeader } from '../../components';
 
 /**
  * Location screen. displays the bart station real time estimates.
  */
-function Location({isFetching,locationScreenData:{date,time,message,name,abbr,platformSections}}) {
+function Location({isFetching,stationsData,locationScreenData:{date,time,message,name,abbr,platformSections}}) {
 
 	// TODO create progress indicator to show loading.
 	if(isFetching)
@@ -17,14 +18,15 @@ function Location({isFetching,locationScreenData:{date,time,message,name,abbr,pl
 
 	const messageValue = message.warning ? <Text style={{backgroundColor:'yellow'}}>{message.warning}</Text> : <View />;
 
+	Logger.info(stationsData[0]);
+	const data = stationsData[0];
+
 	return (
 		<View style={{flex:1}}>
 			<SectionList
 				ListHeaderComponent={() => (
 					<View>
-						<Text>{name}</Text>
-						<Text>{date}</Text>
-						<Text>{time}</Text>
+						<LocationScreenListHeader {...{...data,time,date}} />
 						{messageValue}
 					</View>
 				)}

@@ -1,14 +1,15 @@
 import {connect} from 'react-redux'
 import Logger from 'js-logger'
 import {Location} from './Location'
-import { rteIsFetching,rteResponse, rtePlatformMap, rteLocationScreenData } from '../../selectors';
+import { rteIsFetching,rteResponse, rtePlatformMap, rteLocationScreenData, rteStationsData } from '../../selectors';
 
 const mapStateToProps = state => {
 
 	const isFetching = rteIsFetching(state);
 	const locationScreenData = rteLocationScreenData(state);
+	const stationsData = rteStationsData(state);
 
-	return {isFetching,locationScreenData,/*platformSections*/};
+	return {isFetching,locationScreenData,stationsData};
 }
 
 const mapDispatchToProps = disptach => {

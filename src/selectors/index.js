@@ -6,6 +6,16 @@ import Logger from 'js-logger';
  */
 const getRoutesSelector = state => state.routes;
 
+export const routesIsFetching = createSelector([getRoutesSelector],routes =>{
+
+	if(routes.hasOwnProperty('isFetching'))
+	{
+		return routes.isFetching;
+	}
+
+	return false;
+});
+
 export const routesResponse = createSelector([getRoutesSelector],routes =>{
 	if( routes.entities)
 	{
@@ -115,16 +125,15 @@ export const rtePlatformMap = createSelector([getRealTimeEstimateSelector,rteSta
 			const stations = station.map( stationData =>{
 				if(stationData.etd) {
 					return stationData.etd.map(id =>	{
-						const etd = rte.entities.etd[id];
+						const etd = {...rte.entities.etd[id]};
 						// add the estimates
-						etd.estimate = etd.estimate.map(id => rte.entities.estimate[id]);
+						etd.estimate = etd.estimate.map(id => ({...rte.entities.estimate[id]}));
 						return etd;
 					});
 				}
 
 				return [];
 			});
-
 			//array of station maps.
 			return stations.map(stationList =>{
 				const map = new Map();
@@ -170,23 +179,70 @@ export const rteLocationScreenData = createSelector(
 		const platformSections = [];
 		const {date,time,message} = response;
 		const {name,abbr} = stations[0];
-		
+
 		platformMap.forEach(station =>{
 			station.forEach((stationMap,platformName) =>{
+				
 				platformSections.push({
 					title:`Platform:  ${platformName}`,
-					data:Array.from(stationMap),
+					data:[...stationMap.values()],
 				});
 			})
 		});
-
-		Logger.info(platformSections);
 
 		return {date,time,message,name,abbr,platformSections};
 });
 
 export const rteLocationStationsData = createSelector([]);
 
+const getStationsDetailSelector = state => state.stationsDetail
+
+export const stationsDetailIsFetching = createSelector(getStationsDetailSelector,stationsDetail =>{
+		
+	if(stationsDetail.hasOwnProperty('isFetching'))
+	{
+		return stationsDetail.isFetching;
+	}
+
+	return false;
+});
+
+export const stationsDetailStationID = createSelector(getStationsDetailSelector,stationsDetail =>{
+	if(stationsDetail.entities && stationsDetail.entities.stations && stationsDetail.entities.stations.stationID.station)
+	{
+		return stationsDetail.entities.stations.stationID.station;
+	}
+
+	return '';
+});
+
+export const stationsDetailStation = createSelector([getStationsDetailSelector,stationsDetailStationID],(stationsDetail,stationId) =>{
+	if(stationsDetail.entities && stationId.length > 0)
+	{
+		return stationsDetail.entities.station[stationId];
+	}
+
+	return {};
+});
+
+export const stationsDetailStationRoutes = createSelector([getRoutesSelector,stationsDetailStation],(routes,station) =>{
+	if(routes.entities && station)
+	{
+		const r = [];
+		if(station.north_routes && station.north_routes.route)
+		{
+			station.north_routes.route.forEach(id => r.push(routes.entities.route[id]))
+		}
+		if(station.south_routes && station.south_routes.route)
+		{
+			station.south_routes.route.forEach(id => r.push(routes.entities.route[id]))
+		}
+
+		return r;
+	}
+
+	return [];
+});
 
 const getTripPlannerSelector = state => state.tripplanner;
 

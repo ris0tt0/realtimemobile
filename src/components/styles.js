@@ -24,15 +24,6 @@ const style = StyleSheet.create({
 		fontSize: 16,
 	 },
 	 //
-	 LocatoinRenderItem: {
-		color: 'blue',
-		padding: 4,
-  },
-  LocationRenderSectionHeader: {
-		fontWeight: 'bold',
-		color: 'red',
-		backgroundColor: 'white',
-	},
 });
 
 export default style;

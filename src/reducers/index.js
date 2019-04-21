@@ -12,7 +12,11 @@ import {
 	REQUEST_STATIONS,
 	REQUEST_ROUTES, 
 	REQUEST_TRIP_PLANNING,
-	REQUEST_RTE } from '../actions/ActionTypes';
+	REQUEST_RTE, 
+	REQUEST_ERROR_STATION_DETAIL,
+	REQUEST_STATION_DETAIL,
+	RECIEVE_STATION_DETAIL,
+	UPDATE_STATION_DETAIL_STATIONID} from '../actions/ActionTypes';
 
 	import Logger from 'js-logger';
 
@@ -63,12 +67,23 @@ function stations(state={isFetching:false},action){
 	}
 }
 
-// function stationsDetail(state={isFetching:false},action){
-// 	switch(action.type)
-// 	{
-// 		case REQUEST_STATIONS_DETAIL:
-// 	}
-// }
+function stationsDetail(state={isFetching:false},action){
+	switch(action.type)
+	{
+		case REQUEST_STATION_DETAIL:
+			return {...state,isFetching:true}
+		case RECIEVE_STATION_DETAIL:
+			action.payload.entities.station =
+				state.entities && state.entities.station ? 
+				{...action.payload.entities.station, ...state.entities.station} :
+				action.payload.entities.station;
+			return {...action.payload,isFetching:false}
+		case UPDATE_STATION_DETAIL_STATIONID:
+			state.entities.stations.stationID.station = action.payload;
+		default:
+			return {...state}
+	}
+}
 
 function request_error(state = {}, action)
 {
@@ -79,6 +94,7 @@ function request_error(state = {}, action)
 		case REQUEST_ERROR_STATIONS:
 		case REQUEST_ERROR_TRAIN_COUNT:
 		case REQUEST_ERROR_TRIP_PLANNING:
+		case REQUEST_ERROR_STATION_DETAIL:
 		
 			Logger.debug('request error');
 			Logger.info(action.payload);
@@ -94,7 +110,8 @@ const reducers = combineReducers({
 	tripplanner,
 	routes,
 	stations,
-
+	stationsDetail,
+	
 	request_error,
 });
 

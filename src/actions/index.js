@@ -1,8 +1,14 @@
 import Logger from 'js-logger'
 import {normalize, schema} from 'normalizr';
-import { REQUEST_ERROR_ROUTES, RECIEVE_ROUTES, REQUEST_ERROR_STATIONS, RECIEVE_STATIONS, REQUEST_ERROR_TRAIN_COUNT, RECIEVE_TRAIN_COUNT, RECIEVE_RTE, REQUEST_ERROR_RTE, REQUEST_STATIONS, REQUEST_RTE } from './ActionTypes';
+import { REQUEST_ERROR_ROUTES, RECIEVE_ROUTES, REQUEST_ERROR_STATIONS, RECIEVE_STATIONS, REQUEST_ERROR_TRAIN_COUNT, RECIEVE_TRAIN_COUNT, RECIEVE_RTE, REQUEST_ERROR_RTE, REQUEST_STATIONS, REQUEST_RTE, REQUEST_STATION_DETAIL, REQUEST_ERROR_STATION_DETAIL, RECIEVE_STATION_DETAIL, UPDATE_STATION_DETAIL_STATIONID, REQUEST_ROUTES } from './ActionTypes';
 
 const DEV_KEY = 'MW9S-E7SL-26DU-VV8V';
+
+export function requestRoutes(){
+	return {
+		type:REQUEST_ROUTES,
+	}
+}
 
 export function requestErrorRoutes(error){
 	return {
@@ -21,9 +27,17 @@ export function recieveRoutes(normalizedData)
 
 export function fetchRoutes()
 {
-	// Logger.info('fetch routes');
-	return dispatch =>
+	return (dispatch,getState) =>
 	{
+		const {routes:{entities}} = getState();
+
+		if(entities)
+		{
+			return Promise.resolve();
+		}
+		
+		dispatch(requestRoutes());
+
 		return fetch(`http://api.bart.gov/api/route.aspx?cmd=routes&key=${DEV_KEY}&json=y`)
 			.then( response => response.json(),error => dispatch(requestErrorRoutes(error)) )
 			.then( json =>
@@ -35,12 +49,68 @@ export function fetchRoutes()
 
 				const normalized = normalize(json.root,responseSchema);
 
-				// Logger.info(json.root);
-				// Logger.info(normalized);
-
 				dispatch(recieveRoutes(normalized));
 			});
 	}
+}
+
+
+export function requestStationDetail(){
+	return {
+		type:REQUEST_STATION_DETAIL,
+	}
+}
+export function requestErrorStationDetail(error){
+	return{
+		type:REQUEST_ERROR_STATION_DETAIL,
+		payload:error
+	}
+}
+export function recieveStationDetail(normalizedData){
+	return{
+		type:RECIEVE_STATION_DETAIL,
+		payload:normalizedData,
+	}
+}
+
+export function updateStationDetailStationID(abbr){
+	return{
+		type:UPDATE_STATION_DETAIL_STATIONID,
+		payload:abbr,
+	}
+}
+
+export function fetchStationDetail(stationAbbr){
+
+	return (dispatch,getState) =>
+	{
+
+		const {stationsDetail} = getState();
+
+		if( stationsDetail.entities && 
+				stationsDetail.entities.station &&
+				stationsDetail.entities.station[stationAbbr])
+		{
+			return dispatch(updateStationDetailStationID(stationAbbr));
+		}
+
+		dispatch(requestStationDetail());
+
+		return fetch(`https://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${stationAbbr}&key=${DEV_KEY}&json=y`)
+			.then( response => response.json(), error => dispatch(requestErrorStationDetail(error)) )
+			.then( json => {
+
+				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
+				const stationSchema = new schema.Entity('station',undefined,{idAttribute:item => item.abbr});
+				const stationsSchema = new schema.Entity('stations',{station:stationSchema},{idAttribute:item => `stationID`})
+				const responseSchema = new schema.Entity('response',{stations:stationsSchema,uri:uriSchema},{idAttribute:response => 'responseId'});
+
+				const normalized = normalize(json.root,responseSchema);
+
+				dispatch(recieveStationDetail(normalized));
+			});
+	}
+
 }
 
 export function requestStations(){
@@ -79,10 +149,6 @@ export function fetchStations()
 				const responseSchema = new schema.Entity('response',{stations:stationsSchema,uri:uriSchema},{idAttribute:response => 'responseId'});
 				// normalize the station data.
 				const normalized = normalize(json.root, responseSchema);
-
-				// Logger.info('fetchStations');
-				// Logger.info(json)
-				// Logger.info(normalized)
 
 				dispatch(recieveStations(normalized));
 			});
@@ -162,10 +228,7 @@ export function fetchRTE(station)
 				const responseSchema = new schema.Entity('response',{uri:uriSchema,station:[stationSchema]},{idAttribute:response => response.time});
 				const normalized = normalize(json.root, responseSchema);
 
-				// Logger.info(json);
-				// Logger.info(normalized);
-
 				dispatch(recieveRTE(normalized));
-			} );
+			});
 	}
 }

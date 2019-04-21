@@ -1,25 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import {View, Text} from 'react-native'
+import {ActivityIndicator, Button, ImageBackground, View, Text} from 'react-native'
 import styles from './styles'
 import Logger from 'js-logger'
 
-function LocationScreenListHeader({abbr,name,address,city,state,zipcode,county}) {
+function LocationScreenListHeader({onRefresh,onDetails,abbr,name,address,city,state,zipcode,county,time,date}) {
 	return (
 		<View style={{padding:15,flex:1, justifyContent:'flex-end', height:200}}>
-			<View>
-				<Text style={{fontSize:50}}>{abbr}</Text>
+		{/* <ImageBackground source={require('../../assets/splash.png')} style={{width:200,height:200}} > */}
+			<View style={{flexDirection:'row'}}>
+				<Text style={{fontWeight:'bold', fontSize:30}}>{name}</Text>
+				<Button title='station info' onPress={() => onDetails()} ></Button>
 			</View>
-			<View style={{marginLeft:10}}>
-				<Text style={{fontSize:20}}>{name}</Text>
-				<View style={{marginLeft:40}}>
+			<View style={{flexDirection:'row'}}>
+				<View style={{marginLeft:3}}>
 					<Text>{address}</Text>
 					<Text>{city}, {state}, {zipcode}</Text>
+					<Text style={{fontWeight:'bold',fontSize:10,color:'darkgray'}}>{date} - {time}</Text>
 				</View>
-				<View style={{flexDirection:'row',justifyContent:'flex-end'}}>
-					<Text style={{fontSize:12}}>county: {county}</Text>
-				</View> 
 			</View>
+			<Button title='refresh' onPress={event => onRefresh()} />
+		{/* </ImageBackground> */}
 		</View>
 	)
 }
@@ -38,5 +39,18 @@ LocationScreenListHeader.propTypes = {
 	time:PropTypes.string.isRequired,
 }
 
-export {LocationScreenListHeader}
+function WaitingScreen({title}){
+	return (
+		<View style={{flex:1, justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
+			<ActivityIndicator size='large' color='black' />
+			<Text>{title ? title : 'Loading'}</Text>
+		</View>
+	)
+}
+
+WaitingScreen.propTypes = {
+	title:PropTypes.string,
+}
+
+export {LocationScreenListHeader,WaitingScreen}
 

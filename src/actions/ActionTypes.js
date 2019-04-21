@@ -13,6 +13,14 @@ export const REQUEST_ERROR_STATIONS = 'request error stations';
 export const RECIEVE_STATIONS = 'receive stations';
 
 /**
+ * Used to gather station details
+ */
+export const REQUEST_STATION_DETAIL = 'request station detail';
+export const REQUEST_ERROR_STATION_DETAIL = 'request error station detail';
+export const RECIEVE_STATION_DETAIL = 'receive station detail';
+export const UPDATE_STATION_DETAIL_STATIONID = 'update station detail stationId';
+
+/**
  * the current number of trains
  */
 export const REQUEST_TRAIN_COUNT = 'request train count';

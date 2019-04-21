@@ -45,7 +45,7 @@ TripPlannerStack.navigationOptions = {
 const StationStack = createStackNavigator({
 	Station:StationScreen,
 	Location:LocationScreen,
-	LocatoinDetails:LocationDetails,
+	LocationDetails,
 });
 
 StationStack.navigationOptions = {

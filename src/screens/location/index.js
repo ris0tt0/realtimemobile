@@ -1,7 +1,8 @@
 import {connect} from 'react-redux'
 import Logger from 'js-logger'
 import {Location} from './Location'
-import { rteIsFetching,rteResponse, rtePlatformMap, rteLocationScreenData, rteStationsData } from '../../selectors';
+import { rteIsFetching, rteLocationScreenData, rteStationsData } from '../../selectors';
+import { fetchRTE, fetchStationDetail, fetchRoutes } from '../../actions';
 
 const mapStateToProps = state => {
 
@@ -12,11 +13,15 @@ const mapStateToProps = state => {
 	return {isFetching,locationScreenData,stationsData};
 }
 
-const mapDispatchToProps = disptach => {
+const mapDispatchToProps = (dispatch,ownProps) => {
 
-	const onClick = () => Logger.info('onclick');
-
-	return {onClick};
+	return {
+		onRefresh:abbr => dispatch(fetchRTE(abbr)),
+		onDetails:abbr =>{
+			dispatch(fetchStationDetail(abbr));
+			dispatch(fetchRoutes());
+		},
+	};
 }
 
 const LocationContainer = connect(mapStateToProps,mapDispatchToProps)(Location);

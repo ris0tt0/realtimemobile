@@ -10,9 +10,9 @@ function LocationDetails({isFetching,details,routes}) {
 	if(isFetching) return <WaitingScreen />
 
 	const routeNames = routes.map((route,index) => (
-		<View style={{backgroundColor:'whitesmoke', flexDirection:'row'}}>
+		<View key={index} style={{backgroundColor:'whitesmoke', flexDirection:'row'}}>
 			<RouteLineArrows color={route.hexcolor} />
-			<Text key={index}>{route.name}</Text>
+			<Text style={{paddingLeft:4}}>{route.name}</Text>
 		</View>
 		));
 

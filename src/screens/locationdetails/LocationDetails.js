@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {View,Text} from 'react-native'
 import Logger from 'js-logger'
 import { WaitingScreen } from '../../components';
-import {RouteLineArrows} from '../../components/TabBarIcon';
+import {RouteLineArrows} from '../../components/AIcons';
 
 function LocationDetails({isFetching,details,routes}) {
 
@@ -16,7 +16,7 @@ function LocationDetails({isFetching,details,routes}) {
 		</View>
 		));
 
-	Logger.info(routes);
+	// Logger.info(routes);
 
 	return (
 		<View style={{flex:1}}>

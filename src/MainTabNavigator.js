@@ -4,7 +4,7 @@ import TripPlannerScreen from './screens/planner/'
 import StationScreen from './screens/station/'
 import LocationScreen from './screens/location/'
 import LocationDetails from './screens/locationdetails/'
-import { TabBarIcon } from './components/TabBarIcon'
+import { TabBarIcon } from './components/AIcons'
 import { Platform } from 'expo-core'
 import React from 'react'
 

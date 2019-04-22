@@ -5,7 +5,7 @@ import { fetchRoutes } from '../../actions';
 
 const mapStateToProps = state =>{
 	return {
-		param:'paaram'
+		param:'paaram',
 	}
 }
 

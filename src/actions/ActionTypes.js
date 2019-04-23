@@ -33,7 +33,7 @@ export const RECIEVE_TRAIN_COUNT = 'recieve train count';
 export const REQUEST_TRIP_PLANNING = 'request trip planning';
 export const REQUEST_ERROR_TRIP_PLANNING = 'request error trip planning';
 export const RECIEVE_TRIP_PLANNING = 'receieve trip planning';
-
+export const UPDATE_TRIP_PLANNING_TRIPID = 'update trip planning tripid';
 /**
  * BART routes
  */

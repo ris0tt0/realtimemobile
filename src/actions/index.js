@@ -1,6 +1,6 @@
 import Logger from 'js-logger'
 import {normalize, schema} from 'normalizr';
-import { REQUEST_ERROR_ROUTES, RECIEVE_ROUTES, REQUEST_ERROR_STATIONS, RECIEVE_STATIONS, REQUEST_ERROR_TRAIN_COUNT, RECIEVE_TRAIN_COUNT, RECIEVE_RTE, REQUEST_ERROR_RTE, REQUEST_STATIONS, REQUEST_RTE, REQUEST_STATION_DETAIL, REQUEST_ERROR_STATION_DETAIL, RECIEVE_STATION_DETAIL, UPDATE_STATION_DETAIL_STATIONID, REQUEST_ROUTES } from './ActionTypes';
+import { REQUEST_ERROR_ROUTES, RECIEVE_ROUTES, REQUEST_ERROR_STATIONS, RECIEVE_STATIONS, REQUEST_ERROR_TRAIN_COUNT, RECIEVE_TRAIN_COUNT, RECIEVE_RTE, REQUEST_ERROR_RTE, REQUEST_STATIONS, REQUEST_RTE, REQUEST_STATION_DETAIL, REQUEST_ERROR_STATION_DETAIL, RECIEVE_STATION_DETAIL, UPDATE_STATION_DETAIL_STATIONID, REQUEST_ROUTES, REQUEST_TRIP_PLANNING, REQUEST_ERROR_TRIP_PLANNING, RECIEVE_TRIP_PLANNING, UPDATE_TRIP_PLANNING_TRIPID } from './ActionTypes';
 
 const DEV_KEY = 'MW9S-E7SL-26DU-VV8V';
 
@@ -230,5 +230,67 @@ export function fetchRTE(station)
 
 				dispatch(recieveRTE(normalized));
 			});
+	}
+}
+
+export function requestTripPlanner()
+{
+	return {type:REQUEST_TRIP_PLANNING}
+}
+
+export function requestErrorTripPlanner(error){
+	return {
+		type:REQUEST_ERROR_TRIP_PLANNING,
+		payload:error,
+	}
+}
+export function recieveTripPlanner(normalizedData){
+	return {
+		type:RECIEVE_TRIP_PLANNING,
+		payload:normalizedData,
+	}
+}
+
+export function fetchTripPlanning(startingAbbr,destinationAbbr)
+{
+	return (dispatch) =>
+	{
+		if(startingAbbr && startingAbbr.length > 0 && destinationAbbr && destinationAbbr.length > 0)
+		{
+			dispatch(requestTripPlanner());
+
+			return fetch(`http://api.bart.gov/api/sched.aspx?cmd=depart&orig=${startingAbbr}&dest=${destinationAbbr}&date=today&time=now&key=${DEV_KEY}&b=1&a=4&json=y`)
+			.then( response => response.json() )
+			.then( json => {
+
+				// start to normalize the json response.
+				const fareSchema = new schema.Entity('fare',undefined,{idAttribute: value => `${value['@name']}ID`});
+				const faresSchema = new schema.Entity('fares',{fare:[fareSchema]},{idAttribute: value => `${value['@level']}-${value.fare.length}ID`});
+				const legSchema = new schema.Entity('leg',undefined,{idAttribute: value => `${value['@origTimeMin']}-${value['@destTimeMin']}ID`});
+				const tripSchema = new schema.Entity('trip',{fares:faresSchema,leg:[legSchema]},{
+					idAttribute: value => `${value['@origTimeMin']}-${value['@destTimeMin']}ID`,
+					processStrategy: value => ({...value,id:`${value['@origTimeMin']}-${value['@destTimeMin']}ID`})} );
+
+				const requestSchema = new schema.Entity('request',{trip:[tripSchema]},{idAttribute: value => 'requestID'});
+				const scheduleSchema = new schema.Entity('schedule',{request:requestSchema},{idAttribute: value => `${value.time}-${value.date}ID`});
+				const responseSchema = new schema.Entity('response',{schedule:scheduleSchema},{idAttribute: value => `${value.origin}-${value.destination}ID`});
+
+				const normalized = normalize(json.root, responseSchema);
+
+				dispatch(recieveTripPlanner(normalized));
+			});
+		}
+		else
+		{
+			return Promise.resolve();
+		}
+	}
+}
+
+export function setTripPLanningTripId(id)
+{
+	return {
+		type:UPDATE_TRIP_PLANNING_TRIPID,
+		payload:id,
 	}
 }

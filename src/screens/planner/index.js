@@ -1,17 +1,18 @@
 import {connect} from 'react-redux'
 import Logger from 'js-logger'
 import Planner from './Planner'
-import { fetchRoutes } from '../../actions';
+import { stationsList } from '../../selectors';
+import { fetchTripPlanning } from '../../actions';
 
 const mapStateToProps = state =>{
 	return {
-		param:'paaram',
+		stations:stationsList(state),
 	}
 }
 
 const mapDispatchToProps = dispatch => {
 	return{
-		onClick: () => dispatch( fetchRoutes() )
+		onSearch:(origin,ending) => dispatch(fetchTripPlanning(origin,ending))
 	}
 }
 

@@ -246,3 +246,77 @@ export const stationsDetailStationRoutes = createSelector([getRoutesSelector,sta
 
 const getTripPlannerSelector = state => state.tripplanner;
 
+export const tripPlannerIsFetching = createSelector(getTripPlannerSelector,tripplanner =>{
+		
+	if(tripplanner.hasOwnProperty('isFetching'))
+	{
+		return tripplanner.isFetching;
+	}
+
+	return false;
+});
+
+export const tripPlannerResponse = createSelector(getTripPlannerSelector,tripplanner =>{
+	if(tripplanner.entities)
+	{
+		return tripplanner.entities.response[tripplanner.result];
+	}
+
+	return {};
+})
+
+export const tripPlannerOriginStation = createSelector(
+	[getTripPlannerSelector, getStationsSelector, tripPlannerResponse],
+	(tripplanner,stations,response) =>{
+	
+	if(tripplanner.entities && stations.entities)
+	{
+		return {...stations.entities.station[response.origin]};
+	}
+
+	return {};
+});
+
+export const tripPlannerDestinationStation = createSelector(
+	[getTripPlannerSelector, getStationsSelector, tripPlannerResponse],
+	(tripplanner,stations,response) =>{
+	
+	if(tripplanner.entities && stations.entities)
+	{
+		return {...stations.entities.station[response.destination]};
+	}
+
+	return {};
+});
+
+export const tripPlannerSchedule = createSelector(
+	[getTripPlannerSelector,tripPlannerResponse],
+	(tripplaner,response) =>{
+
+	if(tripplaner.entities)
+	{
+		return {...tripplaner.entities.schedule[response.schedule]};
+	}
+
+	return {};
+});
+
+export const tripPlannerTrip = createSelector(
+	[getTripPlannerSelector,tripPlannerSchedule],
+	(tripplanner,schedule) =>{
+
+		if(tripplanner.entities)
+		{
+			const ids = tripplanner.entities.request[schedule.request].trip;
+			
+			return ids.map(tripId => {
+				const trip = tripplanner.entities.trip[tripId];
+				const leg = trip.leg.map(legId => tripplanner.entities.leg[legId]);
+
+				return {...trip,leg};
+			});
+		}
+
+		return [];
+	}
+)

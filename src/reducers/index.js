@@ -16,7 +16,8 @@ import {
 	REQUEST_ERROR_STATION_DETAIL,
 	REQUEST_STATION_DETAIL,
 	RECIEVE_STATION_DETAIL,
-	UPDATE_STATION_DETAIL_STATIONID} from '../actions/ActionTypes';
+	UPDATE_STATION_DETAIL_STATIONID,
+	UPDATE_TRIP_PLANNING_TRIPID} from '../actions/ActionTypes';
 
 	import Logger from 'js-logger';
 
@@ -40,6 +41,8 @@ function tripplanner(state = {isFetching:false},action){
 			return {...state,isFetching:true};
 		case RECIEVE_TRIP_PLANNING:
 			return {...action.payload,isFetching:false};
+		case UPDATE_TRIP_PLANNING_TRIPID:
+			return {...state,tripId:action.payload};
 		default:
 			return {...state};
 	}

@@ -52,5 +52,76 @@ WaitingScreen.propTypes = {
 	title:PropTypes.string,
 }
 
-export {LocationScreenListHeader,WaitingScreen}
+function TripBar({leg}) {
+	return (
+		<View>
+			<Text>Trip Bar length:{leg.length}</Text>
+		</View>
+	)
+}
+
+TripBar.propTypes = {
+	leg:PropTypes.array.isRequired,
+	// "@bikeflag": "1",
+	// "@destTimeDate": "04/22/2019",
+	// "@destTimeMin": "12:47 AM",
+	// "@destination": "MCAR",
+	// "@line": "ROUTE 1",
+	// "@load": "1",
+	// "@order": "1",
+	// "@origTimeDate": "04/21/2019",
+	// "@origTimeMin": "11:46 PM",
+	// "@origin": "ANTC",
+	// "@trainHeadStation": "San Francisco International Airport",
+}
+
+function TripTime({time}) {
+	return (
+		<View>
+			<Text>{time}</Text>
+		</View>
+	)
+}
+
+TripTime.propTypes = {
+
+}
+
+function TripChanges({changes}) {
+	return (
+		<View>
+			<Text>changes:{changes}</Text>
+		</View>
+	)
+}
+
+TripChanges.propTypes = {
+
+}
+
+function TripFare({fare}) {
+	return (
+		<View>
+			<Text>fare: {fare}</Text>
+		</View>
+		)
+}
+
+TripFare.propTypes = {
+
+}
+
+function TripDuration({duration}) {
+	return (
+	<View>
+		<Text>{duration} min</Text>
+	</View>
+	)
+}
+
+TripDuration.propTypes = {
+
+}
+
+export {LocationScreenListHeader,WaitingScreen,TripBar,TripTime,TripChanges,TripFare,TripDuration}
 

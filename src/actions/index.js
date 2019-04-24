@@ -33,6 +33,7 @@ export function fetchRoutes()
 
 		if(entities)
 		{
+			// just use once per session
 			return Promise.resolve();
 		}
 		

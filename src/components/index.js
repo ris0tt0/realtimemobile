@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import {ActivityIndicator, Button, ImageBackground, View, Text} from 'react-native'
 import styles from './styles'
 import Logger from 'js-logger'
+import { LongPressGestureHandler } from 'react-native-gesture-handler';
 
 function LocationScreenListHeader({onRefresh,onDetails,abbr,name,address,city,state,zipcode,county,time,date}) {
 	return (
@@ -123,5 +124,13 @@ TripDuration.propTypes = {
 
 }
 
-export {LocationScreenListHeader,WaitingScreen,TripBar,TripTime,TripChanges,TripFare,TripDuration}
+function TripLineBar({color}){
+
+	return(
+		<View style={{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,backgroundColor:color,width:10}}>
+		</View>
+	)
+}
+
+export {LocationScreenListHeader,WaitingScreen,TripBar,TripTime,TripChanges,TripFare,TripDuration,TripLineBar}
 

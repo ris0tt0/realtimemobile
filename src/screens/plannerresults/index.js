@@ -2,6 +2,7 @@ import {connect} from 'react-redux'
 import Logger from 'js-logger'
 import {PlannerResults} from './PlannerResults'
 import { tripPlannerIsFetching, tripPlannerOriginStation, tripPlannerDestinationStation, tripPlannerSchedule, tripPlannerTrip } from '../../selectors';
+import { setTripPLanningTripId, fetchRoutes } from '../../actions';
 
 const mapStateToProps = state =>{
 	return {
@@ -14,7 +15,11 @@ const mapStateToProps = state =>{
 };
 
 const mapDispatchToProps = dispatch =>{
-	return {onClick:()=>Logger.info('on click')}
+	return {
+		onTrip: id => {
+			dispatch(fetchRoutes());
+			dispatch(setTripPLanningTripId(id));
+			}};
 };
 
 const PlannerResultsContainer = connect(mapStateToProps,mapDispatchToProps)(PlannerResults);

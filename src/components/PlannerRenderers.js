@@ -2,49 +2,60 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Logger from 'js-logger'
 import {View,Text} from 'react-native'
-import { TripBar,TripTime,TripFare,TripDuration } from '../components/';
+import { TripBar,TripTime,TripFare,TripDuration,TripLineBar } from '../components/';
+import { bold } from 'ansi-colors';
 
-function ResultRenderItem({item,index}) {
-	
-	return (
-		<View key={index} style={{flex:1}}>
-			<TripBar leg={item.leg}/>
-			<View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
-				<TripTime time={item['@origTimeMin']}/>
-				<TripDuration duration={item['@tripTime']}/>
-				<TripFare fare={item['@fare']}/>
-				<TripTime time={item['@destTimeMin']}/>
-			</View>
-		</View>
-	)
+function itemStation(time,stationName, city){
+  return (
+    <View style={{flexDirection:'row'}}>
+      <TripTime time={time} />
+      <Text>{stationName}</Text>
+    </View>
+  )
 }
 
-ResultRenderItem.propTypes = {
-  //   "@clipper": "",
-  //   "@destTimeDate": "04/22/2019",
-  //   "@destTimeMin": "01:29 AM",
-  //   "@destination": "DUBL",
-  //   "@fare": "8.5",
-  //   "@origTimeDate": "04/21/2019",
-  //   "@origTimeMin": "11:46 PM",
-  //   "@origin": "ANTC",
-  //   "@tripTime": "103",
-  //   "fares": "normal-undefinedID",
-  //   "leg": Array [
-  //     Object {
-  //       "@bikeflag": "1",
-  //       "@destTimeDate": "04/22/2019",
-  //       "@destTimeMin": "12:47 AM",
-  //       "@destination": "MCAR",
-  //       "@line": "ROUTE 1",
-  //       "@load": "1",
-  //       "@order": "1",
-  //       "@origTimeDate": "04/21/2019",
-  //       "@origTimeMin": "11:46 PM",
-  //       "@origin": "ANTC",
-  //       "@trainHeadStation": "San Francisco International Airport",
-  //     },
+function PlannerDetailsRenderItem({item,index}) {
+  const {origin,destination,line} = item;
+
+  var d = new Date(item['@origTimeDate'])
+  var e = new Date(item['@destTimeDate']);
+
+  d.setHours(10,58);
+  e.setHours(11,1);
+
+  Logger.info(d)
+  Logger.info(e);
+  const v = e-d;
+const t = v/1000;
+const minutes = t/60;
+
+  Logger.info(minutes);
+
+  Logger.info(item['@origTimeMin'].search(/\d\d:/))
+  Logger.info(item['@origTimeMin'].search(/:\d\d/))
+
+  return (
+    <View style={{flex:1,flexDirection:'row'}}>
+      <View style={{justifyContent:'space-between'}}>
+        <Text style={{fontWeight:'bold'}}>{item['@origTimeMin']}</Text>
+        <Text style={{fontWeight:'bold'}}>{item['@destTimeMin']}</Text>
+      </View>
+      <TripLineBar color={line.hexcolor}/>
+      <View>
+        <Text style={{fontWeight:'bold'}}>{origin.name} BART STATION, {origin.city}</Text>
+        <Text style={{backgroundColor:line.hexcolor}}>{item['@trainHeadStation']}</Text>
+        <Text>Bikes are{item['@bikeflag'] === '1' ? '' : ' not'} allowed</Text>
+        <Text style={{fontWeight:'bold'}}>{destination.name} BART STATION, {destination.city}</Text>
+      </View>
+    </View>
+  )
 }
 
-export {ResultRenderItem}
+PlannerDetailsRenderItem.propTypes = {
+
+}
+
+
+export {PlannerDetailsRenderItem}
+
 

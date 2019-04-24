@@ -320,3 +320,27 @@ export const tripPlannerTrip = createSelector(
 		return [];
 	}
 )
+
+export const tripPlannerTripDetails = createSelector(
+	[getTripPlannerSelector,getStationsSelector,getRoutesSelector],
+	(tripplanner,stations,routes) =>{
+		if( tripplanner.tripId)
+		{
+			const details = tripplanner.entities.trip[tripplanner.tripId];
+			const leg = details.leg.map(id => {
+				const l = tripplanner.entities.leg[id];
+
+				l.origin =stations.entities.station[l['@origin']];
+				l.destination = stations.entities.station[l['@destination']];
+
+				if(routes.entities) l.line = routes.entities.route[l['@line']];
+
+				return l;
+			});
+
+			return {...details,leg};
+		}
+
+		return {};
+	}
+)

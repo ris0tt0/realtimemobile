@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types'
-import {Icon} from 'expo'
 import Colors from '../constants/Colors'
 import React from 'react'
 import {View} from 'react-native'
 import { Platform } from 'expo-core'
+import {Ionicons,MaterialCommunityIcons} from '@expo/vector-icons'
 
 function TabBarIcon({name,focused}) {
 	
 	return	(
-		<Icon.Ionicons
+		<Ionicons
 			name={name}
 			size={26}
 			style={{ marginBottom: -3}}
@@ -24,12 +24,12 @@ TabBarIcon.propTypes = {
 function RouteLineArrows({color}) {
 	return (
 		<View style={{paddingLeft:3, paddingTop:3, flexDirection:'row'}}>
-			<Icon.Ionicons
+			<Ionicons
 				name={Platform.OS === 'ios' ? 'ios-arrow-round-back' : 'md-arrow-round-back'}
 				size={13}
 				color={color}
 			/>
-			<Icon.Ionicons
+			<Ionicons
 				name={Platform.OS === 'ios' ? 'ios-arrow-round-forward' : 'md-arrow-round-forward'}
 				size={13}
 				color={color}
@@ -42,4 +42,16 @@ RouteLineArrows.propTypes = {
 
 }
 
-export {TabBarIcon,RouteLineArrows};
+function RouteLineDetailBike(){
+	return (
+		<View style={{paddingTop:3,paddingRight:5}}>
+			<MaterialCommunityIcons
+				name='bike'
+				size={13}
+			/>
+		</View>
+		);
+}
+
+
+export {TabBarIcon,RouteLineArrows,RouteLineDetailBike};

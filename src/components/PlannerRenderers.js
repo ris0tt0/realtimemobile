@@ -4,6 +4,7 @@ import Logger from 'js-logger'
 import {View,Text} from 'react-native'
 import { TripBar,TripTime,TripFare,TripDuration,TripLineBar } from '../components/';
 import { bold } from 'ansi-colors';
+import { RouteLineDetailBike } from './AIcons';
 
 function itemStation(time,stationName, city){
   return (
@@ -31,8 +32,9 @@ const minutes = t/60;
 
   Logger.info(minutes);
 
-  Logger.info(item['@origTimeMin'].search(/\d\d:/))
-  Logger.info(item['@origTimeMin'].search(/:\d\d/))
+  const hourIndex = item['@origTimeMin'].search(/\d\d:/);
+  const minIndex = item['@origTimeMin'].search(/:\d\d/);
+
 
   return (
     <View style={{flex:1,flexDirection:'row'}}>
@@ -44,7 +46,10 @@ const minutes = t/60;
       <View>
         <Text style={{fontWeight:'bold'}}>{origin.name} BART STATION, {origin.city}</Text>
         <Text style={{backgroundColor:line.hexcolor}}>{item['@trainHeadStation']}</Text>
-        <Text>Bikes are{item['@bikeflag'] === '1' ? '' : ' not'} allowed</Text>
+        <View style={{flexDirection:'row'}}>
+          <RouteLineDetailBike />
+          <Text>Bikes are{item['@bikeflag'] === '1' ? '' : ' not'} allowed</Text>
+        </View>
         <Text style={{fontWeight:'bold'}}>{destination.name} BART STATION, {destination.city}</Text>
       </View>
     </View>

@@ -7,7 +7,8 @@ const selectStationID = 'selectstations';
 
 export default class Planner extends Component {
 	static propTypes = {
-		prop: PropTypes
+		navigation:PropTypes.object,
+		onSearch:PropTypes.func.isRequired,
 	}
 
 	constructor(props)
@@ -15,8 +16,8 @@ export default class Planner extends Component {
 		super(props);
 		this.state = {originAbbr:selectStationID,destinationAbbr:selectStationID};
 
-		const {navigation:{navigate}} = this.props;
-		const {onSearch} = props;
+		const {onSearch,navigation:{navigate}} = this.props;
+		
 		this.onTripPlanning = () =>
 		{
 				const {originAbbr,destinationAbbr} = this.state;

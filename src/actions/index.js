@@ -2,7 +2,7 @@ import Logger from 'js-logger'
 import {normalize, schema} from 'normalizr';
 import { REQUEST_ERROR_ROUTES, RECIEVE_ROUTES, REQUEST_ERROR_STATIONS, RECIEVE_STATIONS, REQUEST_ERROR_TRAIN_COUNT, RECIEVE_TRAIN_COUNT, RECIEVE_RTE, REQUEST_ERROR_RTE, REQUEST_STATIONS, REQUEST_RTE, REQUEST_STATION_DETAIL, REQUEST_ERROR_STATION_DETAIL, RECIEVE_STATION_DETAIL, UPDATE_STATION_DETAIL_STATIONID, REQUEST_ROUTES, REQUEST_TRIP_PLANNING, REQUEST_ERROR_TRIP_PLANNING, RECIEVE_TRIP_PLANNING, UPDATE_TRIP_PLANNING_TRIPID } from './ActionTypes';
 
-const DEV_KEY = 'MW9S-E7SL-26DU-VV8V';
+const api_key = 'MW9S-E7SL-26DU-VV8V';
 
 export function requestRoutes(){
 	return {
@@ -39,7 +39,7 @@ export function fetchRoutes()
 		
 		dispatch(requestRoutes());
 
-		return fetch(`http://api.bart.gov/api/route.aspx?cmd=routes&key=${DEV_KEY}&json=y`)
+		return fetch(`http://api.bart.gov/api/route.aspx?cmd=routes&key=${api_key}&json=y`)
 			.then( response => response.json(),error => dispatch(requestErrorRoutes(error)) )
 			.then( json =>
 			{
@@ -97,7 +97,7 @@ export function fetchStationDetail(stationAbbr){
 
 		dispatch(requestStationDetail());
 
-		return fetch(`https://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${stationAbbr}&key=${DEV_KEY}&json=y`)
+		return fetch(`https://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=${stationAbbr}&key=${api_key}&json=y`)
 			.then( response => response.json(), error => dispatch(requestErrorStationDetail(error)) )
 			.then( json => {
 
@@ -140,7 +140,7 @@ export function fetchStations()
 	{
 		dispatch(requestStations());
 		
-		return fetch(`http://api.bart.gov/api/stn.aspx?cmd=stns&key=${DEV_KEY}&json=y`)
+		return fetch(`http://api.bart.gov/api/stn.aspx?cmd=stns&key=${api_key}&json=y`)
 			.then( response => response.json(), error => dispatch(requestErrorStations(error)) )
 			.then( json =>
 			{
@@ -174,7 +174,7 @@ export function fetchTrainCount()
 {
 	return dispatch =>
 	{
-		return fetch(`http://api.bart.gov/api/bsa.aspx?cmd=count&key=${DEV_KEY}&json=y`)
+		return fetch(`http://api.bart.gov/api/bsa.aspx?cmd=count&key=${api_key}&json=y`)
 			.then( response => response.json(), error => dispatch(requestErrorTrainCount(error)) )
 			.then( json => {
 				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
@@ -213,7 +213,7 @@ export function fetchRTE(station)
 	{
 		dispatch(requestRTE());
 		
-		return fetch(`http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${station}&key=${DEV_KEY}&json=y`)
+		return fetch(`http://api.bart.gov/api/etd.aspx?cmd=etd&orig=${station}&key=${api_key}&json=y`)
 			.then( response => response.json(), error => dispatch(requestErrorRTE(error)) )
 			.then( json => {
 
@@ -260,7 +260,7 @@ export function fetchTripPlanning(startingAbbr,destinationAbbr)
 		{
 			dispatch(requestTripPlanner());
 
-			return fetch(`http://api.bart.gov/api/sched.aspx?cmd=depart&orig=${startingAbbr}&dest=${destinationAbbr}&date=today&time=now&key=${DEV_KEY}&b=1&a=4&json=y`)
+			return fetch(`http://api.bart.gov/api/sched.aspx?cmd=depart&orig=${startingAbbr}&dest=${destinationAbbr}&date=today&time=now&key=${api_key}&b=1&a=4&json=y`)
 			.then( response => response.json() )
 			.then( json => {
 

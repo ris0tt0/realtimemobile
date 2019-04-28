@@ -37,14 +37,14 @@ function LocationDetails({isFetching,details,routes}) {
 LocationDetails.propTypes = {
 	isFetching:PropTypes.bool.isRequired,
 	details:PropTypes.shape({
-		abbr:PropTypes.string.isRequired,
-		address:PropTypes.string.isRequired,
-		city:PropTypes.string.isRequired,
-		county:PropTypes.string.isRequired,
-		name:PropTypes.string.isRequired,
-		platform_info:PropTypes.string.isRequired,
-		state:PropTypes.string.isRequired,
-		zipcode:PropTypes.string.isRequired,
+		abbr:PropTypes.string,
+		address:PropTypes.string,
+		city:PropTypes.string,
+		county:PropTypes.string,
+		name:PropTypes.string,
+		platform_info:PropTypes.string,
+		state:PropTypes.string,
+		zipcode:PropTypes.string,
 	}).isRequired,
 	routes:PropTypes.arrayOf(PropTypes.shape({
 		abbr:PropTypes.string.isRequired,

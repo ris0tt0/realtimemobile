@@ -1,4 +1,3 @@
-import {combineReducers} from 'redux';
 import { 
 	RECIEVE_RTE,
 	RECIEVE_TRIP_PLANNING,
@@ -17,9 +16,12 @@ import {
 	REQUEST_STATION_DETAIL,
 	RECIEVE_STATION_DETAIL,
 	UPDATE_STATION_DETAIL_STATIONID,
-	UPDATE_TRIP_PLANNING_TRIPID} from '../actions/ActionTypes';
+	UPDATE_TRIP_PLANNING_TRIPID,
+	REQUEST_STATION_ACCESS,
+	RECIEVE_STATION_ACCESS} from '../actions/ActionTypes'
 
-	import Logger from 'js-logger';
+	import Logger from 'js-logger'
+	import {combineReducers} from 'redux'
 
 function rte(state = {isFetching:false},action){
 
@@ -84,7 +86,29 @@ function stationsDetail(state={isFetching:false},action){
 		case UPDATE_STATION_DETAIL_STATIONID:
 			state.entities.stations.stationID.station = action.payload;
 		default:
-			return {...state}
+			return {...state};
+	}
+}
+function stationsAccess(state={},action){
+	switch(action.type)
+	{
+		case REQUEST_STATION_ACCESS:
+			return {...state,isFetching:true};
+		case RECIEVE_STATION_ACCESS:
+			// first grab the current entities.
+			const {entities} = state;
+			if(entities)
+			{
+				for(prop in entities)
+				{
+					//merge
+					action.payload.entities[prop] = {...action.payload.entities[prop], ...entities[prop]}
+				}
+			}
+
+			return {...action.payload,isFetching:false};
+		default:
+			return {...state};
 	}
 }
 
@@ -114,7 +138,7 @@ const reducers = combineReducers({
 	routes,
 	stations,
 	stationsDetail,
-	
+	stationsAccess,
 	request_error,
 });
 

@@ -21,6 +21,13 @@ export const RECIEVE_STATION_DETAIL = 'receive station detail';
 export const UPDATE_STATION_DETAIL_STATIONID = 'update station detail stationId';
 
 /**
+ * Gets station access information
+ */
+export const REQUEST_STATION_ACCESS = 'request station access';
+export const REQUEST_ERROR_STATION_ACCESS = 'request error station access';
+export const RECIEVE_STATION_ACCESS = 'recieve station access';
+
+/**
  * the current number of trains
  */
 export const REQUEST_TRAIN_COUNT = 'request train count';

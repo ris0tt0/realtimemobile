@@ -1,6 +1,28 @@
 import Logger from 'js-logger'
 import {normalize, schema} from 'normalizr';
-import { REQUEST_ERROR_ROUTES, RECIEVE_ROUTES, REQUEST_ERROR_STATIONS, RECIEVE_STATIONS, REQUEST_ERROR_TRAIN_COUNT, RECIEVE_TRAIN_COUNT, RECIEVE_RTE, REQUEST_ERROR_RTE, REQUEST_STATIONS, REQUEST_RTE, REQUEST_STATION_DETAIL, REQUEST_ERROR_STATION_DETAIL, RECIEVE_STATION_DETAIL, UPDATE_STATION_DETAIL_STATIONID, REQUEST_ROUTES, REQUEST_TRIP_PLANNING, REQUEST_ERROR_TRIP_PLANNING, RECIEVE_TRIP_PLANNING, UPDATE_TRIP_PLANNING_TRIPID } from './ActionTypes';
+import {
+	REQUEST_ERROR_ROUTES,
+	RECIEVE_ROUTES,
+	REQUEST_ERROR_STATIONS,
+	RECIEVE_STATIONS,
+	REQUEST_ERROR_TRAIN_COUNT,
+	RECIEVE_TRAIN_COUNT,
+	RECIEVE_RTE,
+	REQUEST_ERROR_RTE,
+	REQUEST_STATIONS,
+	REQUEST_RTE,
+	REQUEST_STATION_DETAIL,
+	REQUEST_ERROR_STATION_DETAIL,
+	RECIEVE_STATION_DETAIL,
+	UPDATE_STATION_DETAIL_STATIONID,
+	REQUEST_ROUTES,
+	REQUEST_TRIP_PLANNING,
+	REQUEST_ERROR_TRIP_PLANNING,
+	RECIEVE_TRIP_PLANNING,
+	UPDATE_TRIP_PLANNING_TRIPID,
+	REQUEST_STATION_ACCESS,
+	REQUEST_ERROR_STATION_ACCESS,
+	RECIEVE_STATION_ACCESS } from './ActionTypes';
 
 const api_key = 'MW9S-E7SL-26DU-VV8V';
 
@@ -55,6 +77,70 @@ export function fetchRoutes()
 	}
 }
 
+export function requestStationAccess(){
+	return {
+		type:REQUEST_STATION_ACCESS,
+	}
+}
+
+export function requestErrorStationAccess(error){
+	return {
+		type:REQUEST_ERROR_STATION_ACCESS,
+		payload:error,
+	}
+}
+
+export function recieveStationAccess(normalizedData){
+	return {
+		type:RECIEVE_STATION_ACCESS,
+		payload:normalizedData,
+	}
+}
+
+export function fetchStationAccess(stationAbbr){
+
+	return (dispatch) =>
+	{
+		dispatch(requestStationAccess());
+
+		return fetch(`https://api.bart.gov/api/stn.aspx?cmd=stnaccess&orig=${stationAbbr}&key=${api_key}&json=y`)
+			.then( response => response.json(), error => dispatch(requestErrorStationDetail(error)) )
+			.then( json => {
+				const id = (value,parent,key) => parent.abbr;
+
+				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
+				const bikeStationSchema = new schema.Entity('bike_station_text',undefined,{idAttribute:id});
+				const carShareSchema = new schema.Entity('car_share',undefined,{idAttribute:id});
+				const destinationsSchema = new schema.Entity('destinations',undefined,{idAttribute:id});
+				const enteringSchema = new schema.Entity('entering',undefined,{idAttribute:id});
+				const exitingSchema = new schema.Entity('exiting',undefined,{idAttribute:id});
+				const fillTimeSchema = new schema.Entity('fill_time',undefined,{idAttribute:id});
+				const lockersSchema = new schema.Entity('lockers',undefined,{idAttribute:id});
+				const parkingSchema = new schema.Entity('parking',undefined,{idAttribute:id});
+				const transitInfoSchema = new schema.Entity('transit_info',undefined,{idAttribute:id});
+				const stationSchema = new schema.Entity('station',{
+					bike_station_text:bikeStationSchema,
+					car_share:carShareSchema,
+					destinations:destinationsSchema,
+					entering:enteringSchema,
+					exiting:exitingSchema,
+					fill_time:fillTimeSchema,
+					lockers:lockersSchema,
+					parking:parkingSchema,
+					transit_info:transitInfoSchema,
+					},{idAttribute:item => item.abbr});
+				const stationsSchema = new schema.Entity('stations',{station:stationSchema},{idAttribute:item => `stationID`});
+				const responseSchema = new schema.Entity('response',{stations:stationsSchema,uri:uriSchema},{idAttribute:response => 'responseId'});
+
+				const normalized = normalize(json.root,responseSchema);
+
+				Logger.info(json);
+
+
+				dispatch(recieveStationAccess(normalized));
+			});
+	}
+}
 
 export function requestStationDetail(){
 	return {

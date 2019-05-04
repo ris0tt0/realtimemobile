@@ -107,17 +107,19 @@ export function fetchStationAccess(stationAbbr){
 			.then( response => response.json(), error => dispatch(requestErrorStationDetail(error)) )
 			.then( json => {
 				const id = (value,parent,key) => parent.abbr;
+				// just return the #cdata-section prop
+				const process = value => value['#cdata-section'];
 
 				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
-				const bikeStationSchema = new schema.Entity('bike_station_text',undefined,{idAttribute:id});
-				const carShareSchema = new schema.Entity('car_share',undefined,{idAttribute:id});
-				const destinationsSchema = new schema.Entity('destinations',undefined,{idAttribute:id});
-				const enteringSchema = new schema.Entity('entering',undefined,{idAttribute:id});
-				const exitingSchema = new schema.Entity('exiting',undefined,{idAttribute:id});
-				const fillTimeSchema = new schema.Entity('fill_time',undefined,{idAttribute:id});
-				const lockersSchema = new schema.Entity('lockers',undefined,{idAttribute:id});
-				const parkingSchema = new schema.Entity('parking',undefined,{idAttribute:id});
-				const transitInfoSchema = new schema.Entity('transit_info',undefined,{idAttribute:id});
+				const bikeStationSchema = new schema.Entity('bike_station_text',undefined,{idAttribute:id,processStrategy:process});
+				const carShareSchema = new schema.Entity('car_share',undefined,{idAttribute:id,processStrategy:process});
+				const destinationsSchema = new schema.Entity('destinations',undefined,{idAttribute:id,processStrategy:process});
+				const enteringSchema = new schema.Entity('entering',undefined,{idAttribute:id,processStrategy:process});
+				const exitingSchema = new schema.Entity('exiting',undefined,{idAttribute:id,processStrategy:process});
+				const fillTimeSchema = new schema.Entity('fill_time',undefined,{idAttribute:id,processStrategy:process});
+				const lockersSchema = new schema.Entity('lockers',undefined,{idAttribute:id,processStrategy:process});
+				const parkingSchema = new schema.Entity('parking',undefined,{idAttribute:id,processStrategy:process});
+				const transitInfoSchema = new schema.Entity('transit_info',undefined,{idAttribute:id,processStrategy:process});
 				const stationSchema = new schema.Entity('station',{
 					bike_station_text:bikeStationSchema,
 					car_share:carShareSchema,

@@ -216,7 +216,10 @@ export const stationsDetailStationID = createSelector(getStationsDetailSelector,
 	return '';
 });
 
-export const stationsDetailStation = createSelector([getStationsDetailSelector,stationsDetailStationID],(stationsDetail,stationId) =>{
+export const stationsDetailStation = createSelector(
+	[getStationsDetailSelector,stationsDetailStationID],
+	(stationsDetail,stationId) =>{
+	
 	if(stationsDetail.entities && stationId.length > 0)
 	{
 		return stationsDetail.entities.station[stationId];
@@ -225,20 +228,19 @@ export const stationsDetailStation = createSelector([getStationsDetailSelector,s
 	return {};
 });
 
-export const stationsDetailStationRoutes = createSelector([getRoutesSelector,stationsDetailStation],(routes,station) =>{
-	if(routes.entities && station)
-	{
-		const r = [];
-		if(station.north_routes && station.north_routes.route)
-		{
-			station.north_routes.route.forEach(id => r.push(routes.entities.route[id]))
-		}
-		if(station.south_routes && station.south_routes.route)
-		{
-			station.south_routes.route.forEach(id => r.push(routes.entities.route[id]))
-		}
+export const stationsDetailStationRoutes = createSelector(
+	[getRoutesSelector,getStationsDetailSelector,stationsDetailStation],
+	(routes,stationsDetail,station) =>{
 
-		return r;
+	if(routes.entities &&  stationsDetail.entities && station)
+	{
+		const {route} = routes.entities;
+		const {north_routes,south_routes} = stationsDetail.entities;
+
+		return [
+			...north_routes[station.abbr].route.map(id => route[id]),
+			...south_routes[station.abbr].route.map(id => route[id])
+		];
 	}
 
 	return [];

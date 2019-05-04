@@ -78,11 +78,19 @@ function stationsDetail(state={isFetching:false},action){
 		case REQUEST_STATION_DETAIL:
 			return {...state,isFetching:true}
 		case RECIEVE_STATION_DETAIL:
-			action.payload.entities.station =
-				state.entities && state.entities.station ? 
-				{...action.payload.entities.station, ...state.entities.station} :
-				action.payload.entities.station;
-			return {...action.payload,isFetching:false}
+			const {entities} = state;
+			if(entities)
+			{
+				for(prop in entities)
+				{
+					//ignore stations because we want the server response data.
+					if( prop === 'stations') continue;
+
+					action.payload.entities[prop] = {...action.payload.entities[prop], ...entities[prop]}
+				}
+			}
+
+			return {...action.payload,isFetching:false};
 		case UPDATE_STATION_DETAIL_STATIONID:
 			state.entities.stations.stationID.station = action.payload;
 		default:
@@ -101,6 +109,8 @@ function stationsAccess(state={},action){
 			{
 				for(prop in entities)
 				{
+					//ignore stations because we want the server response data.
+					if( prop === 'stations') continue;
 					//merge
 					action.payload.entities[prop] = {...action.payload.entities[prop], ...entities[prop]}
 				}

@@ -134,9 +134,6 @@ export function fetchStationAccess(stationAbbr){
 
 				const normalized = normalize(json.root,responseSchema);
 
-				Logger.info(json);
-
-
 				dispatch(recieveStationAccess(normalized));
 			});
 	}
@@ -187,12 +184,27 @@ export function fetchStationDetail(stationAbbr){
 			.then( response => response.json(), error => dispatch(requestErrorStationDetail(error)) )
 			.then( json => {
 
+				const id = (value,parent,key) => parent.abbr;
+
+				const northRoutesSchema = new schema.Entity('north_routes',{},{idAttribute:id});
+				const southRoutesSchema = new schema.Entity('south_routes',{},{idAttribute:id});
+
+				const northPlatformsSchema = new schema.Entity('north_platforms',{},{idAttribute:id});
+				const southPlatformsSchema = new schema.Entity('south_platforms',{},{idAttribute:id});
+
 				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
-				const stationSchema = new schema.Entity('station',undefined,{idAttribute:item => item.abbr});
+				const stationSchema = new schema.Entity('station',{
+					north_routes:northRoutesSchema,
+					south_routes:southRoutesSchema,
+					north_platforms:northPlatformsSchema,
+					south_platforms:southPlatformsSchema,
+				},{idAttribute:item => item.abbr});
 				const stationsSchema = new schema.Entity('stations',{station:stationSchema},{idAttribute:item => `stationID`})
 				const responseSchema = new schema.Entity('response',{stations:stationsSchema,uri:uriSchema},{idAttribute:response => 'responseId'});
 
 				const normalized = normalize(json.root,responseSchema);
+
+				Logger.info(json.root);
 
 				dispatch(recieveStationDetail(normalized));
 			});

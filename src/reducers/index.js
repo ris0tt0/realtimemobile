@@ -18,7 +18,8 @@ import {
 	UPDATE_STATION_DETAIL_STATIONID,
 	UPDATE_TRIP_PLANNING_TRIPID,
 	REQUEST_STATION_ACCESS,
-	RECIEVE_STATION_ACCESS} from '../actions/ActionTypes'
+	RECIEVE_STATION_ACCESS,
+	UPDATE_STATION_ACCESS_STATION_ID} from '../actions/ActionTypes'
 
 	import Logger from 'js-logger'
 	import {combineReducers} from 'redux'
@@ -117,6 +118,8 @@ function stationsAccess(state={},action){
 			}
 
 			return {...action.payload,isFetching:false};
+		case UPDATE_STATION_ACCESS_STATION_ID:
+			state.entities.stations.stationID.station = action.payload;
 		default:
 			return {...state};
 	}

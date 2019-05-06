@@ -22,7 +22,9 @@ import {
 	UPDATE_TRIP_PLANNING_TRIPID,
 	REQUEST_STATION_ACCESS,
 	REQUEST_ERROR_STATION_ACCESS,
-	RECIEVE_STATION_ACCESS } from './ActionTypes';
+	RECIEVE_STATION_ACCESS,
+	UPDATE_STATION_ACCESS_STATION_ID,
+ } from './ActionTypes';
 
 const api_key = 'MW9S-E7SL-26DU-VV8V';
 
@@ -97,10 +99,26 @@ export function recieveStationAccess(normalizedData){
 	}
 }
 
+export function updateStationAccessStationId(abbr){
+	return {
+		type:UPDATE_STATION_ACCESS_STATION_ID,
+		payload:abbr,
+	}
+}
+
 export function fetchStationAccess(stationAbbr){
 
-	return (dispatch) =>
+	return (dispatch,getState) =>
 	{
+		const {stationsAccess} = getState();
+
+		if(stationsAccess.entities &&
+			stationsAccess.entities.station &&
+			stationsAccess.entities.station[stationAbbr])
+		{
+			return dispatch(updateStationDetailStationID(stationAbbr));
+		}
+
 		dispatch(requestStationAccess());
 
 		return fetch(`https://api.bart.gov/api/stn.aspx?cmd=stnaccess&orig=${stationAbbr}&key=${api_key}&json=y`)

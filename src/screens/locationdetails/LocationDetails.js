@@ -5,7 +5,7 @@ import Logger from 'js-logger'
 import { WaitingScreen } from '../../components';
 import {RouteLineArrows} from '../../components/AIcons';
 
-function LocationDetails({isFetching,details,routes,stationsAccess}) {
+function LocationDetails({isFetching,details,routes,access}) {
 
 	if(isFetching) return <WaitingScreen />
 
@@ -14,22 +14,83 @@ function LocationDetails({isFetching,details,routes,stationsAccess}) {
 			<RouteLineArrows color={route.hexcolor} />
 			<Text style={{paddingLeft:4}}>{route.name}</Text>
 		</View>
-		));
+	));
 
-		const sections=[
-			{title: 'Title1', data: [<View><Text>jonathan gee</Text></View>]},
-			// {title: 'Title1', data: ['item1', 'item2']},
-			// {title: 'Title2', data: ['item3', 'item4']},
-			// {title: 'Title3', data: ['item5', 'item6']},
-		];
+
+	const listHeaderComponent = (
+		<View>
+			<Text>{details.name} {details.link}</Text>
+			<Text>{details.address}</Text>
+			<Text>{details.city}, {details.state}, {details.zipcode}</Text>
+			<Text>{details.cross_street}</Text>
+		</View>
+	)
+
+	const listFooterComponent = (
+		<View style={{flexDirection:'column'}}>{routeNames}</View>
+	)
+
+	const accessList = [];
+
+	if(access.bikeStation && access.bikeStation.length > 0)
+	{
+		accessList.push(<Text>{access.bikeStation}</Text>);
+	}
+	if(access.carShare.length > 0)
+	{
+		accessList.push(<Text>{access.carShare}</Text>);
+	}
+	if(access.destinations.length > 0)
+	{
+		accessList.push(<Text>{access.destinations}</Text>);
+	}
+	if(access.entering.length > 0)
+	{
+		accessList.push(<Text>{access.entering}</Text>);
+	}
+	if( access.exiting.length > 0)
+	{
+		accessList.push(<Text>{access.exiting}</Text>);
+	}
+	if(access.fillTime.length > 0)
+	{
+		accessList.push(<Text>{access.fillTime}</Text>);
+	}
+	if(access.lockers.length > 0)
+	{
+		accessList.push(<Text>{access.lockers}</Text>);
+	}
+	if( access.parking.length > 0)
+	{
+		accessList.push(<Text>{access.parking}</Text>);
+	}
+	if(access.transitInfo.length > 0)
+	{
+		accessList.push(<Text>{access.transitInfo}</Text>);
+	}
+
+	const sections=[
+		{title: 'DETAILS', data: [
+			<Text>{details.intro}</Text>,
+			<Text>{details.attraction}</Text>,
+			<Text>{details.food}</Text>,
+			<Text>{details.shopping}</Text>,
+			<Text>{details.platform_info}</Text>
+		]},
+		{title: 'ACCESS', data: accessList},
+		// {title: 'Title2', data: ['item3', 'item4']},
+		// {title: 'Title3', data: ['item5', 'item6']},
+	];
 
 	return (
 		<View style={{flex:1}}>
 			<SectionList
 				renderItem={({item, index, section}) => item}
 				renderSectionHeader={({section: {title}}) => (
-					<Text style={{fontWeight: 'bold'}}>{title}</Text>
+					<Text style={{backgroundColor:'lightblue',fontWeight: 'bold'}}>{title}</Text>
 				)}
+				ListHeaderComponent={listHeaderComponent}
+				ListFooterComponent={listFooterComponent}
 				sections={sections}
 			/>
 		</View>

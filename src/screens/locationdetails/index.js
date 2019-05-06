@@ -14,13 +14,13 @@ const mapStateToProps = state =>{
 
 	const details = stationsDetailStation(state);
 	const routes = stationsDetailStationRoutes(state);
-	const stationsAccess = stationsAccessData(state);
+	const access = stationsAccessData(state);
 
 	return {
 		isFetching:stationsDetailIsFetching(state) || routesIsFetching(state) || stationsAccessIsFetching(state),
 		details,
 		routes,
-		stationsAccess,
+		access,
 	};
 }
 

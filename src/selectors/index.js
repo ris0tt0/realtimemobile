@@ -218,12 +218,41 @@ export const stationsDetailStationID = createSelector(getStationsDetailSelector,
 });
 
 export const stationsDetailStation = createSelector(
-	[getStationsDetailSelector,stationsDetailStationID],
-	(stationsDetail,stationId) =>{
+	[getStationsDetailSelector,stationsDetailStationID,getRoutesSelector],
+	(stationsDetail,stationId,routes) =>{
 	
 	if(stationsDetail.entities && stationId.length > 0)
 	{
-		return stationsDetail.entities.station[stationId];
+		const {route} = routes.entities;
+		const {entities} = stationsDetail;
+
+		const station = entities.station[stationId];
+		
+		const north_routes = entities.north_routes && entities.north_routes[stationId] ? entities.north_routes[stationId].map(id => route[id]) : [];
+		const south_routes = entities.south_routes && entities.south_routes[stationId] ? entities.south_routes[stationId].map(id => route[id]) : [];
+
+		const north_platforms = entities.north_platforms && entities.north_platforms[stationId] ? [...entities.north_platforms[stationId]] : [];
+		const south_platforms = entities.south_platforms && entities.south_platforms[stationId] ? [...entities.south_platforms[stationId]] : [];
+		const intro = entities.intro[stationId];
+		const cross_street = entities.cross_street[stationId];
+		const food = entities.food[stationId];
+		const shopping = entities.shopping[stationId];
+		const attraction = entities.attraction[stationId];
+		const link = entities.link[stationId];
+		
+		return {
+			...station,
+			north_routes,
+			south_routes,
+			north_platforms,
+			south_platforms,
+			intro,
+			cross_street,
+			food,
+			shopping,
+			attraction,
+			link,
+		};
 	}
 
 	return {};

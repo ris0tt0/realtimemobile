@@ -4,6 +4,7 @@ import {View,Text,SectionList	} from 'react-native'
 import Logger from 'js-logger'
 import { WaitingScreen } from '../../components';
 import {RouteLineArrows} from '../../components/AIcons';
+import HTML from 'react-native-render-html';
 
 function LocationDetails({isFetching,details,routes,access}) {
 
@@ -34,48 +35,48 @@ function LocationDetails({isFetching,details,routes,access}) {
 
 	if(access.bikeStation && access.bikeStation.length > 0)
 	{
-		accessList.push(<Text>{access.bikeStation}</Text>);
+		accessList.push(<HTML html={access.bikeStation} />);
 	}
 	if(access.carShare.length > 0)
 	{
-		accessList.push(<Text>{access.carShare}</Text>);
+		accessList.push(<HTML html={access.carShare} />);
 	}
 	if(access.destinations.length > 0)
 	{
-		accessList.push(<Text>{access.destinations}</Text>);
+		accessList.push(<HTML html={access.destinations} />);
 	}
 	if(access.entering.length > 0)
 	{
-		accessList.push(<Text>{access.entering}</Text>);
+		accessList.push(<HTML html={access.entering} />);
 	}
 	if( access.exiting.length > 0)
 	{
-		accessList.push(<Text>{access.exiting}</Text>);
+		accessList.push(<HTML html={access.exiting} />);
 	}
 	if(access.fillTime.length > 0)
 	{
-		accessList.push(<Text>{access.fillTime}</Text>);
+		accessList.push(<HTML html={access.fillTime} />);
 	}
 	if(access.lockers.length > 0)
 	{
-		accessList.push(<Text>{access.lockers}</Text>);
+		accessList.push(<HTML html={access.lockers} />);
 	}
 	if( access.parking.length > 0)
 	{
-		accessList.push(<Text>{access.parking}</Text>);
+		accessList.push(<HTML html={access.parking} />);
 	}
 	if(access.transitInfo.length > 0)
 	{
-		accessList.push(<Text>{access.transitInfo}</Text>);
+		accessList.push(<HTML html={access.transitInfo} />);
 	}
 
 	const sections=[
 		{title: 'DETAILS', data: [
 			<Text>{details.intro}</Text>,
-			<Text>{details.attraction}</Text>,
-			<Text>{details.food}</Text>,
-			<Text>{details.shopping}</Text>,
-			<Text>{details.platform_info}</Text>
+			<HTML html={details.attraction} />,
+			<HTML html={details.food} />,
+			<HTML html={details.shopping} />,
+			<HTML html={details.platform_info} />,
 		]},
 		{title: 'ACCESS', data: accessList},
 		// {title: 'Title2', data: ['item3', 'item4']},

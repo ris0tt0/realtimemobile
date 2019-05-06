@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {View,Text} from 'react-native'
+import {View,Text,SectionList	} from 'react-native'
 import Logger from 'js-logger'
 import { WaitingScreen } from '../../components';
 import {RouteLineArrows} from '../../components/AIcons';
 
-function LocationDetails({isFetching,details,routes}) {
+function LocationDetails({isFetching,details,routes,stationsAccess}) {
 
 	if(isFetching) return <WaitingScreen />
 
@@ -16,21 +16,47 @@ function LocationDetails({isFetching,details,routes}) {
 		</View>
 		));
 
-	// Logger.info(routes);
+		const sections=[
+			{title: 'Title1', data: [<View><Text>jonathan gee</Text></View>]},
+			// {title: 'Title1', data: ['item1', 'item2']},
+			// {title: 'Title2', data: ['item3', 'item4']},
+			// {title: 'Title3', data: ['item5', 'item6']},
+		];
 
 	return (
 		<View style={{flex:1}}>
-			<Text>{details.name}</Text>
-			<Text>{details.address}</Text>
-			<Text>{details.city}, {details.state}, {details.zipcode}</Text>
-			<Text>{details.cross_street['#cdata-section']}</Text>
-			<Text style={{color:'darkgray', fontSize:10}}>info:</Text>
-			<Text>{details.intro['#cdata-section']}</Text>
-			<Text style={{color:'darkgray', fontSize:10}}>platform info:</Text>
-			<Text>{details.platform_info}</Text>
-			<Text style={{color:'darkgray', fontSize:10}}>lines serving this station:</Text>
-			<View style={{flexDirection:'column'}}>{routeNames}</View>
+			<SectionList
+				renderItem={({item, index, section}) => item}
+				renderSectionHeader={({section: {title}}) => (
+					<Text style={{fontWeight: 'bold'}}>{title}</Text>
+				)}
+				sections={sections}
+			/>
 		</View>
+
+
+		// <View style={{flex:1}}>
+		// 	<Text>{details.name}</Text>
+		// 	<Text>{details.address}</Text>
+		// 	<Text>{details.city}, {details.state}, {details.zipcode}</Text>
+		// 	<Text>{details.cross_street['#cdata-section']}</Text>
+		// 	<Text style={{color:'darkgray', fontSize:10}}>info:</Text>
+		// 	<Text>{details.intro['#cdata-section']}</Text>
+		// 	<Text style={{color:'darkgray', fontSize:10}}>platform info:</Text>
+		// 	<Text>{details.platform_info}</Text>
+		// 	<Text style={{color:'darkgray', fontSize:10}}>lines serving this station:</Text>
+		// 	<View style={{flexDirection:'column'}}>{routeNames}</View>
+		// 	<Text>{stationsAccess.bikeStation}</Text>
+		// 	<Text>{stationsAccess.carShare}</Text>
+		// 	<Text>{stationsAccess.destinations}</Text>
+		// 	{/* <Text>{stationsAccess.entering.replace(/(<([^>]+)>)/ig,'')}</Text> */}
+		// 	<Text>{stationsAccess.entering}</Text>
+		// 	<Text>{stationsAccess.exiting}</Text>
+		// 	<Text>{stationsAccess.fillTime}</Text>
+		// 	<Text>{stationsAccess.lockers}</Text>
+		// 	<Text>{stationsAccess.parking}</Text>
+		// 	<Text>{stationsAccess.transitInfo}</Text>
+		// </View>
 	)
 }
 

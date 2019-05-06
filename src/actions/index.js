@@ -107,7 +107,7 @@ export function fetchStationAccess(stationAbbr){
 			.then( response => response.json(), error => dispatch(requestErrorStationDetail(error)) )
 			.then( json => {
 				const id = (value,parent,key) => parent.abbr;
-				// just return the #cdata-section prop
+				// just return the #cdata-section property
 				const process = value => value['#cdata-section'];
 
 				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
@@ -187,12 +187,21 @@ export function fetchStationDetail(stationAbbr){
 			.then( json => {
 
 				const id = (value,parent,key) => parent.abbr;
+				const processCdata = value => value['#cdata-section'];
+				const processRoutes = value => value.route;
+				const processPlatform = value => value.platform;
 
-				const northRoutesSchema = new schema.Entity('north_routes',{},{idAttribute:id});
-				const southRoutesSchema = new schema.Entity('south_routes',{},{idAttribute:id});
+				const northRoutesSchema = new schema.Entity('north_routes',{},{idAttribute:id,processStrategy:processRoutes});
+				const southRoutesSchema = new schema.Entity('south_routes',{},{idAttribute:id,processStrategy:processRoutes});
 
-				const northPlatformsSchema = new schema.Entity('north_platforms',{},{idAttribute:id});
-				const southPlatformsSchema = new schema.Entity('south_platforms',{},{idAttribute:id});
+				const northPlatformsSchema = new schema.Entity('north_platforms',{},{idAttribute:id,processStrategy:processPlatform});
+				const southPlatformsSchema = new schema.Entity('south_platforms',{},{idAttribute:id,processStrategy:processPlatform});
+				const introSchema = new schema.Entity('intro',{},{idAttribute:id,processStrategy:processCdata});
+				const crossStreetSchema = new schema.Entity('cross_street',{},{idAttribute:id,processStrategy:processCdata});
+				const foodSchema = new schema.Entity('food',{},{idAttribute:id,processStrategy:processCdata});
+				const shoppingSchema = new schema.Entity('shopping',{},{idAttribute:id,processStrategy:processCdata});
+				const attractionSchema = new schema.Entity('attraction',{},{idAttribute:id,processStrategy:processCdata});
+				const linkSchema = new schema.Entity('link',{},{idAttribute:id,processStrategy:processCdata});
 
 				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
 				const stationSchema = new schema.Entity('station',{
@@ -200,18 +209,21 @@ export function fetchStationDetail(stationAbbr){
 					south_routes:southRoutesSchema,
 					north_platforms:northPlatformsSchema,
 					south_platforms:southPlatformsSchema,
+					intro:introSchema,
+					cross_street:crossStreetSchema,
+					food:foodSchema,
+					shopping:shoppingSchema,
+					attraction:attractionSchema,
+					link:linkSchema,
 				},{idAttribute:item => item.abbr});
 				const stationsSchema = new schema.Entity('stations',{station:stationSchema},{idAttribute:item => `stationID`})
 				const responseSchema = new schema.Entity('response',{stations:stationsSchema,uri:uriSchema},{idAttribute:response => 'responseId'});
 
 				const normalized = normalize(json.root,responseSchema);
 
-				Logger.info(json.root);
-
 				dispatch(recieveStationDetail(normalized));
 			});
 	}
-
 }
 
 export function requestStations(){

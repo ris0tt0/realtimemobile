@@ -193,8 +193,6 @@ export const rteLocationScreenData = createSelector(
 		return {date,time,message,name,abbr,platformSections};
 });
 
-export const rteLocationStationsData = createSelector([]);
-
 const getStationsDetailSelector = state => state.stationsDetail
 
 export const stationsDetailIsFetching = createSelector(getStationsDetailSelector,stationsDetail =>{
@@ -208,9 +206,12 @@ export const stationsDetailIsFetching = createSelector(getStationsDetailSelector
 });
 
 export const stationsDetailStationID = createSelector(getStationsDetailSelector,stationsDetail =>{
-	if(stationsDetail.entities && stationsDetail.entities.stations && stationsDetail.entities.stations.stationID.station)
+
+	const {entities} = stationsDetail;
+
+	if(entities && entities.stations && entities.stations.stationID)
 	{
-		return stationsDetail.entities.stations.stationID.station;
+		return entities.stations.stationID.station;
 	}
 
 	return '';
@@ -234,16 +235,67 @@ export const stationsDetailStationRoutes = createSelector(
 
 	if(routes.entities &&  stationsDetail.entities && station)
 	{
+		const {abbr} = station;
 		const {route} = routes.entities;
 		const {north_routes,south_routes} = stationsDetail.entities;
 
+		// we need to null check, as some stations don't have both route
+		// directions.
+		const nr = north_routes && north_routes[abbr] ? north_routes[abbr] : [];
+		const sr = south_routes && south_routes[abbr] ? south_routes[abbr] : [];
+		// return the all the routes
 		return [
-			...north_routes[station.abbr].route.map(id => route[id]),
-			...south_routes[station.abbr].route.map(id => route[id])
+			...nr.map(id => route[id]),
+			...sr.map(id => route[id]),
 		];
 	}
 
 	return [];
+});
+
+const getStationsAccessSelector = state => state.stationsAccess;
+
+export const stationsAccessIsFetching = createSelector(getStationsAccessSelector,stationsAccess =>{
+
+	if(stationsAccess.hasOwnProperty('isFetching'))
+	{
+		return stationsAccess.isFetching;
+	}
+
+	return false;
+});
+
+export const stationsAccessStationID = createSelector(getStationsAccessSelector,stationsAccess =>{
+	const {entities} = stationsAccess;
+
+	if(entities)
+	{
+		return entities.stations.stationID.station;
+	}
+
+	return '';
+});
+
+export const stationsAccessData = createSelector([getStationsAccessSelector,stationsAccessStationID],(stationsAccess,stationID) =>{
+
+	const {entities} = stationsAccess;
+
+	if( entities)
+	{
+		return {
+			bikeStation:entities.bike_station_text[stationID],
+			carShare:entities.car_share[stationID],
+			destinations:entities.destinations[stationID],
+			entering:entities.entering[stationID],
+			exiting:entities.exiting[stationID],
+			fillTime:entities.fill_time[stationID],
+			lockers:entities.lockers[stationID],
+			parking:entities.parking[stationID],
+			transitInfo:entities.transit_info[stationID],
+		};
+	}
+
+	return {};
 });
 
 const getTripPlannerSelector = state => state.tripplanner;

@@ -6,9 +6,13 @@ import LocationScreen from './screens/location/'
 import LocationDetails from './screens/locationdetails/'
 import PlannerDetailsScreen from './screens/plannerdetails/'
 import PlannerResultsScreen from './screens/plannerresults/'
+import AdvisoryScreen from './screens/advisory/'
 import { TabBarIcon } from './components/AIcons'
 import { Platform } from 'expo-core'
 import React from 'react'
+import store from './store'
+import Logger from 'js-logger'
+import { fetchServiceAdvisory, fetchElevatorInfo } from './actions';
 
 const HomeStack = createStackNavigator({
 	Home:HomeScreen,
@@ -58,15 +62,44 @@ StationStack.navigationOptions = {
 		<TabBarIcon
 			focused={focused}
 			name={Platform.OS === 'ios'
-				? `ios-train` 
+				? 'ios-train'
 				: 'md-train'
 			}
 		/>
 	),
 };
 
+const AdvisoryStack = createStackNavigator({
+	Advisory:AdvisoryScreen,
+});
+
+AdvisoryStack.navigationOptions = {
+
+	tabBarLabel:'Advisory',
+	tabBarIcon:({focused}) => (
+		<TabBarIcon
+			focused={focused}
+			name={Platform.OS === 'ios'
+				? 'ios-alert'
+				: 'md-alert'
+			}
+		/>
+	),
+	tabBarOnPress:({navigation,defaultHandler}) => {
+		/**
+		 * TODO need flag to determine if we are in flight
+		 * to prevent additinal api calls.
+		 */
+		store.dispatch(fetchServiceAdvisory());
+		store.dispatch(fetchElevatorInfo());
+
+		defaultHandler();
+	},
+}
+
 export default createBottomTabNavigator({
 	HomeStack,
 	StationStack,
 	TripPlannerStack,
+	AdvisoryStack,
 })

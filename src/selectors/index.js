@@ -427,3 +427,79 @@ export const tripPlannerTripDetails = createSelector(
 		return {};
 	}
 )
+
+const getServiceAdvisorySelector = state => state.serviceAdvisory;
+
+export const serviceAdvisoryIsFetching = createSelector(getServiceAdvisorySelector,serviceAdvisory =>{
+
+	if(serviceAdvisory.hasOwnProperty('isFetching'))
+	{
+		return serviceAdvisory.isFetching;
+	}
+	return false;
+});
+
+export const serviceAdvisoryResponse = createSelector(getServiceAdvisorySelector,serviceAdvisory =>{
+	const {entities,result} = serviceAdvisory;
+	if( entities && result)
+	{
+		const response = entities.response[result];
+		const bsa = response.bsa.map(id =>
+		{
+			const data = entities.bsa[id];
+			const description = entities.description[data.description];
+			const sms_text = entities.sms_text[data.sms_text];
+
+			return {
+				...data,
+				description,
+				sms_text,
+			};
+		});
+
+		return {
+			...response,
+			bsa,
+		}
+	}
+
+	return {};
+})
+
+
+const getElevatorInfoSelector = state => state.elevatorInfo;
+
+export const elevatorInfoIsFetching = createSelector(getElevatorInfoSelector,elevatorInfo =>{
+	if(elevatorInfo.hasOwnProperty('isFetching'))
+	{
+		return elevatorInfo.isFetching;
+	}
+	return false;
+});
+
+export const elevatorInfoResponse = createSelector(getElevatorInfoSelector,elevatorInfo =>{
+
+	const {entities,result} = elevatorInfo;
+	if( entities && result)
+	{
+		const response = entities.response[result];
+		const bsa = response.bsa.map(id =>{
+			const data = entities.bsa[id];
+			const description = entities.description[data.description];
+			const sms_text = entities.sms_text[data.sms_text];
+
+			return {
+				...data,
+				description,
+				sms_text,
+			}
+		});
+
+		return {
+			...response,
+			bsa,
+		}
+	}
+
+	return {};
+});

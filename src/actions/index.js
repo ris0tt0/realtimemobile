@@ -24,6 +24,11 @@ import {
 	REQUEST_ERROR_STATION_ACCESS,
 	RECIEVE_STATION_ACCESS,
 	UPDATE_STATION_ACCESS_STATION_ID,
+	REQUEST_SERVICE_ADVISORY,
+	RECIEVE_SERVICE_ADVISORY,
+	REQUEST_ELEVATOR_INFO,
+	REQUEST_ERROR_ELEVATOR_INFO,
+	RECIEVE_ELEVATOR_INFO,
  } from './ActionTypes';
 
 const api_key = 'MW9S-E7SL-26DU-VV8V';
@@ -112,9 +117,9 @@ export function fetchStationAccess(stationAbbr){
 	{
 		const {stationsAccess} = getState();
 
-		if(stationsAccess.entities &&
-			stationsAccess.entities.station &&
-			stationsAccess.entities.station[stationAbbr])
+		if(	stationsAccess.entities &&
+				stationsAccess.entities.station &&
+				stationsAccess.entities.station[stationAbbr])
 		{
 			return dispatch(updateStationDetailStationID(stationAbbr));
 		}
@@ -188,10 +193,9 @@ export function fetchStationDetail(stationAbbr){
 
 	return (dispatch,getState) =>
 	{
-
 		const {stationsDetail} = getState();
 
-		if( stationsDetail.entities && 
+		if(	stationsDetail.entities && 
 				stationsDetail.entities.station &&
 				stationsDetail.entities.station[stationAbbr])
 		{
@@ -423,5 +427,108 @@ export function setTripPLanningTripId(id)
 	return {
 		type:UPDATE_TRIP_PLANNING_TRIPID,
 		payload:id,
+	}
+}
+
+export function requestServiceAdvisory()
+{
+	return {
+		type:REQUEST_SERVICE_ADVISORY,
+	}
+}
+
+export function requestErrorServiceAdvisory(error)
+{
+	return {
+		type:REQUEST_ERROR_SERVICE_ADVISORY,
+		payload:error,
+	}
+}
+
+export function recieveServiceAdvisory(normalizedData)
+{
+	return {
+		type:RECIEVE_SERVICE_ADVISORY,
+		payload:normalizedData,
+	}
+}
+
+export function fetchServiceAdvisory()
+{
+	return (dispatch) => {
+		dispatch(requestServiceAdvisory());
+
+		return fetch(`http://api.bart.gov/api/bsa.aspx?cmd=bsa&orig=all&key=${api_key}&json=y`)
+		.then( response => response.json() )
+		.then( json => {
+			// generate id from array index.
+			const id = (value,parent) => `${parent.bsa.indexOf(value)}-Id`;
+			// create id that is used in basid
+			const processBSA = (value,parent) => ({...value,id:`${parent.bsa.indexOf(value)}-Id`})
+			const bsaid = (value,parent) => `${parent.id}`;
+			// just retudn the cdata value.
+			const processCdata = value => value['#cdata-section'];
+
+			const uriSchema = new schema.Entity('uri',{},{idAttribute:() => 'urlId',processStrategy:processCdata});
+			const descriptionSchema = new schema.Entity('description',{},{processStrategy:processCdata,idAttribute:bsaid});
+			const smsTextSchema = new schema.Entity('sms_text',{},{processStrategy:processCdata,idAttribute:bsaid});
+			const bsaSchema = new schema.Entity('bsa',{description:descriptionSchema,sms_text:smsTextSchema},{idAttribute:id,processStrategy:processBSA});
+			const responseSchema = new schema.Entity('response',{uri:uriSchema,bsa:[bsaSchema]},{idAttribute:() => 'responseId'});
+			const normalized = normalize(json.root, responseSchema);
+
+			dispatch(recieveServiceAdvisory(normalized));
+		});
+	}
+}
+
+export function requestElevatorInfo()
+{
+	return {
+		type:REQUEST_ELEVATOR_INFO,
+	}
+}
+
+export function requestErrorElevatorInfo(error)
+{
+	return {
+		type:REQUEST_ERROR_ELEVATOR_INFO,
+		payload:error,
+	}
+}
+
+export function recieveElevatorInfo(normalizedData)
+{
+	return {
+		type:RECIEVE_ELEVATOR_INFO,
+		payload:normalizedData,
+	}
+}
+
+export function fetchElevatorInfo()
+{
+	return (dispatch) => {
+		dispatch(requestElevatorInfo());
+
+		return fetch(`http://api.bart.gov/api/bsa.aspx?cmd=elev&key=${api_key}&json=y`)
+		.then( response => response.json() )
+		.then( json => {
+			// generate id from array index.
+			const id = (value,parent) => `${parent.bsa.indexOf(value)}-Id`;
+			// create id that is used in basid
+			const processBSA = (value,parent) => ({...value,id:`${parent.bsa.indexOf(value)}-Id`})
+			const bsaid = (value,parent) => `${parent.id}`;
+			// just retudn the cdata value.
+			const processCdata = value => value['#cdata-section'];
+
+			const uriSchema = new schema.Entity('uri',{},{idAttribute:() => 'urlId',processStrategy:processCdata});
+			const descriptionSchema = new schema.Entity('description',{},{processStrategy:processCdata,idAttribute:bsaid});
+			const smsTextSchema = new schema.Entity('sms_text',{},{processStrategy:processCdata,idAttribute:bsaid});
+			const bsaSchema = new schema.Entity('bsa',{description:descriptionSchema,sms_text:smsTextSchema},{idAttribute:id,processStrategy:processBSA});
+			const responseSchema = new schema.Entity('response',{uri:uriSchema,bsa:[bsaSchema]},{idAttribute:() => 'responseId'});
+			const normalized = normalize(json.root, responseSchema);
+
+			dispatch(recieveElevatorInfo(normalized));
+			}
+		);
 	}
 }

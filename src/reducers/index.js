@@ -19,10 +19,17 @@ import {
 	UPDATE_TRIP_PLANNING_TRIPID,
 	REQUEST_STATION_ACCESS,
 	RECIEVE_STATION_ACCESS,
-	UPDATE_STATION_ACCESS_STATION_ID} from '../actions/ActionTypes'
+	UPDATE_STATION_ACCESS_STATION_ID,
+	REQUEST_SERVICE_ADVISORY,
+	RECIEVE_SERVICE_ADVISORY,
+	REQUEST_ERROR_SERVICE_ADVISORY,
+	REQUEST_ELEVATOR_INFO,
+	RECIEVE_ELEVATOR_INFO,
+	REQUEST_ERROR_ELEVATOR_INFO,
+} from '../actions/ActionTypes'
 
-	import Logger from 'js-logger'
-	import {combineReducers} from 'redux'
+import Logger from 'js-logger'
+import {combineReducers} from 'redux'
 
 function rte(state = {isFetching:false},action){
 
@@ -125,6 +132,32 @@ function stationsAccess(state={},action){
 	}
 }
 
+function serviceAdvisory(state ={}, action)
+{
+	switch(action.type)
+	{
+		case REQUEST_SERVICE_ADVISORY:
+			return {...state,isFetching:true};
+		case RECIEVE_SERVICE_ADVISORY:
+			return {...action.payload,isFetching:false};
+		default:
+			return {...state};
+	}
+}
+
+function elevatorInfo(state ={}, action)
+{
+	switch(action.type)
+	{
+		case REQUEST_ELEVATOR_INFO:
+			return {...state,isFetching:true};
+		case RECIEVE_ELEVATOR_INFO:
+			return {...action.payload,isFetching:false};
+		default:
+			return {...state};
+	}
+}
+
 function request_error(state = {}, action)
 {
 	switch(action.type)
@@ -135,6 +168,8 @@ function request_error(state = {}, action)
 		case REQUEST_ERROR_TRAIN_COUNT:
 		case REQUEST_ERROR_TRIP_PLANNING:
 		case REQUEST_ERROR_STATION_DETAIL:
+		case REQUEST_ERROR_ELEVATOR_INFO:
+		case REQUEST_ERROR_SERVICE_ADVISORY:
 		
 			Logger.debug('request error');
 			Logger.info(action.payload);
@@ -153,6 +188,8 @@ const reducers = combineReducers({
 	stationsDetail,
 	stationsAccess,
 	request_error,
+	serviceAdvisory,
+	elevatorInfo,
 });
 
 export default reducers;

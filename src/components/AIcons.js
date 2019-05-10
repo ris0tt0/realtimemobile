@@ -53,5 +53,52 @@ function RouteLineDetailBike(){
 		);
 }
 
+function SearchBarIcon(){
+	return(
+		<Ionicons 
+				style={{padding:5}}
+				name={Platform.OS === 'ios' ? 'ios-search' : 'md-search'}
+				size={20}
+				color="#000"/>
+	)
+}
 
-export {TabBarIcon,RouteLineArrows,RouteLineDetailBike};
+function ListItemArrowForward()
+{
+	return(
+		<Ionicons
+			name={Platform.OS === 'ios' ? 'ios-arrow-forward' : 'md-search'}
+			size={20}
+			color="gray" />
+	)
+}
+
+function StationRefresh()
+{
+	return(
+		<Ionicons
+			name={Platform.OS === 'ios' ? 'ios-refresh' : 'md-refresh'}
+			size={20}
+			color={Colors.tintColor} />
+	)
+}
+
+function StationInfo()
+{
+	return(
+		<Ionicons
+			name={Platform.OS === 'ios' ? 'ios-information-circle' : 'md-information-circle'}
+			size={20}
+			color={Colors.tintColor} />
+	)
+}
+
+export {
+	ListItemArrowForward,
+	SearchBarIcon,
+	TabBarIcon,
+	RouteLineArrows,
+	RouteLineDetailBike,
+	StationInfo,
+	StationRefresh,
+};

@@ -1,17 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import {ActivityIndicator, Button, ImageBackground, View, Text} from 'react-native'
+import {ActivityIndicator, Button, ImageBackground, View, Text, TouchableOpacity} from 'react-native'
 import styles from './styles'
 import Logger from 'js-logger'
-import { LongPressGestureHandler } from 'react-native-gesture-handler';
+import { StationInfo, StationRefresh } from './AIcons';
 
 function LocationScreenListHeader({onRefresh,onDetails,abbr,name,address,city,state,zipcode,county,time,date}) {
 	return (
 		<View style={{padding:15,flex:1, justifyContent:'flex-end', height:200}}>
 		{/* <ImageBackground source={require('../../assets/splash.png')} style={{width:200,height:200}} > */}
-			<View style={{flexDirection:'row'}}>
+			<View style={{flexDirection:'row',alignItems:'center'}}>
 				<Text style={{fontWeight:'bold', fontSize:30}}>{name}</Text>
-				<Button title='station info' onPress={() => onDetails()} ></Button>
+				<TouchableOpacity onPress={() => onDetails()} >
+					{StationInfo()}
+				</TouchableOpacity>
 			</View>
 			<View style={{flexDirection:'row'}}>
 				<View style={{marginLeft:3}}>
@@ -20,8 +22,9 @@ function LocationScreenListHeader({onRefresh,onDetails,abbr,name,address,city,st
 					<Text style={{fontWeight:'bold',fontSize:10,color:'darkgray'}}>{date} - {time}</Text>
 				</View>
 			</View>
-			<Button title='refresh' onPress={event => onRefresh()} />
-		{/* </ImageBackground> */}
+			<TouchableOpacity onPress={() => onRefresh()} >
+				{StationRefresh()}
+			</TouchableOpacity>
 		</View>
 	)
 }

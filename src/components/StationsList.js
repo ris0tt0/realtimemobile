@@ -1,23 +1,53 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Logger from 'js-logger'
-import {Text,View,TouchableHighlight} from 'react-native'
+import {Text,View,StyleSheet,TouchableHighlight} from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
+import { ListItemArrowForward } from './AIcons'
 
-import style from './styles'
+const style = StyleSheet.create({
+	list:{
+		flex:1,
+	},
+	listItem:{
+		borderWidth:1,
+		borderColor:'lightgray',
+		borderRadius:4,
+		// margin:2,
+		marginBottom:2,
+	},
+	container:{
+		margin:5,
+		flexDirection:'row',
+		justifyContent:'space-between',
+		alignItems:'center',
+	},
+	container__header:{
+		fontSize:16,
+	},
+	container__address:{
+		fontSize:10,
+		color:'gray',
+	},
+});
 
 function StationsList({items,onStation}) {
 
 	return (
-		<View style={style.StationsList}>
+		<View style={style.list}>
 			<FlatList
 				data={items}
 				renderItem={({item}) => (
 						<TouchableHighlight
-							underlayColor='black'
+							style={style.listItem}
+							underlayColor='lightgray'
 							onPress={() => onStation(item.abbr)}>
-							<View style={style.StationsList__renderItem}>
-								<Text>{item.name}</Text>
+							<View style={style.container}>
+								<View>
+									<Text style={style.container__header}>{item.name}</Text>
+									<Text style={style.container__address}>{item.address}, {item.city}</Text>
+								</View>
+								{ListItemArrowForward()}
 							</View>
 						</TouchableHighlight>
 					)}

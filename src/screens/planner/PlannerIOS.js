@@ -1,11 +1,11 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
-import {Button,Picker,View,Text} from 'react-native'
+import {Button,Picker,View,Text,StyleSheet} from 'react-native'
 import Logger from 'js-logger'
 
-const selectStationID = 'selectstations';
-const originTitleDefault = 'select origin station';
-const destinationTitleDefault = 'select destination station';
+const START = 'start';
+const END = 'end';
+const LABEL_DEFAULT = 'Select Station';
 
 export class PlannerIOS extends Component {
 	static propTypes = {
@@ -17,61 +17,122 @@ export class PlannerIOS extends Component {
 	{
 		super(props);
 
+		const {stations} = this.props;
+		const items = stations.map((station,index) => <Picker.Item label={station.name} value={station.abbr} key={index}></Picker.Item>)
+		items.unshift(<Picker.Item label={LABEL_DEFAULT} value={LABEL_DEFAULT} key={LABEL_DEFAULT} />);
+
 		this.state = {
-			originAbbr:selectStationID,
-			destinationAbbr:selectStationID,
-			originTitle:originTitleDefault,
-			destinationTitle:destinationTitleDefault,
-			currentButton:null,
-			currentLabel:null,
-		};
-
-		const {onSearch,navigation:{navigate}} = this.props;
-		
-		this.onTripPlanning = () =>
-		{
-				const {originAbbr,destinationAbbr} = this.state;
-
-				if( originAbbr !== selectStationID && destinationAbbr !== selectStationID && originAbbr !== destinationAbbr)
-				{
-					navigate('PlannerResults');
-					onSearch(originAbbr,destinationAbbr);
-				}
+			active:'',
+			startAbbr:LABEL_DEFAULT,
+			endAbbr:LABEL_DEFAULT,
+			items,
 		};
 	}
 
-	render() {
-		const {stations} = this.props;
-		const {originTitle,destinationTitle,originAbbr,destinationAbbr,currentButton,currentLabel} = this.state;
-		const items = stations.map((station,index) => <Picker.Item label={station.name} value={station.abbr} key={index}></Picker.Item>)
+	onTextClick(selected)
+	{
+		this.setState({active:selected});
+	}
 
-		items.unshift(<Picker.Item label='select station' value={selectStationID} key={selectStationID} />);
+	getTextLabel(abbr)
+	{
+		return abbr;
+	}
 
-		const enableSearchButton = !(originAbbr !== selectStationID && destinationAbbr !== selectStationID)
+	isSubmitButtonDisabled()
+	{
+		const {startAbbr,endAbbr} = this.state;
 
-		return (
-			<View style={{margin:10,backgroundColor:'white'}}>
-				<Text>select stations and stuff</Text>
-				<Button
-					title={originTitle} 
-					onPress={()=>this.setState({currentButton:'originAbbr',currentLabel:'originTitle'})}
-				/>
-				<Button
-					title={destinationTitle}
-					onPress={()=>this.setState({currentButton:'destinationAbbr',currentLabel:'destinationTitle'})}
-				/>
-				<Button disabled={enableSearchButton} title='Search'
-					onPress={()=>this.onTripPlanning()}
-				/>
+		return !(
+			startAbbr !== LABEL_DEFAULT && 
+			endAbbr !== LABEL_DEFAULT && 
+			startAbbr !== endAbbr);
+	}
 
-				{ currentButton != null ? <Picker
-					selectedValue={this.state[currentButton]}
-					// style={{backgroundColor:'pink',height:30,width:400}}
-					onValueChange={(itemValue,itemIndex) => this.setState({[currentButton]:itemValue,[currentLabel]:items[itemIndex].props.label})}
-				>{items}</Picker> : <View />}
+	onSubmit = () =>
+	{
+		const {onSearch,navigation:{navigate}} = this.props;
+		const {startAbbr,endAbbr} = this.state;
+
+		navigate('PlannerResults');
+		onSearch(startAbbr,endAbbr);
+	}
+
+	onPickerSelected = (value) =>
+	{
+		this.setState({[`${this.state.active}Abbr`]:value})
+	}
+
+	render()
+	{
+		const {active,startAbbr,endAbbr,items} = this.state;
+
+		Logger.info(`active: ${active} startAbbr:${startAbbr} endAbbr:${endAbbr}`);
+
+		return(
+			<View style={style.container}>
+				<View style={active === START ? style.selectedStation : style.station }>
+					<Text
+						style={style.stationText}
+						onPress={()=>this.onTextClick(START)}
+						>{this.getTextLabel(startAbbr)}</Text>
+				</View>
+				<View style={active === END ? style.selectedStation : style.station }>
+					<Text
+						style={style.stationText}
+						onPress={()=>this.onTextClick(END)}
+					>{this.getTextLabel(endAbbr)}</Text>
+				</View>
+				<View>
+					<Button
+						title='Search Routes'
+						disabled={this.isSubmitButtonDisabled()}
+						onPress={this.onSubmit}
+					/>
+				</View>
+				<View>
+					{active === '' ? null :
+					<Picker
+						style={style.picker}
+						selectedValue={this.state[`${active}Abbr`]}
+						onValueChange={this.onPickerSelected}
+					>{items}</Picker>}
+				</View>
 			</View>
-		)
+		);
 	}
 }
+
+const style = StyleSheet.create({
+	container:{
+		flex:1,
+	},
+	station:{
+		marginLeft:20,
+		marginRight:20,
+		margin:5,
+		padding:5,
+		borderRadius:4,
+		borderColor:'gray',
+		borderWidth:1,
+	},
+	selectedStation:{
+		marginLeft:20,
+		marginRight:20,
+		margin:5,
+		padding:5,
+		borderRadius:4,
+		borderColor:'blue',
+		borderWidth:1,
+	},
+	stationText:{
+		color:'lightgray',
+	},
+	picker:{
+		marginLeft:20,
+		marginRight:20,
+		margin:5,
+	}
+});
 
 export default PlannerIOS

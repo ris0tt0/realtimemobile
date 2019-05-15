@@ -21,11 +21,15 @@ export class PlannerIOS extends Component {
 		const items = stations.map((station,index) => <Picker.Item label={station.name} value={station.abbr} key={index}></Picker.Item>)
 		items.unshift(<Picker.Item label={LABEL_DEFAULT} value={LABEL_DEFAULT} key={LABEL_DEFAULT} />);
 
+		const stationName = new Map();
+		stations.forEach(station => stationName.set(station.abbr,station.name));
+
 		this.state = {
 			active:'',
 			startAbbr:LABEL_DEFAULT,
 			endAbbr:LABEL_DEFAULT,
 			items,
+			stationName,
 		};
 	}
 
@@ -36,7 +40,8 @@ export class PlannerIOS extends Component {
 
 	getTextLabel(abbr)
 	{
-		return abbr;
+		const {stationName} = this.state;
+		return stationName.get(abbr);
 	}
 
 	isSubmitButtonDisabled()
@@ -90,15 +95,15 @@ export class PlannerIOS extends Component {
 						onPress={this.onSubmit}
 					/>
 				</View>
-				<View>
 					{active === '' ? null :
-					<Picker
-						style={style.picker}
-						selectedValue={this.state[`${active}Abbr`]}
-						onValueChange={this.onPickerSelected}
-					>{items}</Picker>}
+					<View>
+						<Picker
+							style={style.picker}
+							selectedValue={this.state[`${active}Abbr`]}
+							onValueChange={this.onPickerSelected}
+						>{items}</Picker>
+					</View>}
 				</View>
-			</View>
 		);
 	}
 }

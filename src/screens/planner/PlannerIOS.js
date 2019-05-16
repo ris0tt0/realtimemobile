@@ -1,7 +1,9 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
-import {Button,Picker,View,Text,StyleSheet} from 'react-native'
+import {Button,Picker,View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import Logger from 'js-logger'
+import Colors from '../../constants/Colors'
+import {StationLocation,StationSwap} from '../../components/AIcons'
 
 const START = 'start';
 const END = 'end';
@@ -22,6 +24,7 @@ export class PlannerIOS extends Component {
 		items.unshift(<Picker.Item label={LABEL_DEFAULT} value={LABEL_DEFAULT} key={LABEL_DEFAULT} />);
 
 		const stationName = new Map();
+		stationName.set(LABEL_DEFAULT,LABEL_DEFAULT);
 		stations.forEach(station => stationName.set(station.abbr,station.name));
 
 		this.state = {
@@ -41,6 +44,7 @@ export class PlannerIOS extends Component {
 	getTextLabel(abbr)
 	{
 		const {stationName} = this.state;
+
 		return stationName.get(abbr);
 	}
 
@@ -53,7 +57,17 @@ export class PlannerIOS extends Component {
 			endAbbr !== LABEL_DEFAULT && 
 			startAbbr !== endAbbr);
 	}
+	
+	onSwapStations = () =>
+	{
+		const {startAbbr,endAbbr} = this.state;
 
+		this.setState({startAbbr:endAbbr,endAbbr:startAbbr});
+	}
+	onStationLocation = () =>
+	{
+		Logger.info('stationLocation');
+	}
 	onSubmit = () =>
 	{
 		const {onSearch,navigation:{navigate}} = this.props;
@@ -62,7 +76,6 @@ export class PlannerIOS extends Component {
 		navigate('PlannerResults');
 		onSearch(startAbbr,endAbbr);
 	}
-
 	onPickerSelected = (value) =>
 	{
 		this.setState({[`${this.state.active}Abbr`]:value})
@@ -71,30 +84,42 @@ export class PlannerIOS extends Component {
 	render()
 	{
 		const {active,startAbbr,endAbbr,items} = this.state;
-
-		Logger.info(`active: ${active} startAbbr:${startAbbr} endAbbr:${endAbbr}`);
-
+		// Logger.info(`active: ${active} startAbbr:${startAbbr} endAbbr:${endAbbr}`);
 		return(
 			<View style={style.container}>
-				<View style={active === START ? style.selectedStation : style.station }>
-					<Text
-						style={style.stationText}
-						onPress={()=>this.onTextClick(START)}
-						>{this.getTextLabel(startAbbr)}</Text>
-				</View>
-				<View style={active === END ? style.selectedStation : style.station }>
-					<Text
-						style={style.stationText}
-						onPress={()=>this.onTextClick(END)}
-					>{this.getTextLabel(endAbbr)}</Text>
-				</View>
-				<View>
-					<Button
-						title='Search Routes'
-						disabled={this.isSubmitButtonDisabled()}
-						onPress={this.onSubmit}
-					/>
-				</View>
+				<Text style={style.title}>Trip Planner</Text>
+				<View style={{paddingTop:10}}>
+					<View style={style.stationContainer}>
+						<Text>A</Text>
+						<View style={active === START ? style.selectedStation : style.station }>
+							<Text
+								style={active === START ? style.selectedStationText : style.stationText}
+								onPress={()=>this.onTextClick(START)}
+								>{this.getTextLabel(startAbbr)}</Text>
+						</View>
+						<TouchableOpacity onPress={this.onStationLocation}>
+							<StationLocation />
+						</TouchableOpacity>
+					</View>
+					<View style={style.stationContainer}>
+						<Text>B</Text>
+						<View style={active === END ? style.selectedStation : style.station }>
+							<Text
+								style={active === END ? style.selectedStationText : style.stationText}
+								onPress={()=>this.onTextClick(END)}
+							>{this.getTextLabel(endAbbr)}</Text>
+						</View>
+						<TouchableOpacity onPress={this.onSwapStations}>
+							<StationSwap />
+						</TouchableOpacity>
+					</View>
+					<View>
+						<Button
+							title='Search Routes'
+							disabled={this.isSubmitButtonDisabled()}
+							onPress={this.onSubmit}
+						/>
+					</View>
 					{active === '' ? null :
 					<View>
 						<Picker
@@ -104,6 +129,7 @@ export class PlannerIOS extends Component {
 						>{items}</Picker>
 					</View>}
 				</View>
+			</View>
 		);
 	}
 }
@@ -112,9 +138,26 @@ const style = StyleSheet.create({
 	container:{
 		flex:1,
 	},
+	title:{
+		fontSize:18,
+		fontWeight:'bold',
+		color:'white',
+		padding:10,
+		backgroundColor:Colors.bartBlue,
+	},
+	stationContainer:{
+		// borderColor:'black',
+		// borderWidth:1,
+		alignItems:'center',
+		justifyContent:'space-between',
+		flexDirection:'row',
+		paddingLeft:10,
+		paddingRight:10,
+	},
 	station:{
-		marginLeft:20,
-		marginRight:20,
+		flex:1,
+		marginLeft:10,
+		marginRight:10,
 		margin:5,
 		padding:5,
 		borderRadius:4,
@@ -122,16 +165,20 @@ const style = StyleSheet.create({
 		borderWidth:1,
 	},
 	selectedStation:{
-		marginLeft:20,
-		marginRight:20,
+		flex:1,
+		marginLeft:10,
+		marginRight:10,
 		margin:5,
 		padding:5,
 		borderRadius:4,
-		borderColor:'blue',
+		borderColor:Colors.bartBlue,
 		borderWidth:1,
 	},
 	stationText:{
 		color:'lightgray',
+	},
+	selectedStationText:{
+		color:Colors.bartBlue,
 	},
 	picker:{
 		marginLeft:20,

@@ -3,7 +3,7 @@ import Colors from '../constants/Colors'
 import React from 'react'
 import {View} from 'react-native'
 import { Platform } from 'expo-core'
-import {Ionicons,MaterialCommunityIcons} from '@expo/vector-icons'
+import {Ionicons,MaterialIcons,MaterialCommunityIcons} from '@expo/vector-icons'
 
 function TabBarIcon({name,focused}) {
 	
@@ -93,6 +93,28 @@ function StationInfo()
 	)
 }
 
+function StationSwap()
+{
+	return(
+		<MaterialIcons
+			name='swap-vert'
+			size={25}
+			color='black'
+		/>
+	)
+}
+
+function StationLocation()
+{
+	return(
+		<MaterialIcons
+			name='my-location'	
+			size={25}
+			color='black'
+		/>
+	)
+}
+
 export {
 	ListItemArrowForward,
 	SearchBarIcon,
@@ -101,4 +123,6 @@ export {
 	RouteLineDetailBike,
 	StationInfo,
 	StationRefresh,
+	StationSwap,
+	StationLocation,
 };

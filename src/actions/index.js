@@ -29,6 +29,10 @@ import {
 	REQUEST_ELEVATOR_INFO,
 	REQUEST_ERROR_ELEVATOR_INFO,
 	RECIEVE_ELEVATOR_INFO,
+	REQUEST_GEOLOCATION,
+	REQUEST_ERROR_GEOLOCATOIN,
+	RECIEVE_GEOLOCATION,
+	SET_CLOSEST_STATION,
  } from './ActionTypes';
 
 const api_key = 'MW9S-E7SL-26DU-VV8V';
@@ -530,5 +534,48 @@ export function fetchElevatorInfo()
 			dispatch(recieveElevatorInfo(normalized));
 			}
 		);
+	}
+}
+
+export function requestGeolocation()
+{
+	return {
+		type:REQUEST_GEOLOCATION,
+	}
+}
+
+export function requestGeolocatoin(error)
+{
+	return {
+		type:REQUEST_ERROR_GEOLOCATOIN,
+		payload:error,
+	}
+}
+
+export function recieveGeoLocation(position)
+{
+	return {
+		type:RECIEVE_GEOLOCATION,
+		payload:position,
+	}
+}
+
+export function fetchGeolocation()
+{
+	return dispatch =>{
+		dispatch(requestGeolocation());
+
+		navigator.geolocation.getCurrentPosition(
+			position => dispatch(recieveGeoLocation(position)),
+			error => dispatch(requestGeolocatoin(error)),
+		);
+	}
+}
+
+export function setClosesStatoin(station)
+{
+	return {
+		type:SET_CLOSEST_STATION,
+		payload:station,
 	}
 }

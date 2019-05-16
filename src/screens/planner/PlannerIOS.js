@@ -12,7 +12,9 @@ const LABEL_DEFAULT = 'Select Station';
 export class PlannerIOS extends Component {
 	static propTypes = {
 		stations:PropTypes.array,
+		closestStation:PropTypes.object,
 		onSearch:PropTypes.func.isRequired,
+		onLocation:PropTypes.func.isRequired,
 	}
 
 	constructor(props)
@@ -57,7 +59,7 @@ export class PlannerIOS extends Component {
 			endAbbr !== LABEL_DEFAULT && 
 			startAbbr !== endAbbr);
 	}
-	
+
 	onSwapStations = () =>
 	{
 		const {startAbbr,endAbbr} = this.state;
@@ -66,7 +68,9 @@ export class PlannerIOS extends Component {
 	}
 	onStationLocation = () =>
 	{
-		Logger.info('stationLocation');
+		const {onLocation} = this.props;
+		
+		onLocation();
 	}
 	onSubmit = () =>
 	{

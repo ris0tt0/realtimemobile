@@ -503,3 +503,15 @@ export const elevatorInfoResponse = createSelector(getElevatorInfoSelector,eleva
 
 	return {};
 });
+
+const getClosestStation = state => state.closestStation;
+
+export const closestStation = createSelector(getClosestStation,closestStation =>{
+
+	if( closestStation)
+	{
+		return {};
+	}
+
+	return {};
+});

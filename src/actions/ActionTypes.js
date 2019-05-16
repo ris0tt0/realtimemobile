@@ -53,13 +53,22 @@ export const RECIEVE_ROUTES = 'recieve routes';
 /**
  * BART advisories
  */
- export const REQUEST_SERVICE_ADVISORY = 'request service advisory';
- export const REQUEST_ERROR_SERVICE_ADVISORY = 'request error service advisory';
- export const RECIEVE_SERVICE_ADVISORY = 'recieive service advisory';
+export const REQUEST_SERVICE_ADVISORY = 'request service advisory';
+export const REQUEST_ERROR_SERVICE_ADVISORY = 'request error service advisory';
+export const RECIEVE_SERVICE_ADVISORY = 'recieive service advisory';
 
- /**
-	* BART Elevator information
-  */
- export const REQUEST_ELEVATOR_INFO = 'request elevator info';
- export const REQUEST_ERROR_ELEVATOR_INFO = 'request error elevator info';
- export const RECIEVE_ELEVATOR_INFO = 'recieve elevator info';
+/**
+* BART Elevator information
+*/
+export const REQUEST_ELEVATOR_INFO = 'request elevator info';
+export const REQUEST_ERROR_ELEVATOR_INFO = 'request error elevator info';
+export const RECIEVE_ELEVATOR_INFO = 'recieve elevator info';
+
+/**
+* geolocation information
+*/
+export const REQUEST_GEOLOCATION = 'request geolocation';
+export const REQUEST_ERROR_GEOLOCATOIN = 'request error geolocation';
+export const RECIEVE_GEOLOCATION = 'recieve geolocatoin';
+
+export const SET_CLOSEST_STATION = 'set closest station';

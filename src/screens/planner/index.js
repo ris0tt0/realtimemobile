@@ -2,19 +2,21 @@ import {connect} from 'react-redux'
 import Logger from 'js-logger'
 import PlannerAdroid from './PlannerAndroid'
 import PlannerIOS from './PlannerIOS'
-import { stationsList } from '../../selectors';
-import { fetchTripPlanning } from '../../actions';
+import { stationsList, closestStation } from '../../selectors';
+import { fetchTripPlanning, fetchGeolocation } from '../../actions';
 import {Platform} from 'react-native'
 
 const mapStateToProps = state =>{
 	return {
 		stations:stationsList(state),
+		closestStation:closestStation(state),
 	}
 }
 
 const mapDispatchToProps = dispatch => {
 	return{
-		onSearch:(origin,ending) => dispatch(fetchTripPlanning(origin,ending))
+		onSearch:(origin,ending) => dispatch(fetchTripPlanning(origin,ending)),
+		onLocation:() => dispatch(fetchGeolocation()),
 	}
 }
 

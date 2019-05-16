@@ -26,6 +26,10 @@ import {
 	REQUEST_ELEVATOR_INFO,
 	RECIEVE_ELEVATOR_INFO,
 	REQUEST_ERROR_ELEVATOR_INFO,
+	REQUEST_GEOLOCATION,
+	REQUEST_ERROR_GEOLOCATOIN,
+	RECIEVE_GEOLOCATION,
+	SET_CLOSEST_STATION,
 } from '../actions/ActionTypes'
 
 import Logger from 'js-logger'
@@ -157,6 +161,29 @@ function elevatorInfo(state ={}, action)
 			return {...state};
 	}
 }
+function geolocation(state = {}, action)
+{
+	switch(action.type)
+	{
+		case REQUEST_GEOLOCATION:
+			return {...state,isFetching:true};
+		case RECIEVE_GEOLOCATION:
+			return {...action.payload,isFetching:false};
+		default:
+			return {...state};
+	}
+}
+
+function closestStation(state ={},action)
+{
+	switch(action.type)
+	{
+		case SET_CLOSEST_STATION:
+			return {...action.payload};
+		default:
+			return {...state};
+	}
+}
 
 function request_error(state = {}, action)
 {
@@ -170,8 +197,9 @@ function request_error(state = {}, action)
 		case REQUEST_ERROR_STATION_DETAIL:
 		case REQUEST_ERROR_ELEVATOR_INFO:
 		case REQUEST_ERROR_SERVICE_ADVISORY:
+		case REQUEST_ERROR_GEOLOCATOIN:
 		
-			Logger.debug('request error');
+			Logger.debug(`Request Error: ${action.type}`);
 			Logger.info(action.payload);
 
 			return action.payload;
@@ -190,6 +218,8 @@ const reducers = combineReducers({
 	request_error,
 	serviceAdvisory,
 	elevatorInfo,
+	geolocation,
+	closestStation,
 });
 
 export default reducers;

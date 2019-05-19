@@ -70,5 +70,3 @@ export const RECIEVE_ELEVATOR_INFO = 'recieve elevator info';
 export const REQUEST_GEOLOCATION = 'request geolocation';
 export const REQUEST_ERROR_GEOLOCATOIN = 'request error geolocation';
 export const RECIEVE_GEOLOCATION = 'recieve geolocatoin';
-
-export const SET_CLOSEST_STATION = 'set closest station';

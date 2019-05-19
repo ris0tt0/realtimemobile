@@ -29,7 +29,6 @@ import {
 	REQUEST_GEOLOCATION,
 	REQUEST_ERROR_GEOLOCATOIN,
 	RECIEVE_GEOLOCATION,
-	SET_CLOSEST_STATION,
 } from '../actions/ActionTypes'
 
 import Logger from 'js-logger'
@@ -174,17 +173,6 @@ function geolocation(state = {}, action)
 	}
 }
 
-function closestStation(state ={},action)
-{
-	switch(action.type)
-	{
-		case SET_CLOSEST_STATION:
-			return {...action.payload};
-		default:
-			return {...state};
-	}
-}
-
 function request_error(state = {}, action)
 {
 	switch(action.type)
@@ -219,7 +207,6 @@ const reducers = combineReducers({
 	serviceAdvisory,
 	elevatorInfo,
 	geolocation,
-	closestStation,
 });
 
 export default reducers;

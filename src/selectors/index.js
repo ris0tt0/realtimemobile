@@ -1,5 +1,6 @@
 import {createSelector} from 'reselect';
 import Logger from 'js-logger';
+import { getClosestCoordIndex } from '../Utils';
 
 /**
  * Routes.
@@ -504,13 +505,26 @@ export const elevatorInfoResponse = createSelector(getElevatorInfoSelector,eleva
 	return {};
 });
 
-const getClosestStation = state => state.closestStation;
+const getGeolocation = state => state.geolocation;
 
-export const closestStation = createSelector(getClosestStation,closestStation =>{
+export const closestStation = createSelector(
+	[getGeolocation,stationsList],
+	(geolocation, stationsList) =>{
 
-	if( closestStation)
+	if( geolocation.coords)
 	{
-		return {};
+		const coords = stationsList.map(station => {
+			return {
+				latitude:parseFloat(station.gtfs_latitude),
+				longitude:parseFloat(station.gtfs_longitude)};
+		});
+		const coord = {
+			latitude:geolocation.coords.latitude,
+			longitude:geolocation.coords.longitude};
+		
+		const index = getClosestCoordIndex(coord,coords);
+		
+		return stationsList[index];
 	}
 
 	return {};

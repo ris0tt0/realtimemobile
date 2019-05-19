@@ -1,14 +1,45 @@
+import Logger from 'js-logger';
+
 /**
  * This function returns a promise with a value station ABBR.
  */
-function getClosestStation(position,stations)
+function getClosestCoordIndex(coord,coords)
 {
-	// navigator.geolocation.getCurrentPosition(
-	// 	position => Logger.info(position),
-	// 	error => Logger.info(error),
-	// );
-	// return Promise.resolve('16th');
+	let minDif = 99999;
+  let closest;
+
+	for (index = 0; index < coords.length; ++index)
+	{
+		const c = coords[index];
+    const dif = PythagorasEquirectangular(
+			coord.latitude,
+			coord.longitude,
+			c.latitude,
+			c.longitude
+		);
+    if (dif < minDif) {
+      closest = index;
+      minDif = dif;
+    }
+	}
 	
+	return closest;
 }
 
-export {getClosestStation};
+function Deg2Rad(deg) {
+  return deg * Math.PI / 180;
+}
+
+function PythagorasEquirectangular(lat1, lon1, lat2, lon2) {
+  lat1 = Deg2Rad(lat1);
+  lat2 = Deg2Rad(lat2);
+  lon1 = Deg2Rad(lon1);
+  lon2 = Deg2Rad(lon2);
+  var R = 6371; // km
+  var x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
+  var y = (lat2 - lat1);
+  var d = Math.sqrt(x * x + y * y) * R;
+  return d;
+}
+
+export {getClosestCoordIndex};

@@ -87,6 +87,10 @@ export class PlannerIOS extends Component {
 
 	render()
 	{
+		const {closestStation} = this.props;
+
+		Logger.info(closestStation);
+
 		const {active,startAbbr,endAbbr,items} = this.state;
 		// Logger.info(`active: ${active} startAbbr:${startAbbr} endAbbr:${endAbbr}`);
 		return(

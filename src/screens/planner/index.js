@@ -1,10 +1,8 @@
 import {connect} from 'react-redux'
 import Logger from 'js-logger'
-import PlannerAdroid from './PlannerAndroid'
-import PlannerIOS from './PlannerIOS'
+import Planner from './Planner'
 import { stationsList, closestStation } from '../../selectors';
 import { fetchTripPlanning, fetchGeolocation } from '../../actions';
-import {Platform} from 'react-native'
 
 const mapStateToProps = state =>{
 	return {
@@ -20,8 +18,6 @@ const mapDispatchToProps = dispatch => {
 	}
 }
 
-const PlannerContainer = Platform.OS === 'ios' ?
-	connect(mapStateToProps,mapDispatchToProps)(PlannerIOS) :
-	connect(mapStateToProps,mapDispatchToProps)(PlannerAdroid);
+const PlannerContainer = connect(mapStateToProps,mapDispatchToProps)(Planner)
 
 export default PlannerContainer;

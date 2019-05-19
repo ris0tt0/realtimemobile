@@ -1,4 +1,5 @@
 import React,{Component} from 'react'
+import {Platform} from 'react-native'
 import PropTypes from 'prop-types'
 import {Button,Picker,View,Text,StyleSheet,TouchableOpacity} from 'react-native'
 import Logger from 'js-logger'
@@ -9,7 +10,7 @@ const START = 'start';
 const END = 'end';
 const LABEL_DEFAULT = 'Select Station';
 
-export class PlannerIOS extends Component {
+class Planner extends Component {
 	static propTypes = {
 		stations:PropTypes.array,
 		closestStation:PropTypes.object,
@@ -90,6 +91,7 @@ export class PlannerIOS extends Component {
 		const {closestStation} = this.props;
 
 		Logger.info(closestStation);
+		const isIOS = Platform.OS === 'ios';
 
 		const {active,startAbbr,endAbbr,items} = this.state;
 		// Logger.info(`active: ${active} startAbbr:${startAbbr} endAbbr:${endAbbr}`);
@@ -100,10 +102,15 @@ export class PlannerIOS extends Component {
 					<View style={style.stationContainer}>
 						<Text>A</Text>
 						<View style={active === START ? style.selectedStation : style.station }>
+							{isIOS ?
 							<Text
 								style={active === START ? style.selectedStationText : style.stationText}
 								onPress={()=>this.onTextClick(START)}
-								>{this.getTextLabel(startAbbr)}</Text>
+								>{this.getTextLabel(startAbbr)}</Text> : 
+							<Picker
+								selectedValue={startAbbr}
+								onValueChange={(itemValue,itemIndex) => this.setState({startAbbr:itemValue})}
+							>{items}</Picker>}
 						</View>
 						<TouchableOpacity onPress={this.onStationLocation}>
 							<StationLocation />
@@ -112,10 +119,15 @@ export class PlannerIOS extends Component {
 					<View style={style.stationContainer}>
 						<Text>B</Text>
 						<View style={active === END ? style.selectedStation : style.station }>
+							{isIOS ?
 							<Text
 								style={active === END ? style.selectedStationText : style.stationText}
 								onPress={()=>this.onTextClick(END)}
-							>{this.getTextLabel(endAbbr)}</Text>
+								>{this.getTextLabel(endAbbr)}</Text> :
+							<Picker
+								selectedValue={endAbbr}
+								onValueChange={(itemValue,itemIndex) => this.setState({endAbbr:itemValue})}
+								>{items}</Picker>}
 						</View>
 						<TouchableOpacity onPress={this.onSwapStations}>
 							<StationSwap />
@@ -195,4 +207,4 @@ const style = StyleSheet.create({
 	}
 });
 
-export default PlannerIOS
+export default Planner

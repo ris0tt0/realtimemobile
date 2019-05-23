@@ -2,9 +2,18 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Logger from 'js-logger'
 import {FlatList,View} from 'react-native'
-import { TripTime, TripBar, TripDuration, TripChanges, TripFare, WaitingScreen } from '../../components';
+import {
+	TripTime,
+	TripBar,
+	TripDuration,
+	TripChanges,
+	TripFare,
+	WaitingScreen } from '../../components';
 import { PlannerDetailsRenderItem } from '../../components/PlannerRenderers';
 
+/**
+ * This screen shows the route choosen is great detail.
+ */
 function PlannerDetails({isFetching,details}) {
 
 	if( isFetching) return <WaitingScreen />
@@ -13,15 +22,15 @@ function PlannerDetails({isFetching,details}) {
 		<View style={{flex:1}}>
 			<View>
 				<View style={{flexDirection:'row'}}>
-					<TripTime time={details['@origTimeMin']} />
+					<TripTime time={details.origTimeMin} />
 					<TripBar leg={details.leg} />
-					<TripTime time={details['@destTimeMin']} />
+					<TripTime time={details.destTimeMin} />
 				</View>
 			</View>
 			<View style={{flexDirection:'row'}}>
-				<TripDuration duration={details['@tripTime']} />
+				<TripDuration duration={details.tripTime} />
 				<TripChanges changes={details.leg.length} />
-				<TripFare fare={details['@fare']} />
+				<TripFare fare={details.fare} />
 			</View>
 			<FlatList
 				data={details.leg}

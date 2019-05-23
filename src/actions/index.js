@@ -1,39 +1,5 @@
-import Logger from 'js-logger'
-import {normalize, schema} from 'normalizr';
-import {
-	REQUEST_ERROR_ROUTES,
-	RECIEVE_ROUTES,
-	REQUEST_ERROR_STATIONS,
-	RECIEVE_STATIONS,
-	REQUEST_ERROR_TRAIN_COUNT,
-	RECIEVE_TRAIN_COUNT,
-	RECIEVE_RTE,
-	REQUEST_ERROR_RTE,
-	REQUEST_STATIONS,
-	REQUEST_RTE,
-	REQUEST_STATION_DETAIL,
-	REQUEST_ERROR_STATION_DETAIL,
-	RECIEVE_STATION_DETAIL,
-	UPDATE_STATION_DETAIL_STATIONID,
-	REQUEST_ROUTES,
-	REQUEST_TRIP_PLANNING,
-	REQUEST_ERROR_TRIP_PLANNING,
-	RECIEVE_TRIP_PLANNING,
-	UPDATE_TRIP_PLANNING_TRIPID,
-	REQUEST_STATION_ACCESS,
-	REQUEST_ERROR_STATION_ACCESS,
-	RECIEVE_STATION_ACCESS,
-	UPDATE_STATION_ACCESS_STATION_ID,
-	REQUEST_SERVICE_ADVISORY,
-	RECIEVE_SERVICE_ADVISORY,
-	REQUEST_ELEVATOR_INFO,
-	REQUEST_ERROR_ELEVATOR_INFO,
-	RECIEVE_ELEVATOR_INFO,
-	REQUEST_GEOLOCATION,
-	REQUEST_ERROR_GEOLOCATOIN,
-	RECIEVE_GEOLOCATION,
-	SET_CLOSEST_STATION,
- } from './ActionTypes';
+import { normalize, schema } from 'normalizr';
+import { RECIEVE_ELEVATOR_INFO, RECIEVE_GEOLOCATION, RECIEVE_ROUTES, RECIEVE_RTE, RECIEVE_SERVICE_ADVISORY, RECIEVE_STATIONS, RECIEVE_STATION_ACCESS, RECIEVE_STATION_DETAIL, RECIEVE_TRAIN_COUNT, RECIEVE_TRIP_PLANNING, REQUEST_ELEVATOR_INFO, REQUEST_ERROR_ELEVATOR_INFO, REQUEST_ERROR_GEOLOCATOIN, REQUEST_ERROR_ROUTES, REQUEST_ERROR_RTE, REQUEST_ERROR_STATIONS, REQUEST_ERROR_STATION_ACCESS, REQUEST_ERROR_STATION_DETAIL, REQUEST_ERROR_TRAIN_COUNT, REQUEST_ERROR_TRIP_PLANNING, REQUEST_GEOLOCATION, REQUEST_ROUTES, REQUEST_RTE, REQUEST_SERVICE_ADVISORY, REQUEST_STATIONS, REQUEST_STATION_ACCESS, REQUEST_STATION_DETAIL, REQUEST_TRIP_PLANNING, SET_CLOSEST_STATION, UPDATE_STATION_ACCESS_STATION_ID, UPDATE_STATION_DETAIL_STATIONID, UPDATE_TRIP_PLANNING_TRIPID } from './ActionTypes';
 
 const api_key = 'MW9S-E7SL-26DU-VV8V';
 
@@ -401,14 +367,44 @@ export function fetchTripPlanning(startingAbbr,destinationAbbr)
 			return fetch(`http://api.bart.gov/api/sched.aspx?cmd=depart&orig=${startingAbbr}&dest=${destinationAbbr}&date=today&time=now&key=${api_key}&b=1&a=4&json=y`)
 			.then( response => response.json() )
 			.then( json => {
+				const legProcess = value =>{
+					return{
+						order:value['@order'],
+						origin:value['@origin'],
+						destination:value['@destination'],
+						origTimeMin:value['@origTimeMin'],
+						origTimeDate:value['@origTimeDate'],
+						destTimeMin:value['@destTimeMin'],
+						destTimeDate:value['@destTimeDate'],
+						line:value['@line'],
+						bikeflag:value['@bikeflag'],
+						load:value['@load'],
+						trainHeadStation:value['@trainHeadStation'],
+					}
+				};
 
+				const tripProcess = value =>{
+					return {
+						origin:value['@origin'],
+						destination:value['@destination'],
+						fare:value['@fare'],
+						origTimeMin:value['@origTimeMin'],
+						origTimeDate:value['@origTimeDate'],
+						destTimeMin:value['@destTimeMin'],
+						destTimeDate:value['@destTimeDate'],
+						clipper:value['@clipper'],
+						tripTime:value['@tripTime'],
+						leg:value.leg,
+						id:`${value['@origTimeMin']}-${value['@destTimeMin']}ID`
+					}
+				}
 				// start to normalize the json response.
-				const fareSchema = new schema.Entity('fare',undefined,{idAttribute: value => `${value['@name']}ID`});
+				const fareSchema = new schema.Entity('fare',{},{idAttribute: value => `${value['@name']}ID`});
 				const faresSchema = new schema.Entity('fares',{fare:[fareSchema]},{idAttribute: value => `${value['@level']}-${value.fare.length}ID`});
-				const legSchema = new schema.Entity('leg',undefined,{idAttribute: value => `${value['@origTimeMin']}-${value['@destTimeMin']}ID`});
+				const legSchema = new schema.Entity('leg',{},{idAttribute: value => `${value['@origTimeMin']}-${value['@destTimeMin']}ID`,processStrategy:legProcess});
 				const tripSchema = new schema.Entity('trip',{fares:faresSchema,leg:[legSchema]},{
 					idAttribute: value => `${value['@origTimeMin']}-${value['@destTimeMin']}ID`,
-					processStrategy: value => ({...value,id:`${value['@origTimeMin']}-${value['@destTimeMin']}ID`})} );
+					processStrategy:tripProcess});
 
 				const requestSchema = new schema.Entity('request',{trip:[tripSchema]},{idAttribute: value => 'requestID'});
 				const scheduleSchema = new schema.Entity('schedule',{request:requestSchema},{idAttribute: value => `${value.time}-${value.date}ID`});

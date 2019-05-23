@@ -384,10 +384,36 @@ export const tripPlannerSchedule = createSelector(
 
 	return {};
 });
+function getDate(time,date)
+{
+	let hours = parseInt(time.substring(0,2),10);
+	let minutes = parseInt(time.substring(3,5),10);
+	
+	const isPM = time.indexOf('PM') > -1;
+	
+	if(isPM)
+	{
+		if(hours !== 12)
+		{
+			hours+=12
+		}
+	}
+	else{
+		if(hours === 12)
+		{
+			hours = 0;
+		}
+	}
+
+	const d = new Date(date);
+	d.setHours(hours,minutes);
+
+	return d;
+}
 
 export const tripPlannerTrip = createSelector(
-	[getTripPlannerSelector,tripPlannerSchedule],
-	(tripplanner,schedule) =>{
+	[getTripPlannerSelector,tripPlannerSchedule,getRoutesSelector],
+	(tripplanner,schedule,routes) =>{
 
 		if(tripplanner.entities)
 		{
@@ -395,7 +421,14 @@ export const tripPlannerTrip = createSelector(
 			
 			return ids.map(tripId => {
 				const trip = tripplanner.entities.trip[tripId];
-				const leg = trip.leg.map(legId => tripplanner.entities.leg[legId]);
+				const leg = trip.leg.map(legId => {
+					const l = tripplanner.entities.leg[legId];
+					const {origTimeMin,origTimeDate,destTimeMin,destTimeDate} = l;
+					const origDate = getDate(origTimeMin,origTimeDate);
+					const destDate = getDate(destTimeMin,destTimeDate);
+					const line = {...routes.entities.route[l.line]};
+					return {...l,origDate,destDate,line};
+				});
 
 				return {...trip,leg};
 			});
@@ -412,12 +445,12 @@ export const tripPlannerTripDetails = createSelector(
 		{
 			const details = tripplanner.entities.trip[tripplanner.tripId];
 			const leg = details.leg.map(id => {
-				const l = tripplanner.entities.leg[id];
+				const l = {...tripplanner.entities.leg[id]};
 
-				l.origin =stations.entities.station[l['@origin']];
-				l.destination = stations.entities.station[l['@destination']];
+				l.origin = {...stations.entities.station[l.origin]};
+				l.destination = {...stations.entities.station[l.destination]};
 
-				if(routes.entities) l.line = routes.entities.route[l['@line']];
+				if(routes.entities) l.line = {...routes.entities.route[l.line]};
 
 				return l;
 			});
@@ -523,7 +556,7 @@ export const closestStation = createSelector(
 			longitude:geolocation.coords.longitude};
 		
 		const index = getClosestCoordIndex(coord,coords);
-		
+
 		return stationsList[index];
 	}
 

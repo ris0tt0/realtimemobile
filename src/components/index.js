@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import {ActivityIndicator, Button, ImageBackground, View, Text, TouchableOpacity} from 'react-native'
-import styles from './styles'
+import {ActivityIndicator, Button, ImageBackground, View,StyleSheet, Text, TouchableOpacity} from 'react-native'
+// import styles from './styles'
 import Logger from 'js-logger'
 import { StationInfo, StationRefresh } from './AIcons';
 
@@ -55,11 +55,35 @@ function WaitingScreen({title}){
 WaitingScreen.propTypes = {
 	title:PropTypes.string,
 }
+const styles = StyleSheet.create({
+	tripbar__container:{
+		borderWidth:1,
+		borderColor:'lightgray',
+		borderRadius:4,
+		marginBottom:2,
+	},
+	tripbar__leg:{
+		// height:10,
+		// width:50,
+		flex:1,
+	}
+})
 
 function TripBar({leg}) {
+
 	return (
-		<View>
-			<Text>Trip Bar length:{leg.length}</Text>
+		<View style={styles.tripbar__container}>
+			<View style={{flexDirection:'row',flex:1}}>
+				{leg.map((item,index) => {
+					const total = item.destDate - item.origDate;
+					return (
+						<View
+							key={index}
+							style={{...styles.tripbar__leg,backgroundColor:item.line.hexcolor}}
+						><Text>{`${total/1000/60} min`}</Text></View>
+						);
+				})}
+			</View>
 		</View>
 	)
 }

@@ -2,9 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Logger from 'js-logger'
 import {View,Text} from 'react-native'
-import { TripBar,TripTime,TripFare,TripDuration,TripLineBar } from '../components/';
+import { TripTime,TripLineBar } from '../components/';
 import { bold } from 'ansi-colors';
-import { RouteLineDetailBike } from './AIcons';
+import { RouteLineDetailBike, PlannerForwardArrow } from './AIcons';
 
 function itemStation(time,stationName, city){
   return (
@@ -27,7 +27,10 @@ function PlannerDetailsRenderItem({item,index}) {
       <TripLineBar color={line.hexcolor}/>
       <View style={{flex:1}}>
         <Text style={{paddingLeft:5,fontWeight:'bold'}}>{origin.name} BART STATION, {origin.city}</Text>
-        <Text style={{paddingLeft:5,backgroundColor:line.hexcolor}}>{item.trainHeadStation}</Text>
+				<View style={{paddingLeft:5,backgroundColor:line.hexcolor,flexDirection:'row',alignItems:'center'}}>
+        <PlannerForwardArrow/>
+					<Text style={{paddingLeft:4}}>{item.trainHeadStation}</Text>
+				</View>
         <View style={{paddingLeft:5,flexDirection:'row'}}>
           <RouteLineDetailBike />
           <Text>Bikes are{item.bikeflag === '1' ? '' : ' not'} allowed</Text>

@@ -90,7 +90,6 @@ class Planner extends Component {
 	{
 		const {closestStation} = this.props;
 
-		Logger.info(closestStation);
 		const isIOS = Platform.OS === 'ios';
 
 		const {active,startAbbr,endAbbr,items} = this.state;

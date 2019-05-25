@@ -147,10 +147,23 @@ function PlannerMap()
 		/>
 	)
 }
+
+function PlannerForwardArrow()
+{
+	return(
+		<Ionicons
+			name={Platform.OS === 'ios' ? 'ios-arrow-round-forward' : 'md-arrow-round-forward'}
+			size={20}
+			color='black'
+		/>
+	)
+}
+
 export {
 	ListItemArrowForward,
 	PlannerMoney,
 	PlannerMap,
+	PlannerForwardArrow,
 	SearchBarIcon,
 	TabBarIcon,
 	RouteLineArrows,

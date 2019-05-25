@@ -18,24 +18,6 @@ function itemStation(time,stationName, city){
 function PlannerDetailsRenderItem({item,index}) {
   const {origin,destination,line} = item;
 
-//   var d = new Date(item['@origTimeDate'])
-//   var e = new Date(item['@destTimeDate']);
-
-//   d.setHours(10,58);
-//   e.setHours(11,1);
-
-//   Logger.info(d)
-//   Logger.info(e);
-//   const v = e-d;
-// const t = v/1000;
-// const minutes = t/60;
-
-//   Logger.info(minutes);
-
-//   const hourIndex = item['@origTimeMin'].search(/\d\d:/);
-//   const minIndex = item['@origTimeMin'].search(/:\d\d/);
-
-
   return (
     <View style={{flex:1,flexDirection:'row'}}>
       <View style={{justifyContent:'space-between'}}>
@@ -43,14 +25,14 @@ function PlannerDetailsRenderItem({item,index}) {
         <Text style={{fontWeight:'bold'}}>{item.destTimeMin}</Text>
       </View>
       <TripLineBar color={line.hexcolor}/>
-      <View>
-        <Text style={{fontWeight:'bold'}}>{origin.name} BART STATION, {origin.city}</Text>
-        <Text style={{backgroundColor:line.hexcolor}}>{item.trainHeadStation}</Text>
-        <View style={{flexDirection:'row'}}>
+      <View style={{flex:1}}>
+        <Text style={{paddingLeft:5,fontWeight:'bold'}}>{origin.name} BART STATION, {origin.city}</Text>
+        <Text style={{paddingLeft:5,backgroundColor:line.hexcolor}}>{item.trainHeadStation}</Text>
+        <View style={{paddingLeft:5,flexDirection:'row'}}>
           <RouteLineDetailBike />
           <Text>Bikes are{item.bikeflag === '1' ? '' : ' not'} allowed</Text>
         </View>
-        <Text style={{fontWeight:'bold'}}>{destination.name} BART STATION, {destination.city}</Text>
+        <Text style={{paddingLeft:5,fontWeight:'bold'}}>{destination.name} BART STATION, {destination.city}</Text>
       </View>
     </View>
   )

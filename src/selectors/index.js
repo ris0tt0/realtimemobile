@@ -446,6 +446,9 @@ export const tripPlannerTripDetails = createSelector(
 			const details = tripplanner.entities.trip[tripplanner.tripId];
 			const leg = details.leg.map(id => {
 				const l = {...tripplanner.entities.leg[id]};
+				const {origTimeMin,origTimeDate,destTimeMin,destTimeDate} = l;
+				l.origDate = getDate(origTimeMin,origTimeDate);
+				l.destDate = getDate(destTimeMin,destTimeDate);
 
 				l.origin = {...stations.entities.station[l.origin]};
 				l.destination = {...stations.entities.station[l.destination]};

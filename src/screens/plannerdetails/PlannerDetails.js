@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Logger from 'js-logger'
-import {FlatList,View} from 'react-native'
+import {FlatList,StyleSheet, View} from 'react-native'
 import {
 	TripTime,
 	TripBar,
@@ -17,17 +17,15 @@ import { PlannerDetailsRenderItem } from '../../components/PlannerRenderers';
 function PlannerDetails({isFetching,details}) {
 
 	if( isFetching) return <WaitingScreen />
-	
+
 	return (
-		<View style={{flex:1}}>
-			<View>
-				<View style={{flexDirection:'row'}}>
-					<TripTime time={details.origTimeMin} />
-					<TripBar leg={details.leg} />
-					<TripTime time={details.destTimeMin} />
-				</View>
+		<View style={styles.container}>
+			<View style={{paddingTop:10,paddingBottom:10,flexDirection:'row'}}>
+				<TripTime time={details.origTimeMin} />
+				<TripBar leg={details.leg} />
+				<TripTime time={details.destTimeMin} />
 			</View>
-			<View style={{flexDirection:'row'}}>
+			<View style={{paddingBottom:10,flexDirection:'row',justifyContent:'space-around'}}>
 				<TripDuration duration={details.tripTime} />
 				<TripChanges changes={details.leg.length} />
 				<TripFare fare={details.fare} />
@@ -70,5 +68,13 @@ PlannerDetails.propTypes = {
   //   },
   // ],
 }
+
+const styles = StyleSheet.create({
+	container:{
+		flex:1,
+		paddingLeft:10,
+		paddingRight:10,
+	},
+});
 
 export {PlannerDetails}

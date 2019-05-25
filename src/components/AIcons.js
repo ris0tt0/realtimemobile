@@ -3,7 +3,7 @@ import Colors from '../constants/Colors'
 import React from 'react'
 import {View} from 'react-native'
 import { Platform } from 'expo-core'
-import {Ionicons,MaterialIcons,MaterialCommunityIcons} from '@expo/vector-icons'
+import {Foundation,Ionicons,MaterialIcons,MaterialCommunityIcons} from '@expo/vector-icons'
 
 function TabBarIcon({name,focused}) {
 	
@@ -115,8 +115,42 @@ function StationLocation()
 	)
 }
 
+function Timelapse()
+{
+	return(
+		<MaterialCommunityIcons
+			name='timelapse'
+			size={25}
+			color='gray'
+		/>
+	)
+}
+
+function PlannerMoney()
+{
+	return(
+		<Foundation
+			name='dollar-bill'
+			size={25}
+			color='gray'
+		/>
+	)
+}
+
+function PlannerMap()
+{
+	return(
+		<MaterialCommunityIcons
+			name='map-search-outline'
+			size={25}
+			color='gray'
+		/>
+	)
+}
 export {
 	ListItemArrowForward,
+	PlannerMoney,
+	PlannerMap,
 	SearchBarIcon,
 	TabBarIcon,
 	RouteLineArrows,
@@ -125,4 +159,5 @@ export {
 	StationRefresh,
 	StationSwap,
 	StationLocation,
+	Timelapse,
 };

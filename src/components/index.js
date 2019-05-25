@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {ActivityIndicator, Button, ImageBackground, View,StyleSheet, Text, TouchableOpacity} from 'react-native'
 // import styles from './styles'
 import Logger from 'js-logger'
-import { StationInfo, StationRefresh } from './AIcons';
+import { PlannerMoney, StationInfo, StationRefresh, Timelapse, PlannerMap } from './AIcons';
 
 function LocationScreenListHeader({onRefresh,onDetails,abbr,name,address,city,state,zipcode,county,time,date}) {
 	return (
@@ -57,32 +57,68 @@ WaitingScreen.propTypes = {
 }
 const styles = StyleSheet.create({
 	tripbar__container:{
-		borderWidth:1,
-		borderColor:'lightgray',
-		borderRadius:4,
-		marginBottom:2,
+		// borderWidth:1,
+		// borderColor:'red',
+		// borderRadius:4,
+		// marginBottom:2,
+		flex:1,
 	},
 	tripbar__leg:{
 		// height:10,
 		// width:50,
 		flex:1,
+	},
+	tripTime__container:{
+		padding:4,
+	},
+	tripTime__title:{
+		fontWeight:'bold',
+		fontSize:16,
 	}
 })
 
 function TripBar({leg}) {
+	const totalDuration = leg[leg.length-1].destDate - leg[0].origDate;
+
+	const legColors = [];
+	leg.forEach( (tripLeg,index,list) =>{
+		let total = tripLeg.destDate - tripLeg.origDate;
+		let flex = total/totalDuration;
+		let min = total/1000/60;
+		
+		legColors.push(
+			<View
+			key={`${tripLeg.line.hexcolor}`}
+			style={{
+				...styles.tripbar__leg,
+				backgroundColor:tripLeg.line.hexcolor,
+				flex,
+			}}
+		></View>);
+
+		// look for layovers
+		const next = list[index+1];
+		if( next && next.origDate - tripLeg.destDate > 0)
+		{
+			total = next.origDate - tripLeg.destDate;
+			flex = total/totalDuration;
+			min = total/1000/60;
+			legColors.push(
+				<View
+				key={`lightgray`}
+				style={{
+					...styles.tripbar__leg,
+					backgroundColor:'lightgray',
+					flex,
+				}}
+			></View>);
+		}
+	});
 
 	return (
 		<View style={styles.tripbar__container}>
 			<View style={{flexDirection:'row',flex:1}}>
-				{leg.map((item,index) => {
-					const total = item.destDate - item.origDate;
-					return (
-						<View
-							key={index}
-							style={{...styles.tripbar__leg,backgroundColor:item.line.hexcolor}}
-						><Text>{`${total/1000/60} min`}</Text></View>
-						);
-				})}
+				{legColors}
 			</View>
 		</View>
 	)
@@ -105,8 +141,8 @@ TripBar.propTypes = {
 
 function TripTime({time}) {
 	return (
-		<View>
-			<Text>{time}</Text>
+		<View style={styles.tripTime__container}>
+			<Text style={styles.tripTime__title}>{time}</Text>
 		</View>
 	)
 }
@@ -117,8 +153,9 @@ TripTime.propTypes = {
 
 function TripChanges({changes}) {
 	return (
-		<View>
-			<Text>changes:{changes}</Text>
+		<View style={{flexDirection:'row',alignItems:'center'}}>
+			<PlannerMap />
+			<Text style={{paddingLeft:5}}>{changes}</Text>
 		</View>
 	)
 }
@@ -129,10 +166,11 @@ TripChanges.propTypes = {
 
 function TripFare({fare}) {
 	return (
-		<View>
-			<Text>fare: {fare}</Text>
+		<View style={{flexDirection:'row', alignItems:'center'}}>
+			<PlannerMoney />
+			<Text style={{paddingLeft:5}}>${fare}</Text>
 		</View>
-		)
+		);
 }
 
 TripFare.propTypes = {
@@ -141,10 +179,11 @@ TripFare.propTypes = {
 
 function TripDuration({duration}) {
 	return (
-	<View>
-		<Text>{duration} min</Text>
+	<View style={{flexDirection:'row',alignItems:'center'}}>
+		<Timelapse />
+		<Text style={{paddingLeft:5}}>{duration}</Text>
 	</View>
-	)
+	);
 }
 
 TripDuration.propTypes = {
@@ -154,7 +193,14 @@ TripDuration.propTypes = {
 function TripLineBar({color}){
 
 	return(
-		<View style={{marginLeft:5,marginRight:5,marginTop:10,marginBottom:10,backgroundColor:color,width:10}}>
+		<View style={
+			{
+				marginLeft:5,
+				marginTop:10,
+				marginBottom:10,
+				backgroundColor:color,
+				width:10,
+			}}>
 		</View>
 	)
 }

@@ -14,17 +14,21 @@ function PlannerResults({navigation:{navigate},isFetching,originStation,destinat
 			onTrip(item.id);	
 			navigate('PlannerDetails')
 		}} >
-			<View style={{flexDirection:'row',alignItems:'center'}}>
+			<View style={styles.renderItemContainer}>
 				<View style={{flex:1}}>
-					<TripBar leg={item.leg}/>
-					<View style={{flexDirection:'row',justifyContent:'space-around'}}>
+					<View style={styles.renderItemTop}>
 						<TripTime time={item.origTimeMin}/>
-						<TripDuration duration={item.tripTime}/>
-						<TripFare fare={item.fare}/>
+						<View style={styles.renderItemTripBar}>
+							<TripBar leg={item.leg}/>
+						</View>
 						<TripTime time={item.destTimeMin}/>
 					</View>
+					<View style={styles.renderItemBottom}>
+						<TripDuration duration={item.tripTime}/>
+						<TripFare fare={item.fare}/>
+					</View>
 				</View>
-				{ListItemArrowForward()}
+				<View style={{paddingLeft:5,paddingRight:5}}>{ListItemArrowForward()}</View>
 			</View>
 		</TouchableHighlight>
 	);
@@ -71,5 +75,32 @@ const styles = StyleSheet.create({
 		borderColor:'lightgray',
 		borderRadius:4,
 		marginBottom:2,
+	},
+	renderItemContainer:{
+		flexDirection:'row',
+		alignItems:'center',
+	},
+	renderItemTop:{
+		flexDirection:'row',
+		alignItems:'center',
+
+		// borderWidth:1,
+		// borderColor:'red',
+	},
+	renderItemBottom:{
+		flexDirection:'row',
+		justifyContent:'space-around',
+
+		// borderWidth:1,
+		// borderColor:'pink',
+	},
+	renderItemTripBar:{
+		flex:1,
+		height:10,
+		paddingLeft:10,
+		paddingRight:10,
+		borderColor:'white',
+		borderWidth:1,
+		borderRadius:10,
 	},
 })

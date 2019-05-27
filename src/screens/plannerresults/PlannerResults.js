@@ -12,7 +12,7 @@ function PlannerResults({navigation:{navigate},isFetching,originStation,destinat
 	const resultRenderItem = ({item,index}) =>(
 		<TouchableHighlight key={index} style={styles.listItem} onPress={() =>{
 			onTrip(item.id);	
-			navigate('PlannerDetails')
+			navigate('PlannerDetails',{name:`${item.origTimeMin}-${item.destTimeMin}`});
 		}} >
 			<View style={styles.renderItemContainer}>
 				<View style={{flex:1}}>

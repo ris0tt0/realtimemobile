@@ -14,7 +14,13 @@ class Station extends Component {
 	{
 		super(props);
 		
-		this.state = {stations:props.stations.concat()}
+		this.state = {stations:props.stations.concat()};
+		const {navigation:{navigate},onStationSelect} = this.props;
+		
+		this.onStation = item =>{
+			onStationSelect(item.abbr);
+			navigate('Location',{name:item.name});
+		}
 	}
 
 	onInputText = text =>
@@ -25,16 +31,11 @@ class Station extends Component {
 
 	render() {
 
-		const {navigation:{navigate},onStationSelect} = this.props;
-		
-		const onStation = abbr =>{
-			onStationSelect(abbr);
-			navigate('Location');
-		}
+
 		return (
 			<View style={{flex:1, margin:10}}>
 				<StationSearchInput onText={this.onInputText}></StationSearchInput>
-				<StationsList items={this.state.stations} onStation={onStation}></StationsList>
+				<StationsList items={this.state.stations} onStation={this.onStation}></StationsList>
 			</View>
 		)
 	}

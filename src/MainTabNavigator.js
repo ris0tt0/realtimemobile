@@ -28,9 +28,9 @@ const HomeStack = createStackNavigator({
 			backgroundColor: '#009bda',
 		},
 		headerTintColor: '#fff',
-		headerTitleStyle: {
-			fontWeight: 'bold',
-		},
+		// headerTitleStyle: {
+		// 	fontWeight: 'bold',
+		// },
 	},
 },);
 
@@ -56,14 +56,14 @@ const TripPlannerStack = createStackNavigator({
 	},
 	PlannerResults:{
 		screen:PlannerResultsScreen,
-		navigationOptions:({navigation}) => ({
-			title:'reults',
+		navigationOptions:({navigation:{getParam}}) => ({
+			title:getParam('name','Result'),
 		}),
 	},
 	PlannerDetails:{
 		screen:PlannerDetailsScreen,
-		navigationOptions:({navigation}) => ({
-			title:'detatuls',
+		navigationOptions:({navigation:{getParam}}) => ({
+			title:getParam('name','Details'),
 		}),
 	},
 },
@@ -73,9 +73,9 @@ const TripPlannerStack = createStackNavigator({
 			backgroundColor: '#009bda',
 		},
 		headerTintColor: '#fff',
-		headerTitleStyle: {
-			fontWeight: 'bold',
-		},
+		// headerTitleStyle: {
+		// 	fontWeight: 'bold',
+		// },
 	},
 },);
 
@@ -101,14 +101,14 @@ const StationStack = createStackNavigator({
 	},
 	Location:{
 		screen:LocationScreen,
-		navigationOptions:() => ({
-			title:'location',
+		navigationOptions:({navigation:{getParam}}) => ({
+			title:getParam('name','Station'),
 		}),
 	},
 	LocationDetails:{
 		screen:LocationDetails,
-		navigationOptions:() => ({
-			title:'details',
+		navigationOptions:({navigation:{getParam}}) => ({
+			title:getParam('name','Details'),
 		}),
 	},
 },
@@ -118,9 +118,9 @@ const StationStack = createStackNavigator({
 			backgroundColor: '#009bda',
 		},
 		headerTintColor: '#fff',
-		headerTitleStyle: {
-			fontWeight: 'bold',
-		},
+		// headerTitleStyle: {
+		// 	fontWeight: 'bold',
+		// },
 	},
 },);
 
@@ -141,7 +141,7 @@ const AdvisoryStack = createStackNavigator({
 	Advisory:{
 		screen:AdvisoryScreen,
 		navigationOptions:() => ({
-			title:'advisory',
+			title:'Advisory',
 		}),
 	},
 },
@@ -151,9 +151,9 @@ const AdvisoryStack = createStackNavigator({
 			backgroundColor: '#009bda',
 		},
 		headerTintColor: '#fff',
-		headerTitleStyle: {
-			fontWeight: 'bold',
-		},
+		// headerTitleStyle: {
+		// 	fontWeight: 'bold',
+		// },
 	},
 },);
 

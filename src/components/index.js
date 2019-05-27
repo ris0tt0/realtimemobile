@@ -1,30 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import {ActivityIndicator, Button, ImageBackground, View,StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {ActivityIndicator, Button, ImageBackground, View,StyleSheet, Text, TouchableWithoutFeedback} from 'react-native'
 // import styles from './styles'
 import Logger from 'js-logger'
 import { PlannerMoney, StationInfo, StationRefresh, Timelapse, PlannerMap } from './AIcons';
 
 function LocationScreenListHeader({onRefresh,onDetails,abbr,name,address,city,state,zipcode,county,time,date}) {
 	return (
-		<View style={{padding:15,flex:1, justifyContent:'flex-end', height:200}}>
-		{/* <ImageBackground source={require('../../assets/splash.png')} style={{width:200,height:200}} > */}
-			<View style={{flexDirection:'row',alignItems:'center'}}>
-				<Text style={{fontWeight:'bold', fontSize:30}}>{name}</Text>
-				<TouchableOpacity onPress={() => onDetails()} >
+		<View style={{flex:1}}>
+			<TouchableWithoutFeedback style={{paddingLeft:4}} onPress={onDetails} >
+				<View style={{flexDirection:'row',alignItems:'center'}}>
+					<Text style={{fontWeight:'bold', fontSize:18}}>{name}</Text>
 					{StationInfo()}
-				</TouchableOpacity>
-			</View>
-			<View style={{flexDirection:'row'}}>
-				<View style={{marginLeft:3}}>
-					<Text>{address}</Text>
-					<Text>{city}, {state}, {zipcode}</Text>
-					<Text style={{fontWeight:'bold',fontSize:10,color:'darkgray'}}>{date} - {time}</Text>
 				</View>
+			</TouchableWithoutFeedback>
+			<View>
+				<Text>{address}</Text>
+				<Text>{city}, {state}, {zipcode}</Text>
+				<TouchableWithoutFeedback style={{flexDirection:'row', alignItems:'center'}} onPress={onRefresh}>
+					<View style={{flexDirection:'row',justifyContent:'flex-end'}}>
+						<Text style={{fontWeight:'bold',fontSize:10,color:'darkgray'}}>{date} - {time}</Text>
+						{StationRefresh()}
+					</View>
+				</TouchableWithoutFeedback>
 			</View>
-			<TouchableOpacity onPress={() => onRefresh()} >
-				{StationRefresh()}
-			</TouchableOpacity>
 		</View>
 	)
 }

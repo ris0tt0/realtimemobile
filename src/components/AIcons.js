@@ -76,20 +76,26 @@ function ListItemArrowForward()
 function StationRefresh()
 {
 	return(
-		<Ionicons
-			name={Platform.OS === 'ios' ? 'ios-refresh' : 'md-refresh'}
-			size={20}
-			color={Colors.tintColor} />
+		<View style={{paddingLeft:5}}>
+			<Ionicons
+				name={Platform.OS === 'ios' ? 'ios-refresh' : 'md-refresh'}
+				size={12}
+				color={Colors.tintColor}
+			/>
+		</View>
 	)
 }
 
 function StationInfo()
 {
 	return(
-		<Ionicons
-			name={Platform.OS === 'ios' ? 'ios-information-circle' : 'md-information-circle'}
-			size={20}
-			color={Colors.tintColor} />
+		<View style={{paddingLeft:5}}>
+			<Ionicons
+				name={Platform.OS === 'ios' ? 'ios-information-circle' : 'md-information-circle'}
+				size={12}
+				color={Colors.tintColor}
+			/>
+		</View>
 	)
 }
 

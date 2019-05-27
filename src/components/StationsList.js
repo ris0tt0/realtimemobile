@@ -15,12 +15,14 @@ const style = StyleSheet.create({
 		borderRadius:4,
 		// margin:2,
 		marginBottom:2,
+		backgroundColor:'whitesmoke',
 	},
 	container:{
 		margin:5,
 		flexDirection:'row',
 		justifyContent:'space-between',
 		alignItems:'center',
+		
 	},
 	container__header:{
 		fontSize:16,
@@ -41,7 +43,7 @@ function StationsList({items,onStation}) {
 						<TouchableHighlight
 							style={style.listItem}
 							underlayColor='lightgray'
-							onPress={() => onStation(item.abbr)}>
+							onPress={() => onStation(item)}>
 							<View style={style.container}>
 								<View>
 									<Text style={style.container__header}>{item.name}</Text>

@@ -78,7 +78,7 @@ class Planner extends Component {
 		const {onSearch,navigation:{navigate}} = this.props;
 		const {startAbbr,endAbbr} = this.state;
 
-		navigate('PlannerResults');
+		navigate('PlannerResults',{name:`${startAbbr} - ${endAbbr}`});
 		onSearch(startAbbr,endAbbr);
 	}
 	onPickerSelected = (value) =>
@@ -96,7 +96,6 @@ class Planner extends Component {
 		// Logger.info(`active: ${active} startAbbr:${startAbbr} endAbbr:${endAbbr}`);
 		return(
 			<View style={style.container}>
-				<Text style={style.title}>Trip Planner</Text>
 				<View style={{paddingTop:10}}>
 					<View style={style.stationContainer}>
 						<Text>A</Text>
@@ -156,13 +155,6 @@ class Planner extends Component {
 const style = StyleSheet.create({
 	container:{
 		flex:1,
-	},
-	title:{
-		fontSize:18,
-		fontWeight:'bold',
-		color:'white',
-		padding:10,
-		backgroundColor:Colors.bartBlue,
 	},
 	stationContainer:{
 		// borderColor:'black',

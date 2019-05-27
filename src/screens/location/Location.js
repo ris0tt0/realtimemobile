@@ -21,15 +21,16 @@ function Location({navigation:{navigate},onRefresh,onDetails,isFetching,stations
 		onRefresh:() => onRefresh(stationsData[0].abbr),
 		onDetails:() => {
 			onDetails(stationsData[0].abbr);
-			navigate('LocationDetails');
+			navigate('LocationDetails',{name:stationsData[0].name});
 		},
 	};
 
 	return (
-		<View style={{flex:1}}>
+		<View style={{padding:10,flex:1}}>
 			<SectionList
+				style={{flex:1}}
 				ListHeaderComponent={() => (
-					<View>
+					<View style={{paddingBottom:5}}>
 						<LocationScreenListHeader {...data} />
 						{messageValue}
 					</View>
@@ -37,11 +38,11 @@ function Location({navigation:{navigate},onRefresh,onDetails,isFetching,stations
 				
 				renderItem={renderItem}
 				renderSectionHeader={renderSectionHeader}
+				renderSectionFooter={()=><View style={{borderBottomWidth:1}}/>}
 				sections={platformSections}
 
 				keyExtractor={(item,index) => `id${index}`}
 			/>
-			{/* <Image source={require('../../../assets/sanfrantest.jpg')} /> */}
 		</View>
 	)
 }

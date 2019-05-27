@@ -10,6 +10,7 @@ import {
 	TripFare,
 	WaitingScreen } from '../../components';
 import { PlannerDetailsRenderItem } from '../../components/PlannerRenderers';
+import Colors from '../../constants/Colors';
 
 /**
  * This screen shows the route choosen is great detail.

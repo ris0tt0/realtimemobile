@@ -185,7 +185,7 @@ export const rteLocationScreenData = createSelector(
 			station.forEach((stationMap,platformName) =>{
 				
 				platformSections.push({
-					title:`Platform:  ${platformName}`,
+					title:`${platformName}`,
 					data:[...stationMap.values()],
 				});
 			})

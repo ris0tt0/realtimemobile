@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Logger from 'js-logger'
-import {View,Text} from 'react-native'
+import {View,StyleSheet,Text} from 'react-native'
 import { TripTime,TripLineBar } from '../components/';
 import { bold } from 'ansi-colors';
 import { RouteLineDetailBike, PlannerForwardArrow } from './AIcons';
+import Colors from '../constants/Colors';
 
 function itemStation(time,stationName, city){
   return (
@@ -19,7 +20,7 @@ function PlannerDetailsRenderItem({item,index}) {
   const {origin,destination,line} = item;
 
   return (
-    <View style={{flex:1,flexDirection:'row'}}>
+    <View style={styles.container}>
       <View style={{justifyContent:'space-between'}}>
         <Text style={{fontWeight:'bold'}}>{item.origTimeMin}</Text>
         <Text style={{fontWeight:'bold'}}>{item.destTimeMin}</Text>
@@ -45,6 +46,15 @@ PlannerDetailsRenderItem.propTypes = {
 
 }
 
+const styles = StyleSheet.create({
+	container:{
+		flex:1,
+		flexDirection:'row',
+		backgroundColor:Colors.itemBackgroundColor,
+		paddingLeft:5,
+		paddingRight:5,
+	},
+});
 
 export {PlannerDetailsRenderItem}
 

@@ -6,14 +6,14 @@ import { red } from 'ansi-colors';
 
 const renderSectionHeader = ({item,index,section: {title}}) => 
 	<View style={styles.renderSectionHeader}>
-		<Text style={styles.renderSectionHeaderText}>{title}</Text>
+		<Text style={styles.renderSectionHeaderText}>platform {title}</Text>
 	</View>
 const renderItem = ({item:{abbreviation,destination,estimate}, index, section}) =>{
 	const bgcolor = estimate[0] && estimate[0].hexcolor ? estimate[0].hexcolor : 'white';
 
 	return (	
 	<View style={styles.renderItem}>
-		<View style={{ borderLeftWidth:1,backgroundColor:bgcolor, width:15}}></View>
+		<View style={{backgroundColor:bgcolor, width:15}}></View>
 		<View style={{paddingLeft:4}}>
 			<Text style={{fontSize:16}}>{destination}</Text>
 		</View>
@@ -48,18 +48,19 @@ destinationTrainInfo.propTypes = {
 const styles = StyleSheet.create({
 	renderSectionHeader:{
 		marginTop:10,
+		paddingBottom:5,
 		paddingLeft:10,
-		borderColor:'black',
-		borderTopWidth:1,
+		// borderColor:'gray',
+		// borderTopWidth:1,
 		// borderTopColor:'black',
-		borderLeftWidth:1,
+		// borderLeftWidth:1,
 		// borderLeftColor:'black',
-		borderRightWidth:1,
+		// borderRightWidth:1,
 		backgroundColor: 'whitesmoke',
 	},
 	renderSectionHeaderText:{
 		fontWeight: 'bold',
-		fontSize:18,
+		fontSize:20,
 		color: 'darkgray',
 	},
 	renderItem:{
@@ -71,7 +72,8 @@ const styles = StyleSheet.create({
 		flex:1,
 		flexDirection:'row',
 		justifyContent:'flex-start',
-		borderRightWidth:1,
+		// borderRightWidth:1,
+		// borderColor:'gray',
 		// borderColor:'red',
 		// borderWidth:1,
 		justifyContent:'flex-end',

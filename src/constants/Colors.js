@@ -13,4 +13,6 @@ export default {
 	noticeText: '#ffff',
 	// bart colours
 	bartBlue:'#009bda',
+	itemBorderColor:'gray',
+	itemBackgroundColor:'whitesmoke',
 };

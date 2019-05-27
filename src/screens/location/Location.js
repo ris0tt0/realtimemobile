@@ -4,6 +4,7 @@ import {ActivityIndicator, Image, View, SectionList, Text} from 'react-native'
 import Logger from 'js-logger'
 import {renderItem,renderSectionHeader} from '../../components/LocationRenderers'
 import { LocationScreenListHeader, WaitingScreen } from '../../components';
+import Colors from '../../constants/Colors';
 
 /**
  * Location screen. displays the bart station real time estimates.
@@ -26,7 +27,7 @@ function Location({navigation:{navigate},onRefresh,onDetails,isFetching,stations
 	};
 
 	return (
-		<View style={{padding:10,flex:1}}>
+		<View style={{backgroundColor:'white',padding:10,flex:1}}>
 			<SectionList
 				style={{flex:1}}
 				ListHeaderComponent={() => (
@@ -38,7 +39,6 @@ function Location({navigation:{navigate},onRefresh,onDetails,isFetching,stations
 				
 				renderItem={renderItem}
 				renderSectionHeader={renderSectionHeader}
-				renderSectionFooter={()=><View style={{borderBottomWidth:1}}/>}
 				sections={platformSections}
 
 				keyExtractor={(item,index) => `id${index}`}

@@ -1,17 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {View,Text,SectionList	} from 'react-native'
+import {View,Text,SectionList,StyleSheet} from 'react-native'
 import Logger from 'js-logger'
 import { WaitingScreen } from '../../components';
 import {RouteLineArrows} from '../../components/AIcons';
 import HTML from 'react-native-render-html';
+import Colors from '../../constants/Colors';
 
 function LocationDetails({isFetching,details,routes,access}) {
 
 	if(isFetching) return <WaitingScreen />
 
 	const routeNames = routes.map((route,index) => (
-		<View key={index} style={{backgroundColor:'whitesmoke', flexDirection:'row'}}>
+		<View key={index} style={{backgroundColor:Colors.itemBackgroundColor, flexDirection:'row'}}>
 			<RouteLineArrows color={route.hexcolor} />
 			<Text style={{paddingLeft:4}}>{route.name}</Text>
 		</View>
@@ -19,106 +20,72 @@ function LocationDetails({isFetching,details,routes,access}) {
 
 
 	const listHeaderComponent = (
-		<View>
-			<Text>{details.name} {details.link}</Text>
+		<View style={styles.listHeader}>
 			<Text>{details.address}</Text>
 			<Text>{details.city}, {details.state}, {details.zipcode}</Text>
 			<Text>{details.cross_street}</Text>
 		</View>
 	)
 
-	const listFooterComponent = (
-		<View style={{flexDirection:'column'}}>{routeNames}</View>
-	)
+	const sections = [];
+	const onlinkpress = (args) => Logger.info(args);
 
-	const accessList = [];
-
-	if(access.bikeStation && access.bikeStation.length > 0)
-	{
-		accessList.push(<HTML html={access.bikeStation} />);
-	}
-	if(access.carShare.length > 0)
-	{
-		accessList.push(<HTML html={access.carShare} />);
-	}
-	if(access.destinations.length > 0)
-	{
-		accessList.push(<HTML html={access.destinations} />);
-	}
 	if(access.entering.length > 0)
 	{
-		accessList.push(<HTML html={access.entering} />);
+		sections.push({title:'access',data:[<HTML onLinkPress={onlinkpress} html={access.entering} />]});
 	}
 	if( access.exiting.length > 0)
 	{
-		accessList.push(<HTML html={access.exiting} />);
-	}
-	if(access.fillTime.length > 0)
-	{
-		accessList.push(<HTML html={access.fillTime} />);
+		sections.push({title:'exiting',data:[<HTML onLinkPress={onlinkpress} html={access.exiting} />]});
 	}
 	if(access.lockers.length > 0)
 	{
-		accessList.push(<HTML html={access.lockers} />);
+		sections.push({title:'lockers',data:[<HTML onLinkPress={onlinkpress} html={access.lockers} />]});
 	}
 	if( access.parking.length > 0)
 	{
-		accessList.push(<HTML html={access.parking} />);
+		sections.push({title:'parking',data:[<HTML onLinkPress={onlinkpress} html={access.parking} />]});
 	}
+
+	if(access.bikeStation && access.bikeStation.length > 0)
+	{
+		sections.push({title:'bike',data:[<HTML onLinkPress={onlinkpress} html={access.bikeStation}/>]})
+	}
+	if(access.carShare.length > 0)
+	{
+		sections.push({title:'car share',data:[<HTML onLinkPress={onlinkpress} html={access.carShare} />]})
+	}
+	if(access.destinations.length > 0)
+	{
+		sections.push({title:'destinations',data:[<HTML onLinkPress={onlinkpress} html={access.destinations} />]})
+	}
+
+	if(access.fillTime.length > 0)
+	{
+		sections.push({title:'fill time',data:[<HTML onLinkPress={onlinkpress} html={access.fillTime} />]});
+	}
+
 	if(access.transitInfo.length > 0)
 	{
-		accessList.push(<HTML html={access.transitInfo} />);
+		sections.push({title:'transit information',data:[<HTML onLinkPress={onlinkpress} html={access.transitInfo} />]})
 	}
 
-	const sections=[
-		{title: 'DETAILS', data: [
-			<Text>{details.intro}</Text>,
-			<HTML html={details.attraction} />,
-			<HTML html={details.food} />,
-			<HTML html={details.shopping} />,
-			<HTML html={details.platform_info} />,
-		]},
-		{title: 'ACCESS', data: accessList},
-		// {title: 'Title2', data: ['item3', 'item4']},
-		// {title: 'Title3', data: ['item5', 'item6']},
-	];
+	sections.push({title:'routes',data:[<View style={{flexDirection:'column'}}>{routeNames}</View>]});
 
 	return (
-		<View style={{flex:1}}>
+		<View style={styles.container}>
 			<SectionList
-				renderItem={({item, index, section}) => item}
+				renderItem={({item}) => (
+					<View style={{paddingLeft:5,paddingRight:5,marginBottom:10,backgroundColor:Colors.itemBackgroundColor}}>{item}</View>)}
 				renderSectionHeader={({section: {title}}) => (
-					<Text style={{backgroundColor:'lightblue',fontWeight: 'bold'}}>{title}</Text>
+					<Text key={title} style={styles.listRenderHeaderText}>{title}</Text>
 				)}
 				ListHeaderComponent={listHeaderComponent}
-				ListFooterComponent={listFooterComponent}
+				// ListFooterComponent={listFooterComponent}
 				sections={sections}
+				keyExtractor={(item, index) => `${index}`}
 			/>
 		</View>
-
-
-		// <View style={{flex:1}}>
-		// 	<Text>{details.name}</Text>
-		// 	<Text>{details.address}</Text>
-		// 	<Text>{details.city}, {details.state}, {details.zipcode}</Text>
-		// 	<Text>{details.cross_street['#cdata-section']}</Text>
-		// 	<Text style={{color:'darkgray', fontSize:10}}>info:</Text>
-		// 	<Text>{details.intro['#cdata-section']}</Text>
-		// 	<Text style={{color:'darkgray', fontSize:10}}>platform info:</Text>
-		// 	<Text>{details.platform_info}</Text>
-		// 	<Text style={{color:'darkgray', fontSize:10}}>lines serving this station:</Text>
-		// 	<View style={{flexDirection:'column'}}>{routeNames}</View>
-		// 	<Text>{stationsAccess.bikeStation}</Text>
-		// 	<Text>{stationsAccess.carShare}</Text>
-		// 	<Text>{stationsAccess.destinations}</Text>
-		// 	{/* <Text>{stationsAccess.entering.replace(/(<([^>]+)>)/ig,'')}</Text> */}
-		// 	<Text>{stationsAccess.entering}</Text>
-		// 	<Text>{stationsAccess.exiting}</Text>
-		// 	<Text>{stationsAccess.fillTime}</Text>
-		// 	<Text>{stationsAccess.lockers}</Text>
-		// 	<Text>{stationsAccess.parking}</Text>
-		// 	<Text>{stationsAccess.transitInfo}</Text>
-		// </View>
 	)
 }
 
@@ -141,7 +108,24 @@ LocationDetails.propTypes = {
 		name:PropTypes.string.isRequired,
 		routeID:PropTypes.string.isRequired,
 	})).isRequired,
-}
+};
+
+const styles = StyleSheet.create({
+	container:{
+		flex:1,
+		margin:10,
+	},
+	listHeader:{
+		paddingBottom:10,
+	},
+	listRenderHeaderText:{
+		backgroundColor:Colors.itemBackgroundColor,
+		color:'gray',
+		fontSize:20,
+		fontWeight: 'bold',
+		paddingLeft:5,
+	}
+});
 
 export default LocationDetails
 

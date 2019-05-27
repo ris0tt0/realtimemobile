@@ -12,9 +12,9 @@ const style = StyleSheet.create({
 	listItem:{
 		borderWidth:1,
 		borderColor:'lightgray',
-		borderRadius:4,
+		borderRadius:5,
 		// margin:2,
-		marginBottom:2,
+		marginBottom:4,
 		backgroundColor:'whitesmoke',
 	},
 	container:{

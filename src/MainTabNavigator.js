@@ -15,8 +15,24 @@ import Logger from 'js-logger'
 import { fetchServiceAdvisory, fetchElevatorInfo } from './actions';
 
 const HomeStack = createStackNavigator({
-	Home:HomeScreen,
-});
+	Home:{
+		screen:HomeScreen,
+		navigationOptions:() =>({
+			title:'Home',
+		}),
+	},
+},
+{
+	defaultNavigationOptions: {
+		headerStyle: {
+			backgroundColor: '#009bda',
+		},
+		headerTintColor: '#fff',
+		headerTitleStyle: {
+			fontWeight: 'bold',
+		},
+	},
+},);
 
 HomeStack.navigationOptions = {
 	tabBarLabel: 'Home',
@@ -32,10 +48,36 @@ HomeStack.navigationOptions = {
 };
 
 const TripPlannerStack = createStackNavigator({
-	TripPlanner:TripPlannerScreen,
-	PlannerResults:PlannerResultsScreen,
-	PlannerDetails:PlannerDetailsScreen,
-});
+	TripPlanner:{
+		screen:TripPlannerScreen,
+		navigationOptions:() =>({
+			title:'Trip Planner',
+		}),
+	},
+	PlannerResults:{
+		screen:PlannerResultsScreen,
+		navigationOptions:({navigation}) => ({
+			title:'reults',
+		}),
+	},
+	PlannerDetails:{
+		screen:PlannerDetailsScreen,
+		navigationOptions:({navigation}) => ({
+			title:'detatuls',
+		}),
+	},
+},
+{
+	defaultNavigationOptions: {
+		headerStyle: {
+			backgroundColor: '#009bda',
+		},
+		headerTintColor: '#fff',
+		headerTitleStyle: {
+			fontWeight: 'bold',
+		},
+	},
+},);
 
 TripPlannerStack.navigationOptions = {
 	tabBarLabel: 'Planner',
@@ -51,10 +93,36 @@ TripPlannerStack.navigationOptions = {
 };
 
 const StationStack = createStackNavigator({
-	Station:StationScreen,
-	Location:LocationScreen,
-	LocationDetails,
-});
+	Station:{
+		screen:StationScreen,
+		navigationOptions:() => ({
+			title:'Stations',
+		}),
+	},
+	Location:{
+		screen:LocationScreen,
+		navigationOptions:() => ({
+			title:'location',
+		}),
+	},
+	LocationDetails:{
+		screen:LocationDetails,
+		navigationOptions:() => ({
+			title:'details',
+		}),
+	},
+},
+{
+	defaultNavigationOptions: {
+		headerStyle: {
+			backgroundColor: '#009bda',
+		},
+		headerTintColor: '#fff',
+		headerTitleStyle: {
+			fontWeight: 'bold',
+		},
+	},
+},);
 
 StationStack.navigationOptions = {
 	tabBarLabel: 'Station',
@@ -70,8 +138,24 @@ StationStack.navigationOptions = {
 };
 
 const AdvisoryStack = createStackNavigator({
-	Advisory:AdvisoryScreen,
-});
+	Advisory:{
+		screen:AdvisoryScreen,
+		navigationOptions:() => ({
+			title:'advisory',
+		}),
+	},
+},
+{
+	defaultNavigationOptions: {
+		headerStyle: {
+			backgroundColor: '#009bda',
+		},
+		headerTintColor: '#fff',
+		headerTitleStyle: {
+			fontWeight: 'bold',
+		},
+	},
+},);
 
 AdvisoryStack.navigationOptions = {
 
@@ -98,8 +182,9 @@ AdvisoryStack.navigationOptions = {
 }
 
 export default createBottomTabNavigator({
-	HomeStack,
-	StationStack,
-	TripPlannerStack,
-	AdvisoryStack,
-})
+		HomeStack,
+		StationStack,
+		TripPlannerStack,
+		AdvisoryStack,
+	},
+)

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {FlatList,View,StyleSheet,Text,TouchableHighlight} from 'react-native'
+import {FlatList,View,StyleSheet,Text,TouchableOpacity} from 'react-native'
 import Logger from 'js-logger'
 import {WaitingScreen, TripBar, TripTime, TripDuration, TripFare} from '../../components/'
 import { ListItemArrowForward } from '../../components/AIcons';
@@ -10,7 +10,7 @@ function PlannerResults({navigation:{navigate},isFetching,originStation,destinat
 	if(isFetching) return <WaitingScreen />
 
 	const resultRenderItem = ({item,index}) =>(
-		<TouchableHighlight key={index} style={styles.listItem} onPress={() =>{
+		<TouchableOpacity key={index} style={styles.listItem} onPress={() =>{
 			onTrip(item.id);	
 			navigate('PlannerDetails',{name:`${item.origTimeMin}-${item.destTimeMin}`});
 		}} >
@@ -19,7 +19,7 @@ function PlannerResults({navigation:{navigate},isFetching,originStation,destinat
 					<View style={styles.renderItemTop}>
 						<TripTime time={item.origTimeMin}/>
 						<View style={styles.renderItemTripBar}>
-							<TripBar leg={item.leg}/>
+							<TripBar leg={item.leg} showMin={false}/>
 						</View>
 						<TripTime time={item.destTimeMin}/>
 					</View>
@@ -30,7 +30,7 @@ function PlannerResults({navigation:{navigate},isFetching,originStation,destinat
 				</View>
 				<View style={{paddingLeft:5,paddingRight:5}}>{ListItemArrowForward()}</View>
 			</View>
-		</TouchableHighlight>
+		</TouchableOpacity>
 	);
 
 	return (

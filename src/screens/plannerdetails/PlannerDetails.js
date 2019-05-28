@@ -23,7 +23,9 @@ function PlannerDetails({isFetching,details}) {
 		<View style={styles.container}>
 			<View style={{paddingTop:10,paddingBottom:10,flexDirection:'row'}}>
 				<TripTime time={details.origTimeMin} />
-				<TripBar leg={details.leg} />
+				{/* <View style={{flex:1,borderWidth:1,borderColor:'lightgray'}}> */}
+					<TripBar leg={details.leg} showMin={true} />
+				{/* </View> */}
 				<TripTime time={details.destTimeMin} />
 			</View>
 			<View style={{paddingBottom:10,flexDirection:'row',justifyContent:'space-around'}}>
@@ -31,11 +33,13 @@ function PlannerDetails({isFetching,details}) {
 				<TripChanges changes={details.leg.length} />
 				<TripFare fare={details.fare} />
 			</View>
-			<FlatList
-				data={details.leg}
-				renderItem={PlannerDetailsRenderItem}
-				keyExtractor={(item,index) => `${index}ID`}
-			/>
+			{/* <View style={{borderWidth:1,borderColor:'lightgray'}}> */}
+				<FlatList
+					data={details.leg}
+					renderItem={PlannerDetailsRenderItem}
+					keyExtractor={(item,index) => `${index}ID`}
+				/>
+			{/* </View> */}
 		</View>
 	)
 }

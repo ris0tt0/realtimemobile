@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Logger from 'js-logger'
-import {Text,View,StyleSheet,TouchableHighlight} from 'react-native'
+import {Text,View,StyleSheet,TouchableOpacity} from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { ListItemArrowForward } from './AIcons'
 
@@ -15,7 +15,6 @@ const style = StyleSheet.create({
 		borderRadius:5,
 		// margin:2,
 		marginBottom:4,
-		backgroundColor:'whitesmoke',
 	},
 	container:{
 		margin:5,
@@ -40,9 +39,8 @@ function StationsList({items,onStation}) {
 			<FlatList
 				data={items}
 				renderItem={({item}) => (
-						<TouchableHighlight
+						<TouchableOpacity
 							style={style.listItem}
-							underlayColor='lightgray'
 							onPress={() => onStation(item)}>
 							<View style={style.container}>
 								<View>
@@ -51,7 +49,7 @@ function StationsList({items,onStation}) {
 								</View>
 								{ListItemArrowForward()}
 							</View>
-						</TouchableHighlight>
+						</TouchableOpacity>
 					)}
 				keyExtractor={(item,index) => `${item.abbr}-${index}`}
 			 ></FlatList>

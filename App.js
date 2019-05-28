@@ -1,4 +1,5 @@
 import React from 'react';
+import {View} from 'react-native'
 import Logger from 'js-logger'
 import store from './src/store'
 import {Provider} from 'react-redux'
@@ -19,6 +20,6 @@ export default class App extends React.Component {
 	}
 
 	render(){
-		return <Provider store={store} ><AppNavigator style={{flex:1}} /></Provider>
+		return <Provider store={store} ><AppNavigator style={{flex:1}} /></Provider>;
   }
 }

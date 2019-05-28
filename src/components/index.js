@@ -5,43 +5,6 @@ import {ActivityIndicator, Button, ImageBackground, View,StyleSheet, Text, Touch
 import Logger from 'js-logger'
 import { PlannerMoney, StationInfo, StationRefresh, Timelapse, PlannerMap } from './AIcons';
 
-function LocationScreenListHeader({onRefresh,onDetails,abbr,name,address,city,state,zipcode,county,time,date}) {
-	return (
-		<View style={{flex:1}}>
-			<TouchableWithoutFeedback style={{paddingLeft:4}} onPress={onDetails} >
-				<View style={{flexDirection:'row',alignItems:'center'}}>
-					<Text style={{fontWeight:'bold', fontSize:18}}>{name}</Text>
-					{StationInfo()}
-				</View>
-			</TouchableWithoutFeedback>
-			<View>
-				<Text>{address}</Text>
-				<Text>{city}, {state}, {zipcode}</Text>
-				<TouchableWithoutFeedback style={{flexDirection:'row', alignItems:'center'}} onPress={onRefresh}>
-					<View style={{flexDirection:'row',justifyContent:'flex-end'}}>
-						<Text style={{fontWeight:'bold',fontSize:10,color:'darkgray'}}>{date} - {time}</Text>
-						{StationRefresh()}
-					</View>
-				</TouchableWithoutFeedback>
-			</View>
-		</View>
-	)
-}
-
-LocationScreenListHeader.propTypes = {
-	name : PropTypes.string.isRequired,
-	abbr:PropTypes.string.isRequired,
-	gtfs_latitude:PropTypes.string.isRequired,
-	gtfs_longitude:PropTypes.string.isRequired,
-	address:PropTypes.string.isRequired,
-	city:PropTypes.string.isRequired,
-	county:PropTypes.string.isRequired,
-	state:PropTypes.string.isRequired,
-	zipcode:PropTypes.string.isRequired,
-	date:PropTypes.string.isRequired,
-	time:PropTypes.string.isRequired,
-}
-
 function WaitingScreen({title}){
 	return (
 		<View style={{flex:1, justifyContent:'center', alignItems:'center', flexDirection:'column'}}>
@@ -63,9 +26,12 @@ const styles = StyleSheet.create({
 		flex:1,
 	},
 	tripbar__leg:{
-		// height:10,
-		// width:50,
 		flex:1,
+		justifyContent:'center',
+		alignItems:'center',
+	},
+	tripbar__LegText:{
+		fontSize:12,
 	},
 	tripTime__container:{
 		padding:4,
@@ -76,7 +42,7 @@ const styles = StyleSheet.create({
 	}
 })
 
-function TripBar({leg}) {
+function TripBar({leg,showMin = false}) {
 	const totalDuration = leg[leg.length-1].destDate - leg[0].origDate;
 
 	const legColors = [];
@@ -93,7 +59,7 @@ function TripBar({leg}) {
 				backgroundColor:tripLeg.line.hexcolor,
 				flex,
 			}}
-		></View>);
+		>{showMin ? <Text style={styles.tripbar__LegText}>{min}</Text> : null}</View>);
 
 		// look for layovers
 		const next = list[index+1];
@@ -104,7 +70,7 @@ function TripBar({leg}) {
 			min = total/1000/60;
 			legColors.push(
 				<View
-				key={`lightgray`}
+				key={`${tripLeg.destDate}`}
 				style={{
 					...styles.tripbar__leg,
 					backgroundColor:'lightgray',
@@ -195,14 +161,18 @@ function TripLineBar({color}){
 		<View style={
 			{
 				marginLeft:5,
-				marginTop:10,
-				marginBottom:10,
+				marginTop:5,
+				marginBottom:5,
 				backgroundColor:color,
 				width:10,
+				borderTopLeftRadius:5,
+				borderTopRightRadius:5,
+				borderBottomLeftRadius:5,
+				borderBottomRightRadius:5,
 			}}>
 		</View>
 	)
 }
 
-export {LocationScreenListHeader,WaitingScreen,TripBar,TripTime,TripChanges,TripFare,TripDuration,TripLineBar}
+export {WaitingScreen,TripBar,TripTime,TripChanges,TripFare,TripDuration,TripLineBar}
 

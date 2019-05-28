@@ -8,6 +8,7 @@ const renderSectionHeader = ({item,index,section: {title}}) =>
 	<View style={styles.renderSectionHeader}>
 		<Text style={styles.renderSectionHeaderText}>platform {title}</Text>
 	</View>
+	
 const renderItem = ({item:{abbreviation,destination,estimate}, index, section}) =>{
 	const bgcolor = estimate[0] && estimate[0].hexcolor ? estimate[0].hexcolor : 'white';
 
@@ -47,7 +48,7 @@ destinationTrainInfo.propTypes = {
 
 const styles = StyleSheet.create({
 	renderSectionHeader:{
-		marginTop:10,
+		marginTop:4,
 		paddingBottom:5,
 		paddingLeft:10,
 		// borderColor:'gray',

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "real time bart",
-    "slug": "rtbart",
+    "name": "Real Time BART",
+    "slug": "rt-bart",
     "privacy": "unlisted",
     "sdkVersion": "32.0.0",
     "platforms": [
@@ -22,8 +22,12 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
+		"ios": {
+			"supportsTablet": true,
+      "bundleIdentifier": "com.jonathangee.realtimebart"
+    },
+    "android": {
+      "package": "com.jonathangee.realtimebart"
     }
   }
 }

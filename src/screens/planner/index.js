@@ -13,9 +13,9 @@ const mapStateToProps = state =>{
 
 const mapDispatchToProps = dispatch => {
 	return{
-		onSearch:(origin,ending) => {
+		onSearch:(origin,ending,dateby,date) => {
 			dispatch(fetchRoutes());
-			dispatch(fetchTripPlanning(origin,ending));
+			dispatch(fetchTripPlanning(origin,ending,dateby,date));
 		},
 		onLocation:() => dispatch(fetchGeolocation()),
 	}

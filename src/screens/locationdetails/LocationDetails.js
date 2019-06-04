@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {View,Text,SectionList,StyleSheet} from 'react-native'
+import {Linking,View,Text,SectionList,StyleSheet} from 'react-native'
 import Logger from 'js-logger'
 import { WaitingScreen } from '../../components';
 import {RouteLineArrows} from '../../components/AIcons';
@@ -28,7 +28,21 @@ function LocationDetails({isFetching,details,routes,access}) {
 	)
 
 	const sections = [];
-	const onlinkpress = (args) => Logger.info(args);
+	const onlinkpress = (event,href) => {
+		const openUrl = Linking.canOpenURL(href)
+			.then( supported => {
+				if( supported){
+					// Logger.info(`is ${supported}`);
+					return Linking.openURL(href);
+				}
+				else{
+					return Promise.reject(`not supported`);
+				}
+			});
+		openUrl
+			.then()
+			.catch( e => Logger.info(e));
+	};
 
 	if(access.entering.length > 0)
 	{

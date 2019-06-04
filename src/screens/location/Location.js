@@ -23,7 +23,8 @@ function renderItem({item:{abbreviation,destination,estimate}, index, section}){
 	const bgcolor = estimate[0] && estimate[0].hexcolor ? estimate[0].hexcolor : 'white';
 
 	return (	
-	<View style={styles.renderItem}>
+	// <View style={{...styles.renderItem,borderBottomColor:bgcolor}}>
+	<View style={ styles.renderItem}>
 		<View style={{backgroundColor:bgcolor, width:15}}></View>
 		<View style={{paddingLeft:4}}>
 			<Text style={{fontSize:16}}>{destination}</Text>
@@ -70,7 +71,7 @@ function Location({navigation:{navigate},onRefresh,onDetails,isFetching,stations
 	// TODO create progress indicator to show loading.
 	if(isFetching) return <WaitingScreen />
 
-	const messageValue = message.warning ? <Text style={{backgroundColor:'yellow'}}>{message.warning}</Text> : <View />;
+	const messageValue = message.warning ? <Text style={{backgroundColor:'yellow'}}>{message.warning}</Text> : null;
 	const data = {
 		...stationsData[0],
 		time,
@@ -177,7 +178,9 @@ const styles = StyleSheet.create({
 	renderItem:{
 		flexDirection:'row',
 		flex:1,
-		backgroundColor:'whitesmoke'
+		backgroundColor:'whitesmoke',
+		borderBottomWidth:1,
+		borderBottomColor:'whitesmoke',
 	},
 	renderItemDestnation:{
 		flex:1,

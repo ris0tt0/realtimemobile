@@ -4,6 +4,7 @@ import {ActivityIndicator, Button, ImageBackground, View,StyleSheet, Text, Touch
 // import styles from './styles'
 import Logger from 'js-logger'
 import { PlannerMoney, StationInfo, StationRefresh, Timelapse, PlannerMap } from './AIcons';
+import { getMinutes } from '../Utils';
 
 function WaitingScreen({title}){
 	return (
@@ -49,7 +50,7 @@ function TripBar({leg,showMin = false}) {
 	leg.forEach( (tripLeg,index,list) =>{
 		let total = tripLeg.destDate - tripLeg.origDate;
 		let flex = total/totalDuration;
-		let min = total/1000/60;
+		let min = getMinutes(tripLeg.origDate,tripLeg.destDate);
 		
 		legColors.push(
 			<View
@@ -67,7 +68,7 @@ function TripBar({leg,showMin = false}) {
 		{
 			total = next.origDate - tripLeg.destDate;
 			flex = total/totalDuration;
-			min = total/1000/60;
+			min = getMinutes(tripLeg.destDate,next.origDate);
 			legColors.push(
 				<View
 				key={`${tripLeg.destDate}`}
@@ -76,7 +77,7 @@ function TripBar({leg,showMin = false}) {
 					backgroundColor:'lightgray',
 					flex,
 				}}
-			></View>);
+			>{showMin ? <Text style={styles.tripbar__LegText}>{min}</Text> : null}</View>);
 		}
 	});
 
@@ -142,10 +143,10 @@ TripFare.propTypes = {
 
 }
 
-function TripDuration({duration}) {
+function TripDuration({duration,iconsize=25}) {
 	return (
 	<View style={{flexDirection:'row',alignItems:'center'}}>
-		<Timelapse />
+		<Timelapse size={iconsize}/>
 		<Text style={{paddingLeft:5}}>{duration}</Text>
 	</View>
 	);

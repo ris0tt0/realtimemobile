@@ -121,12 +121,12 @@ function StationLocation()
 	)
 }
 
-function Timelapse()
+function Timelapse({size=25})
 {
 	return(
 		<MaterialCommunityIcons
 			name='timelapse'
-			size={25}
+			size={size}
 			color='gray'
 		/>
 	)
@@ -165,11 +165,25 @@ function PlannerForwardArrow()
 	)
 }
 
+function PlannerDownArrow()
+{
+	return(
+		<View>
+			<Ionicons
+				name={Platform.OS === 'ios' ? 'ios-arrow-down' : 'md-arrow-down'}
+				size={20}
+				color='black'
+			/>
+		</View>
+	)
+}
+
 export {
 	ListItemArrowForward,
 	PlannerMoney,
 	PlannerMap,
 	PlannerForwardArrow,
+	PlannerDownArrow,
 	SearchBarIcon,
 	TabBarIcon,
 	RouteLineArrows,

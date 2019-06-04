@@ -29,7 +29,9 @@ Advisory.propTypes = {
 }
 const styles = StyleSheet.create({
 	container:{
+		flex:1,
 		padding:10,
+		// backgroundColor:'lightgray',
 	},
 	title:{
 		backgroundColor:Colors.itemBackgroundColor,

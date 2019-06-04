@@ -16,44 +16,10 @@ function itemStation(time,stationName, city){
   )
 }
 
-function PlannerDetailsRenderItem({item,index}) {
-  const {origin,destination,line} = item;
 
-  return (
-    <View style={styles.container}>
-      <View style={{justifyContent:'space-between'}}>
-        <Text style={{fontWeight:'bold'}}>{item.origTimeMin}</Text>
-        <Text style={{fontWeight:'bold'}}>{item.destTimeMin}</Text>
-      </View>
-      <TripLineBar color={line.hexcolor}/>
-      <View style={{flex:1}}>
-        <Text style={{paddingLeft:5,fontWeight:'bold'}}>{origin.name} BART STATION, {origin.city}</Text>
-				<View style={{paddingLeft:5,backgroundColor:line.hexcolor,flexDirection:'row',alignItems:'center'}}>
-        <PlannerForwardArrow/>
-					<Text style={{paddingLeft:4}}>{item.trainHeadStation}</Text>
-				</View>
-        <View style={{paddingLeft:5,flexDirection:'row'}}>
-          <RouteLineDetailBike />
-          <Text>Bikes are{item.bikeflag === '1' ? '' : ' not'} allowed</Text>
-        </View>
-        <Text style={{paddingLeft:5,fontWeight:'bold'}}>{destination.name} BART STATION, {destination.city}</Text>
-      </View>
-    </View>
-  )
-}
-
-PlannerDetailsRenderItem.propTypes = {
-
-}
 
 const styles = StyleSheet.create({
-	container:{
-		flex:1,
-		flexDirection:'row',
-		backgroundColor:Colors.itemBackgroundColor,
-		paddingLeft:5,
-		paddingRight:5,
-	},
+
 });
 
 export {PlannerDetailsRenderItem}

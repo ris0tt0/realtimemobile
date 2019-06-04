@@ -1,6 +1,9 @@
 import { normalize, schema } from 'normalizr';
 import { RECIEVE_ELEVATOR_INFO, RECIEVE_GEOLOCATION, RECIEVE_ROUTES, RECIEVE_RTE, RECIEVE_SERVICE_ADVISORY, RECIEVE_STATIONS, RECIEVE_STATION_ACCESS, RECIEVE_STATION_DETAIL, RECIEVE_TRAIN_COUNT, RECIEVE_TRIP_PLANNING, REQUEST_ELEVATOR_INFO, REQUEST_ERROR_ELEVATOR_INFO, REQUEST_ERROR_GEOLOCATOIN, REQUEST_ERROR_ROUTES, REQUEST_ERROR_RTE, REQUEST_ERROR_STATIONS, REQUEST_ERROR_STATION_ACCESS, REQUEST_ERROR_STATION_DETAIL, REQUEST_ERROR_TRAIN_COUNT, REQUEST_ERROR_TRIP_PLANNING, REQUEST_GEOLOCATION, REQUEST_ROUTES, REQUEST_RTE, REQUEST_SERVICE_ADVISORY, REQUEST_STATIONS, REQUEST_STATION_ACCESS, REQUEST_STATION_DETAIL, REQUEST_TRIP_PLANNING, SET_CLOSEST_STATION, UPDATE_STATION_ACCESS_STATION_ID, UPDATE_STATION_DETAIL_STATIONID, UPDATE_TRIP_PLANNING_TRIPID } from './ActionTypes';
 
+import Logger from 'js-logger';
+import { getBartDateMonth, getBartDateTime } from '../Utils';
+
 const api_key = 'MW9S-E7SL-26DU-VV8V';
 
 export function requestRoutes(){
@@ -42,8 +45,8 @@ export function fetchRoutes()
 			.then( response => response.json(),error => dispatch(requestErrorRoutes(error)) )
 			.then( json =>
 			{
-				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
-				const routeSchema = new schema.Entity('route',undefined,{idAttribute:item => item.routeID});
+				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
+				const routeSchema = new schema.Entity('route',{},{idAttribute:item => item.routeID});
 				const routesSchema = new schema.Entity('routes',{route:[routeSchema]},{idAttribute:item => 'routeId'});
 				const responseSchema = new schema.Entity('response',{routes:routesSchema,uri:uriSchema},{idAttribute:response => 'responseId'});
 
@@ -103,16 +106,16 @@ export function fetchStationAccess(stationAbbr){
 				// just return the #cdata-section property
 				const process = value => value['#cdata-section'];
 
-				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
-				const bikeStationSchema = new schema.Entity('bike_station_text',undefined,{idAttribute:id,processStrategy:process});
-				const carShareSchema = new schema.Entity('car_share',undefined,{idAttribute:id,processStrategy:process});
-				const destinationsSchema = new schema.Entity('destinations',undefined,{idAttribute:id,processStrategy:process});
-				const enteringSchema = new schema.Entity('entering',undefined,{idAttribute:id,processStrategy:process});
-				const exitingSchema = new schema.Entity('exiting',undefined,{idAttribute:id,processStrategy:process});
-				const fillTimeSchema = new schema.Entity('fill_time',undefined,{idAttribute:id,processStrategy:process});
-				const lockersSchema = new schema.Entity('lockers',undefined,{idAttribute:id,processStrategy:process});
-				const parkingSchema = new schema.Entity('parking',undefined,{idAttribute:id,processStrategy:process});
-				const transitInfoSchema = new schema.Entity('transit_info',undefined,{idAttribute:id,processStrategy:process});
+				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
+				const bikeStationSchema = new schema.Entity('bike_station_text',{},{idAttribute:id,processStrategy:process});
+				const carShareSchema = new schema.Entity('car_share',{},{idAttribute:id,processStrategy:process});
+				const destinationsSchema = new schema.Entity('destinations',{},{idAttribute:id,processStrategy:process});
+				const enteringSchema = new schema.Entity('entering',{},{idAttribute:id,processStrategy:process});
+				const exitingSchema = new schema.Entity('exiting',{},{idAttribute:id,processStrategy:process});
+				const fillTimeSchema = new schema.Entity('fill_time',{},{idAttribute:id,processStrategy:process});
+				const lockersSchema = new schema.Entity('lockers',{},{idAttribute:id,processStrategy:process});
+				const parkingSchema = new schema.Entity('parking',{},{idAttribute:id,processStrategy:process});
+				const transitInfoSchema = new schema.Entity('transit_info',{},{idAttribute:id,processStrategy:process});
 				const stationSchema = new schema.Entity('station',{
 					bike_station_text:bikeStationSchema,
 					car_share:carShareSchema,
@@ -195,7 +198,7 @@ export function fetchStationDetail(stationAbbr){
 				const attractionSchema = new schema.Entity('attraction',{},{idAttribute:id,processStrategy:processCdata});
 				const linkSchema = new schema.Entity('link',{},{idAttribute:id,processStrategy:processCdata});
 
-				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
+				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
 				const stationSchema = new schema.Entity('station',{
 					north_routes:northRoutesSchema,
 					south_routes:southRoutesSchema,
@@ -248,8 +251,8 @@ export function fetchStations()
 			.then( response => response.json(), error => dispatch(requestErrorStations(error)) )
 			.then( json =>
 			{
-				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
-				const stationSchema = new schema.Entity('station',undefined,{idAttribute: station => `${station.abbr}`});
+				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
+				const stationSchema = new schema.Entity('station',{},{idAttribute: station => `${station.abbr}`});
 				const stationsSchema = new schema.Entity('stations',{station:[stationSchema]},{idAttribute:station => `stationId`});
 				const responseSchema = new schema.Entity('response',{stations:stationsSchema,uri:uriSchema},{idAttribute:response => 'responseId'});
 				// normalize the station data.
@@ -281,7 +284,7 @@ export function fetchTrainCount()
 		return fetch(`http://api.bart.gov/api/bsa.aspx?cmd=count&key=${api_key}&json=y`)
 			.then( response => response.json(), error => dispatch(requestErrorTrainCount(error)) )
 			.then( json => {
-				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
+				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
 				const responseSchema = new schema.Entity('response',{uri:uriSchema},{idAttribute:train => `responseId`});
 				const data = normalize(json.root,responseSchema);
 
@@ -321,13 +324,13 @@ export function fetchRTE(station)
 			.then( response => response.json(), error => dispatch(requestErrorRTE(error)) )
 			.then( json => {
 
-				const estimateSchema = new schema.Entity('estimate',undefined,{idAttribute: estimate => 
+				const estimateSchema = new schema.Entity('estimate',{},{idAttribute: estimate => 
 				{
 					const {color,bikeflag,delay,direction,hexcolor,length,minutes,platform} = estimate;
 
 					return `${color}-${bikeflag}-${delay}-${direction}-${hexcolor}-${length}-${minutes}-${platform}`;
 				} });
-				const uriSchema = new schema.Entity('uri',undefined,{idAttribute: uri => 'uriId'});
+				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
 				const etdSchema = new schema.Entity('etd',{estimate:[estimateSchema]},{idAttribute: etd => etd.abbreviation})
 				const stationSchema = new schema.Entity('station',{etd:[etdSchema]},{idAttribute: station => station.abbr });
 				const responseSchema = new schema.Entity('response',{uri:uriSchema,station:[stationSchema]},{idAttribute:response => response.time});
@@ -356,15 +359,20 @@ export function recieveTripPlanner(normalizedData){
 	}
 }
 
-export function fetchTripPlanning(startingAbbr,destinationAbbr)
+export function fetchTripPlanning(startingAbbr,destinationAbbr,dateby='depart',date='now')
 {
+	const bartDate = getBartDateMonth(date);
+	const bartTime = getBartDateTime(date);
+
+	Logger.info(`date:${bartDate} time:${bartTime}`);
+
 	return (dispatch) =>
 	{
 		if(startingAbbr && startingAbbr.length > 0 && destinationAbbr && destinationAbbr.length > 0)
 		{
 			dispatch(requestTripPlanner());
 
-			return fetch(`http://api.bart.gov/api/sched.aspx?cmd=depart&orig=${startingAbbr}&dest=${destinationAbbr}&date=today&time=now&key=${api_key}&b=1&a=4&json=y`)
+			return fetch(`http://api.bart.gov/api/sched.aspx?cmd=${dateby}&orig=${startingAbbr}&dest=${destinationAbbr}&date=${bartDate}&time=${bartTime}&key=${api_key}&b=1&a=4&json=y`)
 			.then( response => response.json() )
 			.then( json => {
 				const legProcess = value =>{

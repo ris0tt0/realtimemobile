@@ -42,4 +42,45 @@ function PythagorasEquirectangular(lat1, lon1, lat2, lon2) {
   return d;
 }
 
-export {getClosestCoordIndex};
+function getMinutes(startDate,endDate)
+{
+	return (endDate - startDate) / 1000 / 60;
+}
+
+/**
+ * returns date in bart format: MM/DD/YYYY
+ * @param {Date} date objet used to display the date.
+ */
+function getBartDateMonth(date)
+{
+	if( date instanceof Date)
+	{
+		return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+	}
+	return 'now';
+}
+
+/**
+ * returns time in a bart format: 11:30+pm
+ * 
+ * @param {Date} date object used to display time.
+ */
+function getBartDateTime(date)
+{
+	if( date instanceof Date)
+	{
+		let hours = date.getHours();
+		let ampm = 'AM';
+
+		if( hours > 12)
+		{
+			hours-=12;
+			ampm = 'pm';
+		}
+		return `${hours}:${date.getMinutes()}+${ampm}`;
+	}
+	return 'now';
+}
+
+
+export {getClosestCoordIndex,getMinutes,getBartDateMonth,getBartDateTime};

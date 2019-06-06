@@ -12,7 +12,7 @@ import {
 	TripLineBar} from '../../components';
 import Colors from '../../constants/Colors';
 import { PlannerForwardArrow, RouteLineDetailBike, Timelapse } from '../../components/AIcons';
-import { getMinutes } from '../../Utils';
+import { getMinutes, getHoursMinutes } from '../../Utils';
 
 function PlannerDetailsRenderItem({item}) {
   const {origin,destination,line} = item;
@@ -60,7 +60,7 @@ function PlannerDetails({isFetching,details}) {
 				<TripTime time={details.destTimeMin} />
 			</View>
 			<View style={{paddingBottom:10,flexDirection:'row',justifyContent:'space-around'}}>
-				<TripDuration duration={details.tripTime} />
+				<TripDuration duration={getHoursMinutes(parseInt(details.tripTime))} />
 				<TripChanges changes={details.leg.length} />
 				<TripFare fare={details.fare} />
 			</View>

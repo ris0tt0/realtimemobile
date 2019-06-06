@@ -4,6 +4,7 @@ import {FlatList,View,StyleSheet,Text,TouchableOpacity} from 'react-native'
 import Logger from 'js-logger'
 import {WaitingScreen, TripBar, TripTime, TripDuration, TripFare} from '../../components/'
 import { ListItemArrowForward } from '../../components/AIcons';
+import { getHoursMinutes } from '../../Utils';
 
 function PlannerResults({navigation:{navigate},isFetching,originStation,destinationStation,schedule,trip,onTrip}) {
 
@@ -24,7 +25,7 @@ function PlannerResults({navigation:{navigate},isFetching,originStation,destinat
 						<TripTime time={item.destTimeMin}/>
 					</View>
 					<View style={styles.renderItemBottom}>
-						<TripDuration duration={item.tripTime}/>
+						<TripDuration duration={getHoursMinutes(parseInt(item.tripTime,10))}/>
 						<TripFare fare={item.fare}/>
 					</View>
 				</View>

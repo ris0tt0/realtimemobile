@@ -82,5 +82,28 @@ function getBartDateTime(date)
 	return 'now';
 }
 
+/**
+ *  returns in time format 'hh:mm'
+ * @param {Number} minutes the number of minutes.
+ */
+function getHoursMinutes(minutes)
+{
+	if( typeof minutes === 'number')
+	{
+		const hours = Math.floor(minutes/60);
+		const min = minutes % 60;
+		if( min < 10){
+			return `${hours}:0${min}` ;
+		}
 
-export {getClosestCoordIndex,getMinutes,getBartDateMonth,getBartDateTime};
+		return `${hours}:${min}`;
+	}
+
+	/**
+	 * TODO how do we handle error conditions?
+	 */
+	return '0:00';
+}
+
+
+export {getClosestCoordIndex,getHoursMinutes,getMinutes,getBartDateMonth,getBartDateTime};

@@ -124,7 +124,7 @@ function LocationScreenListHeader({
 		<View style={{flex:1}}>
 			<TouchableWithoutFeedback style={{paddingLeft:4}} onPress={onDetails} >
 				<View style={{flexDirection:'row',alignItems:'center'}}>
-					<Text style={{fontWeight:'bold', fontSize:18}}>{name}</Text>
+					<Text style={{fontWeight:'bold', fontSize:20}}>{name}</Text>
 					<StationInfo />
 				</View>
 			</TouchableWithoutFeedback>
@@ -132,7 +132,7 @@ function LocationScreenListHeader({
 				<Text>{address}</Text>
 				<Text>{city}, {state}, {zipcode}</Text>
 				<TouchableWithoutFeedback style={{flexDirection:'row', alignItems:'center'}} onPress={onRefresh}>
-					<View style={{flexDirection:'row',justifyContent:'flex-end'}}>
+					<View style={{flexDirection:'row',justifyContent:'flex-end', alignItems:'center'}}>
 						<Text style={{fontWeight:'bold',fontSize:10,color:'darkgray'}}>{date} - {time}</Text>
 						<StationRefresh />
 					</View>

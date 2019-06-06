@@ -79,7 +79,7 @@ function StationRefresh()
 		<View style={{paddingLeft:5}}>
 			<Ionicons
 				name={Platform.OS === 'ios' ? 'ios-refresh' : 'md-refresh'}
-				size={12}
+				size={20}
 				color={Colors.tintColor}
 			/>
 		</View>
@@ -92,7 +92,7 @@ function StationInfo()
 		<View style={{paddingLeft:5}}>
 			<Ionicons
 				name={Platform.OS === 'ios' ? 'ios-information-circle' : 'md-information-circle'}
-				size={12}
+				size={20}
 				color={Colors.tintColor}
 			/>
 		</View>

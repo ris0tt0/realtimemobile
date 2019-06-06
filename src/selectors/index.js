@@ -183,7 +183,6 @@ export const rteLocationScreenData = createSelector(
 
 		platformMap.forEach(station =>{
 			station.forEach((stationMap,platformName) =>{
-				
 				platformSections.push({
 					title:`${platformName}`,
 					data:[...stationMap.values()],

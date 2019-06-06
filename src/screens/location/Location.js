@@ -23,7 +23,6 @@ function renderItem({item:{abbreviation,destination,estimate}, index, section}){
 	const bgcolor = estimate[0] && estimate[0].hexcolor ? estimate[0].hexcolor : 'white';
 
 	return (	
-	// <View style={{...styles.renderItem,borderBottomColor:bgcolor}}>
 	<View style={ styles.renderItem}>
 		<View style={{backgroundColor:bgcolor, width:15}}></View>
 		<View style={{paddingLeft:4}}>

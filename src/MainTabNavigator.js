@@ -1,7 +1,7 @@
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import HomeScreen from './screens/home/'
 import TripPlannerScreen from './screens/planner/'
-import StationScreen from './screens/station/'
+import DepartureScreen from './screens/departure/'
 import LocationScreen from './screens/location/'
 import LocationDetails from './screens/locationdetails/'
 import PlannerDetailsScreen from './screens/plannerdetails/'
@@ -28,9 +28,6 @@ const HomeStack = createStackNavigator({
 			backgroundColor: '#009bda',
 		},
 		headerTintColor: '#fff',
-		// headerTitleStyle: {
-		// 	fontWeight: 'bold',
-		// },
 	},
 },);
 
@@ -92,11 +89,11 @@ TripPlannerStack.navigationOptions = {
 	),
 };
 
-const StationStack = createStackNavigator({
-	Station:{
-		screen:StationScreen,
+const DepartureStack = createStackNavigator({
+	Departure:{
+		screen:DepartureScreen,
 		navigationOptions:() => ({
-			title:'Stations',
+			title:'Real Time Departures',
 		}),
 	},
 	Location:{
@@ -124,8 +121,8 @@ const StationStack = createStackNavigator({
 	},
 },);
 
-StationStack.navigationOptions = {
-	tabBarLabel: 'Station',
+DepartureStack.navigationOptions = {
+	tabBarLabel: 'Departure',
 	tabBarIcon: ({focused}) => (
 		<TabBarIcon
 			focused={focused}
@@ -182,8 +179,8 @@ AdvisoryStack.navigationOptions = {
 }
 
 export default createBottomTabNavigator({
-		HomeStack,
-		StationStack,
+		// HomeStack,
+		DepartureStack,
 		TripPlannerStack,
 		AdvisoryStack,
 	},

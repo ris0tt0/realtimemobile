@@ -1,29 +1,22 @@
 import {connect} from 'react-redux'
 import Logger from 'js-logger'
-import Departure from './Departure'
-import { fetchRoutes, fetchTrainCount, fetchRTE } from '../../actions';
-import { routesList, routesResponse, stationsList, stationsIsFetching } from '../../selectors';
+import { stationsList, stationsIsFetching } from '../../selectors';
+import { fetchRTE } from '../../actions';
+import Departure from './Departure';
 
 const mapStateToProps = state => {
-
-	const response = routesResponse(state);
-	const routes = routesList(state);
 	const stations = stationsList(state);
 	const isFetching = stationsIsFetching(state);
 
-	return {
-		message:response.message,
-		stations,
-		routes,
-		isFetching,
-	}
+	return {stations,isFetching}
 }
 
-const mapDispatchToProps = disptach => {
-	return {
-		onRoutes: () => disptach(fetchRoutes()),
-		onTrainCount: () => disptach(fetchTrainCount()),
-		onRTE: abbr => disptach(fetchRTE(abbr)),
+const mapDispatchToProps = dispatch => {
+
+	const onStationSelect = stationAbbr => dispatch(fetchRTE(stationAbbr))
+
+	return{
+		onStationSelect,
 	}
 }
 

@@ -331,7 +331,7 @@ export function fetchRTE(station)
 					return `${color}-${bikeflag}-${delay}-${direction}-${hexcolor}-${length}-${minutes}-${platform}`;
 				} });
 				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
-				const etdSchema = new schema.Entity('etd',{estimate:[estimateSchema]},{idAttribute: etd => etd.abbreviation})
+				const etdSchema = new schema.Entity('etd',{estimate:[estimateSchema]},{idAttribute: etd => etd.destination})
 				const stationSchema = new schema.Entity('station',{etd:[etdSchema]},{idAttribute: station => station.abbr });
 				const responseSchema = new schema.Entity('response',{uri:uriSchema,station:[stationSchema]},{idAttribute:response => response.time});
 				const normalized = normalize(json.root, responseSchema);

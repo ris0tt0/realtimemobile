@@ -1,17 +1,19 @@
 import React,{Component} from 'react'
 import {Platform} from 'react-native'
 import PropTypes from 'prop-types'
-import {Button, DatePickerIOS, DatePickerAndroid, Picker,View,Text,StyleSheet,TouchableOpacity} from 'react-native'
+import {Button, DatePickerIOS, DatePickerAndroid, Picker,View,Text,StyleSheet,TimePickerAndroid,TouchableOpacity} from 'react-native'
 import Logger from 'js-logger'
 import Colors from '../../constants/Colors'
 import {StationLocation,StationSwap, PlannerDownArrow} from '../../components/AIcons'
+import SegmentedControlTab from 'react-native-segmented-control-tab'
 
 const START = 'start';
 const END = 'end';
 const DATE = 'date';
 const LABEL_DEFAULT = 'Select Station';
 const ARRIVE = 'Arrive';
-const DEPART = 'Depart'
+const DEPART = 'Depart';
+const DATEBYLIST = [DEPART,ARRIVE];
 
 class Planner extends Component {
 	static propTypes = {
@@ -40,7 +42,7 @@ class Planner extends Component {
 			items,
 			stationName,
 			date:'Now',
-			dateby:DEPART,
+			datebyIndex:0,
 		};
 	}
 
@@ -81,18 +83,18 @@ class Planner extends Component {
 	onSubmit = () =>
 	{
 		const {onSearch,navigation:{navigate}} = this.props;
-		const {startAbbr,endAbbr,dateby,date} = this.state;
+		const {startAbbr,endAbbr,datebyIndex,date} = this.state;
 
 		this.setState({active:''});
 
 		navigate('PlannerResults',{name:`${startAbbr} - ${endAbbr}`});
 
-		onSearch(startAbbr,endAbbr,dateby.toLowerCase(),date);
+		onSearch(startAbbr,endAbbr,DATEBYLIST[datebyIndex].toLowerCase(),date);
 	}
-	onPickerSelected = (value) =>
-	{
-		this.setState({[`${this.state.active}Abbr`]:value})
-	}
+
+	onPickerSelected = (value) => this.setState({[`${this.state.active}Abbr`]:value})
+
+	handleIndexChange = (index) => this.setState({datebyIndex:index})
 
 	setDate = (date) => this.setState({date});
 
@@ -104,24 +106,42 @@ class Planner extends Component {
 		return `${d}   ${t}`;
 	}
 
-	async androidDatePicker()
-	{
+	async showAndroidDatePicker(){
+		let {date} = this.state;
+		date =  date instanceof Date ? date : new Date();
+
 		try {
 			const {action, year, month, day} = await DatePickerAndroid.open({
-				date: new Date(),
+				date,
 				mode:'spinner',
 			});
 			if (action !== DatePickerAndroid.dismissedAction) {
-				// Selected year, month (0-11), day
+				date.setFullYear(year,month,day);
+				this.setState({date:new Date(date)});
 			}
 		} catch ({code, message}) {
 			Logger.warn('Cannot open date picker', message);
 		}
 	}
 
-	basedOn()
-	{
+	async showAndroidTimePicker(){
+		let {date} = this.state;
+		date =  date instanceof Date ? date : new Date();
 
+		try {
+			const {action, hour, minute} = await TimePickerAndroid.open({
+				hour: date.getHours(),
+				minute: date.getMinutes(),
+				is24Hour: false, 
+				mode:'spinner',
+			});
+			if (action !== TimePickerAndroid.dismissedAction) {
+				date.setHours(hour,minute);
+				this.setState({date:new Date(date)});
+			}
+		} catch ({code, message}) {
+			Logger.warn('Cannot open time picker', message);
+		}
 	}
 
 	render()
@@ -130,7 +150,7 @@ class Planner extends Component {
 
 		const isIOS = Platform.OS === 'ios';
 
-		const {active,date,startAbbr,endAbbr,items} = this.state;
+		const {active,date,startAbbr,endAbbr,items,datebyIndex} = this.state;
 		const dateLabel = date instanceof Date ? this.getDateLabel(date) : date;
 
 		return(
@@ -176,23 +196,29 @@ class Planner extends Component {
 								style={{flexDirection:'row',alignItems:'center'}}
 								onPress={()=>this.setState({active:active === DATE ? '' : DATE})}
 							>
-								<Text style={{marginRight:15}}>Depart {dateLabel}</Text>
+								<Text style={{marginRight:15}}>{DATEBYLIST[datebyIndex]} {dateLabel}</Text>
 								<PlannerDownArrow />
 							</TouchableOpacity>
 						</View>
 						{active === DATE ?
 						<View>
 							<View style={{alignItems:'center'}}>
-								<View style={{flexDirection:'row'}}>
-									<Text style={style.date}>Depart</Text>
-									<Text style={style.date}>Arrive</Text>
-								</View>
+								<SegmentedControlTab
+										values={DATEBYLIST}
+										selectedIndex={this.state.datebyIndex}
+										onTabPress={this.handleIndexChange}
+								/>
 							</View>
 							{ isIOS ?
 							<DatePickerIOS 
 								date={date instanceof Date ? date : new Date()}
 								onDateChange={this.setDate}
-							/> : null}
+							/> :
+							<View>
+								<Button onPress={() => this.showAndroidDatePicker()} title='select date' />
+								<Button onPress={() => this.showAndroidTimePicker()} title='select time' />
+							</View>
+							}
 						</View> : null}
 					</View>
 					<View>

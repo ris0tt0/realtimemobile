@@ -9,10 +9,12 @@
   "dependencies": {
     "expo": "^32.0.0",
     "js-logger": "^1.6.0",
+    "jsc-android": "^241213.1.0",
     "normalizr": "^3.3.0",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-render-html": "^4.1.2",
+    "react-native-segmented-control-tab": "^3.4.0",
     "react-navigation": "^3.6.1",
     "react-redux": "^6.0.1",
     "redux": "^4.0.1",

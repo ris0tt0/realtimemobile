@@ -10,6 +10,8 @@ const START = 'start';
 const END = 'end';
 const DATE = 'date';
 const LABEL_DEFAULT = 'Select Station';
+const ARRIVE = 'Arrive';
+const DEPART = 'Depart'
 
 class Planner extends Component {
 	static propTypes = {
@@ -38,7 +40,7 @@ class Planner extends Component {
 			items,
 			stationName,
 			date:'Now',
-			dateby:'depart'
+			dateby:DEPART,
 		};
 	}
 
@@ -80,10 +82,12 @@ class Planner extends Component {
 	{
 		const {onSearch,navigation:{navigate}} = this.props;
 		const {startAbbr,endAbbr,dateby,date} = this.state;
+
 		this.setState({active:''});
 
 		navigate('PlannerResults',{name:`${startAbbr} - ${endAbbr}`});
-		onSearch(startAbbr,endAbbr,dateby,date);
+
+		onSearch(startAbbr,endAbbr,dateby.toLowerCase(),date);
 	}
 	onPickerSelected = (value) =>
 	{
@@ -99,6 +103,27 @@ class Planner extends Component {
 		
 		return `${d}   ${t}`;
 	}
+
+	async androidDatePicker()
+	{
+		try {
+			const {action, year, month, day} = await DatePickerAndroid.open({
+				date: new Date(),
+				mode:'spinner',
+			});
+			if (action !== DatePickerAndroid.dismissedAction) {
+				// Selected year, month (0-11), day
+			}
+		} catch ({code, message}) {
+			Logger.warn('Cannot open date picker', message);
+		}
+	}
+
+	basedOn()
+	{
+
+	}
+
 	render()
 	{
 		const {closestStation} = this.props;
@@ -108,7 +133,6 @@ class Planner extends Component {
 		const {active,date,startAbbr,endAbbr,items} = this.state;
 		const dateLabel = date instanceof Date ? this.getDateLabel(date) : date;
 
-		// Logger.info(`active: ${active} startAbbr:${startAbbr} endAbbr:${endAbbr}`);
 		return(
 			<View style={style.container}>
 				<View style={{paddingTop:10}}>
@@ -158,14 +182,17 @@ class Planner extends Component {
 						</View>
 						{active === DATE ?
 						<View>
-							<View style={{flexDirection:'row'}}>
-								<Text style={{fontSize:14,borderColor:'black',borderWidth:1}}>Depart</Text>
-								<Text style={{fontSize:14,borderColor:'black',borderWidth:1}}>Arrive</Text>
+							<View style={{alignItems:'center'}}>
+								<View style={{flexDirection:'row'}}>
+									<Text style={style.date}>Depart</Text>
+									<Text style={style.date}>Arrive</Text>
+								</View>
 							</View>
+							{ isIOS ?
 							<DatePickerIOS 
 								date={date instanceof Date ? date : new Date()}
 								onDateChange={this.setDate}
-							/>
+							/> : null}
 						</View> : null}
 					</View>
 					<View>
@@ -232,7 +259,9 @@ const style = StyleSheet.create({
 		marginLeft:20,
 		marginRight:20,
 		margin:5,
-	}
+	},
+	date:{fontSize:18,borderColor:'black',borderWidth:1},
+	dateSelected:{fontSize:18,borderColor:'black',borderWidth:1}
 });
 
 export default Planner

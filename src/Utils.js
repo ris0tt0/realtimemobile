@@ -1,4 +1,5 @@
 import Logger from 'js-logger';
+import { Platform } from 'expo-core';
 
 /**
  * This function returns a promise with a value station ABBR.
@@ -42,16 +43,39 @@ function PythagorasEquirectangular(lat1, lon1, lat2, lon2) {
   return d;
 }
 
+/**
+ * Returns label in 'Jume 8, 1:55 PM'
+ * @param {Date} date date objet to generate date label
+ */
+function getDateLabel(date){
+	//TODO quick fix for android
+	if( Platform.OS === 'android')
+	{
+		const m = date.getMonth();
+		const d = date.getDate();
+		// const h = date.getHours();
+		// const min = date.getMinutes();
+
+		return `${m} ${d}, ${getBartApiDateTime(date)}`;
+	}
+
+	const d = new Intl.DateTimeFormat('en-US',{month: 'long', day: 'numeric',hour: 'numeric', minute: 'numeric'}).format(date);
+	// const t = new Intl.DateTimeFormat('en-US',{hour: 'numeric', minute: 'numeric'}).format(date);?
+	
+	// return `${d}   ${t}`;
+	return d;
+}
+
 function getMinutes(startDate,endDate)
 {
 	return (endDate - startDate) / 1000 / 60;
 }
 
 /**
- * returns date in bart format: MM/DD/YYYY
+ * returns date in bart format: MM/DD/YYYY. Used for BART API calls.
  * @param {Date} date objet used to display the date.
  */
-function getBartDateMonth(date)
+function getBartApiDateMonth(date)
 {
 	if( date instanceof Date)
 	{
@@ -61,11 +85,11 @@ function getBartDateMonth(date)
 }
 
 /**
- * returns time in a bart format: 11:30+pm
+ * returns time in a bart format: 11:30+pm, Used for BART API calls.
  * 
  * @param {Date} date object used to display time.
  */
-function getBartDateTime(date)
+function getBartApiDateTime(date)
 {
 	if( date instanceof Date)
 	{
@@ -106,4 +130,4 @@ function getHoursMinutes(minutes)
 }
 
 
-export {getClosestCoordIndex,getHoursMinutes,getMinutes,getBartDateMonth,getBartDateTime};
+export {getDateLabel, getClosestCoordIndex,getHoursMinutes,getMinutes,getBartApiDateMonth,getBartApiDateTime};

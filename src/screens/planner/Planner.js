@@ -6,6 +6,7 @@ import Logger from 'js-logger'
 import Colors from '../../constants/Colors'
 import {StationLocation,StationSwap, PlannerDownArrow} from '../../components/AIcons'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
+import { getDateLabel } from '../../Utils';
 
 const START = 'start';
 const END = 'end';
@@ -98,14 +99,6 @@ class Planner extends Component {
 
 	setDate = (date) => this.setState({date});
 
-	getDateLabel(date){
-		const options = {year: 'numeric', month: 'long', day: 'numeric' };
-		const d = new Intl.DateTimeFormat('en-US', options).format(date);
-		const t = new Intl.DateTimeFormat('en-US',{hour: 'numeric', minute: 'numeric'}).format(date);
-		
-		return `${d}   ${t}`;
-	}
-
 	async showAndroidDatePicker(){
 		let {date} = this.state;
 		date =  date instanceof Date ? date : new Date();
@@ -151,7 +144,7 @@ class Planner extends Component {
 		const isIOS = Platform.OS === 'ios';
 
 		const {active,date,startAbbr,endAbbr,items,datebyIndex} = this.state;
-		const dateLabel = date instanceof Date ? this.getDateLabel(date) : date;
+		const dateLabel = date instanceof Date ? getDateLabel(date) : date;
 
 		return(
 			<View style={style.container}>

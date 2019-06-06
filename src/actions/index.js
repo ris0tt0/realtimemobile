@@ -2,7 +2,7 @@ import { normalize, schema } from 'normalizr';
 import { RECIEVE_ELEVATOR_INFO, RECIEVE_GEOLOCATION, RECIEVE_ROUTES, RECIEVE_RTE, RECIEVE_SERVICE_ADVISORY, RECIEVE_STATIONS, RECIEVE_STATION_ACCESS, RECIEVE_STATION_DETAIL, RECIEVE_TRAIN_COUNT, RECIEVE_TRIP_PLANNING, REQUEST_ELEVATOR_INFO, REQUEST_ERROR_ELEVATOR_INFO, REQUEST_ERROR_GEOLOCATOIN, REQUEST_ERROR_ROUTES, REQUEST_ERROR_RTE, REQUEST_ERROR_STATIONS, REQUEST_ERROR_STATION_ACCESS, REQUEST_ERROR_STATION_DETAIL, REQUEST_ERROR_TRAIN_COUNT, REQUEST_ERROR_TRIP_PLANNING, REQUEST_GEOLOCATION, REQUEST_ROUTES, REQUEST_RTE, REQUEST_SERVICE_ADVISORY, REQUEST_STATIONS, REQUEST_STATION_ACCESS, REQUEST_STATION_DETAIL, REQUEST_TRIP_PLANNING, SET_CLOSEST_STATION, UPDATE_STATION_ACCESS_STATION_ID, UPDATE_STATION_DETAIL_STATIONID, UPDATE_TRIP_PLANNING_TRIPID } from './ActionTypes';
 
 import Logger from 'js-logger';
-import { getBartDateMonth, getBartDateTime } from '../Utils';
+import { getBartApiDateMonth, getBartApiDateTime } from '../Utils';
 
 const api_key = 'MW9S-E7SL-26DU-VV8V';
 
@@ -361,8 +361,8 @@ export function recieveTripPlanner(normalizedData){
 
 export function fetchTripPlanning(startingAbbr,destinationAbbr,dateby='depart',date='now')
 {
-	const bartDate = getBartDateMonth(date);
-	const bartTime = getBartDateTime(date);
+	const bartDate = getBartApiDateMonth(date);
+	const bartTime = getBartApiDateTime(date);
 
 	Logger.info(`date:${bartDate} time:${bartTime}`);
 

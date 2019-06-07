@@ -6,7 +6,7 @@ import { setTripPLanningTripId } from '../../actions';
 
 const mapStateToProps = state =>{
 	return {
-		isFetching:tripPlannerIsFetching(state) && routesIsFetching(state),
+		isFetching:tripPlannerIsFetching(state) || routesIsFetching(state),
 		originStation:tripPlannerOriginStation(state),
 		destinationStation:tripPlannerDestinationStation(state),
 		schedule:tripPlannerSchedule(state),

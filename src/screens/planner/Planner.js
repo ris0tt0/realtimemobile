@@ -93,11 +93,12 @@ class Planner extends Component {
 		onSearch(startAbbr,endAbbr,DATEBYLIST[datebyIndex].toLowerCase(),date);
 	}
 
-	onPickerSelected = (value) => this.setState({[`${this.state.active}Abbr`]:value})
-
-	handleIndexChange = (index) => this.setState({datebyIndex:index})
-
-	setDate = (date) => this.setState({date});
+	onPickerSelected = value => this.setState({[`${this.state.active}Abbr`]:value});
+	handleIndexChange = index => this.setState({datebyIndex:index});
+	setDate = date => this.setState({date});
+	setStartAbbr = startAbbr => this.setState({startAbbr});
+	setEndAbbr = endAbbr => this.setState({endAbbr});
+	setActive = active => this.setState({active});
 
 	async showAndroidDatePicker(){
 		let {date} = this.state;
@@ -159,7 +160,7 @@ class Planner extends Component {
 								>{this.getTextLabel(startAbbr)}</Text> : 
 							<Picker
 								selectedValue={startAbbr}
-								onValueChange={(itemValue,itemIndex) => this.setState({startAbbr:itemValue})}
+								onValueChange={(itemValue) => this.setStartAbbr(itemValue)}
 							>{items}</Picker>}
 						</View>
 						<TouchableOpacity onPress={this.onStationLocation}>
@@ -176,7 +177,7 @@ class Planner extends Component {
 								>{this.getTextLabel(endAbbr)}</Text> :
 							<Picker
 								selectedValue={endAbbr}
-								onValueChange={(itemValue,itemIndex) => this.setState({endAbbr:itemValue})}
+								onValueChange={(itemValue) => this.setEndAbbr(itemValue)}
 								>{items}</Picker>}
 						</View>
 						<TouchableOpacity onPress={this.onSwapStations}>
@@ -187,7 +188,7 @@ class Planner extends Component {
 						<View style={{marginLeft:15}}>
 							<TouchableOpacity
 								style={{flexDirection:'row',alignItems:'center'}}
-								onPress={()=>this.setState({active:active === DATE ? '' : DATE})}
+								onPress={() => this.setActive(active === DATE ? '' : DATE)}
 							>
 								<Text style={{marginRight:15}}>{DATEBYLIST[datebyIndex]} {dateLabel}</Text>
 								<PlannerDownArrow />

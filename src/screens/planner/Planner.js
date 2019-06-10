@@ -4,9 +4,12 @@ import PropTypes from 'prop-types'
 import {Button, DatePickerIOS, DatePickerAndroid, Picker,View,Text,StyleSheet,TimePickerAndroid,TouchableOpacity} from 'react-native'
 import Logger from 'js-logger'
 import Colors from '../../constants/Colors'
-import {StationLocation,StationSwap, PlannerDownArrow} from '../../components/AIcons'
+import {StationLocation,StationSwap, PlannerDownArrow, PlannerUpArrow} from '../../components/AIcons'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import { getDateLabel } from '../../Utils';
+
+const TEN_DAYS_MS = 864000000;
+const EIGHT_WEEKS_MS = 4838360000;
 
 const START = 'start';
 const END = 'end';
@@ -22,6 +25,7 @@ class Planner extends Component {
 		closestStation:PropTypes.object,
 		onSearch:PropTypes.func.isRequired,
 		onLocation:PropTypes.func.isRequired,
+		clearClosestStation:PropTypes.func.isRequired,
 	}
 
 	constructor(props)
@@ -36,6 +40,7 @@ class Planner extends Component {
 		stationName.set(LABEL_DEFAULT,LABEL_DEFAULT);
 		stations.forEach(station => stationName.set(station.abbr,station.name));
 
+		const p = this.getDateProps('Now');
 		this.state = {
 			active:'',
 			startAbbr:LABEL_DEFAULT,
@@ -44,6 +49,7 @@ class Planner extends Component {
 			stationName,
 			date:'Now',
 			datebyIndex:0,
+			...p,
 		};
 	}
 
@@ -95,12 +101,24 @@ class Planner extends Component {
 
 	onPickerSelected = value => this.setState({[`${this.state.active}Abbr`]:value});
 	handleIndexChange = index => this.setState({datebyIndex:index});
-	setDate = date => this.setState({date});
+	setDate = date => this.setState({date,...this.getDateProps(date)});
+
+	getDateProps = date => {
+		const dateLabel = date instanceof Date ? getDateLabel(date) : date;
+		const mindateMS = new Date() - TEN_DAYS_MS;
+		const maxdateMS = EIGHT_WEEKS_MS + new Date().valueOf();
+
+		const mindate = new Date(mindateMS);
+		const maxdate = new Date(maxdateMS);
+		
+		return {dateLabel,mindate,maxdate};
+	}
+
 	setStartAbbr = startAbbr => this.setState({startAbbr});
 	setEndAbbr = endAbbr => this.setState({endAbbr});
 	setActive = active => this.setState({active});
 
-	async showAndroidDatePicker(){
+	async showAndroidDatePicker(mindate,maxdate){
 		let {date} = this.state;
 		date =  date instanceof Date ? date : new Date();
 
@@ -108,10 +126,12 @@ class Planner extends Component {
 			const {action, year, month, day} = await DatePickerAndroid.open({
 				date,
 				mode:'spinner',
+				maxDate:maxdate,
+				minDate:mindate,
 			});
 			if (action !== DatePickerAndroid.dismissedAction) {
 				date.setFullYear(year,month,day);
-				this.setState({date:new Date(date)});
+				this.setDate(new Date(date))
 			}
 		} catch ({code, message}) {
 			Logger.warn('Cannot open date picker', message);
@@ -131,21 +151,27 @@ class Planner extends Component {
 			});
 			if (action !== TimePickerAndroid.dismissedAction) {
 				date.setHours(hour,minute);
-				this.setState({date:new Date(date)});
+				this.setDate(new Date(date));
 			}
 		} catch ({code, message}) {
 			Logger.warn('Cannot open time picker', message);
 		}
 	}
 
+	componentDidUpdate(prevProps){
+		const {closestStation,clearClosestStation} = this.props;
+
+		if( closestStation.hasOwnProperty('abbr'))
+		{
+			clearClosestStation();
+			this.setStartAbbr(closestStation.abbr);
+		}
+	}
+
 	render()
 	{
-		const {closestStation} = this.props;
-
 		const isIOS = Platform.OS === 'ios';
-
-		const {active,date,startAbbr,endAbbr,items,datebyIndex} = this.state;
-		const dateLabel = date instanceof Date ? getDateLabel(date) : date;
+		const {active,date,startAbbr,endAbbr,items,datebyIndex,dateLabel,mindate,maxdate} = this.state;
 
 		return(
 			<View style={style.container}>
@@ -185,14 +211,21 @@ class Planner extends Component {
 						</TouchableOpacity>
 					</View>
 
-					<View style={{borderWidth:1,borderColor:'black'}}>
-						<View style={{marginLeft:30, marginTop:10,marginBottom:10, borderWidth:1,borderColor:'red'}}>
+					<View style={{marginLeft:30,marginRight:46}}>
+						<View style={{marginTop:10,marginBottom:10}}>
 							<TouchableOpacity
 								style={{flexDirection:'row',alignItems:'center'}}
 								onPress={() => this.setActive(active === DATE ? '' : DATE)}
 							>
 								<Text style={{marginRight:15}}>{DATEBYLIST[datebyIndex]} {dateLabel}</Text>
-								<PlannerDownArrow />
+								{active === DATE ?
+									<PlannerUpArrow /> :
+									<PlannerDownArrow />}
+								{date instanceof Date ? 
+									<View style={{marginLeft:10 }}>
+										<Text onPress={()=>this.setDate('Now')}>Now</Text>
+									</View> : 
+									null}
 							</TouchableOpacity>
 						</View>
 						{active === DATE ?
@@ -205,19 +238,23 @@ class Planner extends Component {
 								/>
 							</View>
 							{ isIOS ?
-							<DatePickerIOS 
-								date={date instanceof Date ? date : new Date()}
-								onDateChange={this.setDate}
-							/> :
-							<View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
-								<Button onPress={() => this.showAndroidDatePicker()} title='select date' />
-								<Button onPress={() => this.showAndroidTimePicker()} title='select time' />
+							<View>
+								<DatePickerIOS 
+									date={date instanceof Date ? date : new Date()}
+									onDateChange={this.setDate}
+									minimumDate={mindate}
+									maximumDate={maxdate}
+								/>
+							</View> :
+							<View style={{marginTop:10,marginBottom:10,flexDirection:'row', justifyContent:'space-evenly'}}>
+								<View ><Button onPress={() => this.showAndroidDatePicker(mindate,maxdate)} title='select date' /></View>
+								<View ><Button onPress={() => this.showAndroidTimePicker()} title='select time' /></View>
 							</View>
 							}
 						</View> : null}
 					</View>
 
-					<View>
+					<View style={{marginLeft:30,marginRight:46}}>
 						<Button
 							title='Search Routes'
 							disabled={this.isSubmitButtonDisabled()}

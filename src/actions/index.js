@@ -576,7 +576,7 @@ export function fetchGeolocation()
 	}
 }
 
-export function setClosesStatoin(station)
+export function setClosestStation(station)
 {
 	return {
 		type:SET_CLOSEST_STATION,

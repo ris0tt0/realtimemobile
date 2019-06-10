@@ -143,11 +143,11 @@ function PlannerMoney()
 	)
 }
 
-function PlannerMap()
+function PlannerChanges()
 {
 	return(
-		<MaterialCommunityIcons
-			name='map-search-outline'
+		<Ionicons
+			name={Platform.OS === 'ios' ? 'ios-train' : 'md-train'}
 			size={25}
 			color='gray'
 		/>
@@ -178,12 +178,26 @@ function PlannerDownArrow()
 	)
 }
 
+function PlannerUpArrow()
+{
+	return(
+		<View>
+			<Ionicons
+				name={Platform.OS === 'ios' ? 'ios-arrow-up' : 'md-arrow-up'}
+				size={20}
+				color='black'
+			/>
+		</View>
+	)	
+}
+
 export {
 	ListItemArrowForward,
 	PlannerMoney,
-	PlannerMap,
+	PlannerChanges,
 	PlannerForwardArrow,
 	PlannerDownArrow,
+	PlannerUpArrow,
 	SearchBarIcon,
 	TabBarIcon,
 	RouteLineArrows,

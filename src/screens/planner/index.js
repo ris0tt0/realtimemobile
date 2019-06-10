@@ -2,7 +2,7 @@ import {connect} from 'react-redux'
 import Logger from 'js-logger'
 import Planner from './Planner'
 import { stationsList, closestStation } from '../../selectors';
-import { fetchTripPlanning, fetchGeolocation, fetchRoutes } from '../../actions';
+import { fetchTripPlanning, fetchGeolocation, fetchRoutes, recieveGeoLocation } from '../../actions';
 
 const mapStateToProps = state =>{
 	return {
@@ -18,6 +18,7 @@ const mapDispatchToProps = dispatch => {
 			dispatch(fetchTripPlanning(origin,ending,dateby,date));
 		},
 		onLocation:() => dispatch(fetchGeolocation()),
+		clearClosestStation:() => dispatch(recieveGeoLocation({})),
 	}
 }
 

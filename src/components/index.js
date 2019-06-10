@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import {ActivityIndicator, Button, ImageBackground, View,StyleSheet, Text, TouchableWithoutFeedback} from 'react-native'
+import {ActivityIndicator, View,StyleSheet, Text} from 'react-native'
 // import styles from './styles'
 import Logger from 'js-logger'
-import { PlannerMoney, StationInfo, StationRefresh, Timelapse, PlannerMap } from './AIcons';
+import { PlannerMoney, Timelapse, PlannerChanges } from './AIcons';
 import { getMinutes } from '../Utils';
 
 function WaitingScreen({title}){
@@ -120,7 +120,7 @@ TripTime.propTypes = {
 function TripChanges({changes}) {
 	return (
 		<View style={{flexDirection:'row',alignItems:'center'}}>
-			<PlannerMap />
+			<PlannerChanges />
 			<Text style={{paddingLeft:5}}>{changes}</Text>
 		</View>
 	)

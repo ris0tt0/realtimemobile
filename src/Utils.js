@@ -51,18 +51,13 @@ function getDateLabel(date){
 	//TODO quick fix for android
 	if( Platform.OS === 'android')
 	{
-		const m = date.getMonth();
-		const d = date.getDate();
-		// const h = date.getHours();
-		// const min = date.getMinutes();
+		const m = date.toLocaleDateString();
 
-		return `${m} ${d}, ${getBartApiDateTime(date)}`;
+		return `${m}, ${getDateTime(date)}`;
 	}
 
 	const d = new Intl.DateTimeFormat('en-US',{month: 'long', day: 'numeric',hour: 'numeric', minute: 'numeric'}).format(date);
-	// const t = new Intl.DateTimeFormat('en-US',{hour: 'numeric', minute: 'numeric'}).format(date);?
 	
-	// return `${d}   ${t}`;
 	return d;
 }
 
@@ -106,6 +101,23 @@ function getBartApiDateTime(date)
 	return 'now';
 }
 
+function getDateTime(date)
+{
+	if( date instanceof Date)
+	{
+		let hours = date.getHours();
+		let ampm = 'AM';
+
+		if( hours > 12)
+		{
+			hours-=12;
+			ampm = 'pm';
+		}
+		return `${hours}:${date.getMinutes()} ${ampm}`;
+	}
+	return 'now';
+}
+
 /**
  *  returns in time format 'hh:mm'
  * @param {Number} minutes the number of minutes.
@@ -130,4 +142,4 @@ function getHoursMinutes(minutes)
 }
 
 
-export {getDateLabel, getClosestCoordIndex,getHoursMinutes,getMinutes,getBartApiDateMonth,getBartApiDateTime};
+export {getDateLabel, getDateTime, getClosestCoordIndex,getHoursMinutes,getMinutes,getBartApiDateMonth,getBartApiDateTime};

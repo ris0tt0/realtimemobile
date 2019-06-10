@@ -37,7 +37,7 @@ function PlannerDetailsRenderItem({item}) {
 				{/* <TripDuration iconsize={15} duration={getMinutes(item.origDate,item.destDate)} /> */}
 				<View style={{paddingLeft:5,flexDirection:'row'}}>
 					<Timelapse size={15} />
-					<Text style={{paddingRight:5}}>{getMinutes(item.origDate,item.destDate)} min time</Text>
+					<Text style={{paddingRight:5}}>{getMinutes(item.origDate,item.destDate)} min</Text>
 				</View>
         <Text style={{paddingLeft:5,fontWeight:'bold'}}>{destination.name} BART STATION, {destination.city}</Text>
       </View>

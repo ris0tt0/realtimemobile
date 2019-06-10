@@ -160,7 +160,7 @@ class Planner extends Component {
 								>{this.getTextLabel(startAbbr)}</Text> : 
 							<Picker
 								selectedValue={startAbbr}
-								onValueChange={(itemValue) => this.setStartAbbr(itemValue)}
+								onValueChange={this.setStartAbbr}
 							>{items}</Picker>}
 						</View>
 						<TouchableOpacity onPress={this.onStationLocation}>
@@ -177,15 +177,16 @@ class Planner extends Component {
 								>{this.getTextLabel(endAbbr)}</Text> :
 							<Picker
 								selectedValue={endAbbr}
-								onValueChange={(itemValue) => this.setEndAbbr(itemValue)}
+								onValueChange={this.setEndAbbr}
 								>{items}</Picker>}
 						</View>
 						<TouchableOpacity onPress={this.onSwapStations}>
 							<StationSwap />
 						</TouchableOpacity>
 					</View>
+
 					<View style={{borderWidth:1,borderColor:'black'}}>
-						<View style={{marginLeft:15}}>
+						<View style={{marginLeft:30, marginTop:10,marginBottom:10, borderWidth:1,borderColor:'red'}}>
 							<TouchableOpacity
 								style={{flexDirection:'row',alignItems:'center'}}
 								onPress={() => this.setActive(active === DATE ? '' : DATE)}
@@ -208,13 +209,14 @@ class Planner extends Component {
 								date={date instanceof Date ? date : new Date()}
 								onDateChange={this.setDate}
 							/> :
-							<View>
+							<View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
 								<Button onPress={() => this.showAndroidDatePicker()} title='select date' />
 								<Button onPress={() => this.showAndroidTimePicker()} title='select time' />
 							</View>
 							}
 						</View> : null}
 					</View>
+
 					<View>
 						<Button
 							title='Search Routes'

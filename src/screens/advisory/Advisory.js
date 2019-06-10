@@ -9,15 +9,15 @@ function Advisory({isFetching,serviceAdvisory,elevatorInfo}) {
 	
 	if( isFetching) return <WaitingScreen />
 
-	const service = serviceAdvisory.bsa[0] && serviceAdvisory.bsa[0].description ? serviceAdvisory.bsa[0].description : '';
-	const elevator = elevatorInfo.bsa[0] && elevatorInfo.bsa[0].description ? elevatorInfo.bsa[0].description : '';
+	const service = serviceAdvisory.bsa ? serviceAdvisory.bsa.map((bsa,index) => <Text key={index} style={styles.body}>{bsa.description}</Text>) : [];
+	const elevator = elevatorInfo.bsa ? elevatorInfo.bsa.map((bsa,index) => <Text key={index} style={styles.body}>{bsa.description}</Text>) : [];
 
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>service advisory:</Text>
-			<Text style={styles.body}>{service}</Text>
+			<View>{service}</View>
 			<Text style={styles.title}>elevator status:</Text>
-			<Text style={styles.body}>{elevator}</Text>
+			<View>{elevator}</View>
 		</View>
 	);
 }

@@ -40,7 +40,7 @@ class Planner extends Component {
 		stationName.set(LABEL_DEFAULT,LABEL_DEFAULT);
 		stations.forEach(station => stationName.set(station.abbr,station.name));
 
-		const p = this.getDateProps('Now');
+		const p = this.getDateStateProps('Now');
 		this.state = {
 			active:'',
 			startAbbr:LABEL_DEFAULT,
@@ -101,18 +101,16 @@ class Planner extends Component {
 
 	onPickerSelected = value => this.setState({[`${this.state.active}Abbr`]:value});
 	handleIndexChange = index => this.setState({datebyIndex:index});
-	setDate = date => this.setState({date,...this.getDateProps(date)});
+	setDate = date => this.setState({date,...this.getDateStateProps(date)});
 
-	getDateProps = date => {
+	getDateStateProps = date => {
 		const dateLabel = date instanceof Date ? getDateLabel(date) : date;
-		const mindateMS = new Date() - TEN_DAYS_MS;
-		const maxdateMS = EIGHT_WEEKS_MS + new Date().valueOf();
 
-		const mindate = new Date(mindateMS);
-		const maxdate = new Date(maxdateMS);
+		const mindate = new Date(Date.now() - TEN_DAYS_MS);
+		const maxdate = new Date(Date.now() + EIGHT_WEEKS_MS);
 		
 		return {dateLabel,mindate,maxdate};
-	}
+	};
 
 	setStartAbbr = startAbbr => this.setState({startAbbr});
 	setEndAbbr = endAbbr => this.setState({endAbbr});

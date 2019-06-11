@@ -4,7 +4,11 @@ import { RECIEVE_ELEVATOR_INFO, RECIEVE_GEOLOCATION, RECIEVE_ROUTES, RECIEVE_RTE
 import Logger from 'js-logger';
 import { getBartApiDateMonth, getBartApiDateTime } from '../Utils';
 
-const api_key = 'MW9S-E7SL-26DU-VV8V';
+const api_key = process.env['REACT_APP_BART_API'] ?
+	// BART API KEY
+	process.env['REACT_APP_BART_API'] :
+	// BART DEFAULT DEV API KEY
+	'MW9S-E7SL-26DU-VV8V';
 
 export function requestRoutes(){
 	return {
@@ -248,7 +252,7 @@ export function fetchStations()
 		dispatch(requestStations());
 		
 		return fetch(`http://api.bart.gov/api/stn.aspx?cmd=stns&key=${api_key}&json=y`)
-			.then( response => response.json(), error => dispatch(requestErrorStations(error)) )
+			.then( response => response.json())
 			.then( json =>
 			{
 				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
@@ -259,6 +263,10 @@ export function fetchStations()
 				const normalized = normalize(json.root, responseSchema);
 
 				dispatch(recieveStations(normalized));
+			})
+			.catch(e => {
+				dispatch(recieveStations({}));
+				dispatch(requestErrorStations(e));
 			});
 	}
 }

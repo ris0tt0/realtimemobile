@@ -7,6 +7,7 @@ import Colors from '../../constants/Colors'
 import {StationLocation,StationSwap, PlannerDownArrow, PlannerUpArrow} from '../../components/AIcons'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import { getDateLabel } from '../../Utils';
+import { WaitingScreen } from '../../components';
 
 const TEN_DAYS_MS = 864000000;
 const EIGHT_WEEKS_MS = 4838360000;
@@ -21,6 +22,7 @@ const DATEBYLIST = [DEPART,ARRIVE];
 
 class Planner extends Component {
 	static propTypes = {
+		isFetching:PropTypes.bool,
 		stations:PropTypes.array,
 		closestStation:PropTypes.object,
 		onSearch:PropTypes.func.isRequired,
@@ -169,7 +171,10 @@ class Planner extends Component {
 	render()
 	{
 		const isIOS = Platform.OS === 'ios';
-		const {active,date,startAbbr,endAbbr,items,datebyIndex,dateLabel,mindate,maxdate} = this.state;
+		const { isClosestStationFetching } =this.props;
+		const { active,date,startAbbr,endAbbr,items,datebyIndex,dateLabel,mindate,maxdate} = this.state;
+
+		if( isClosestStationFetching) return <WaitingScreen />
 
 		return(
 			<View style={style.container}>

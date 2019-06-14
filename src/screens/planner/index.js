@@ -1,13 +1,14 @@
 import {connect} from 'react-redux'
 import Logger from 'js-logger'
 import Planner from './Planner'
-import { stationsList, closestStation } from '../../selectors';
+import { stationsList, closestStation, geoLocationIsFetching } from '../../selectors';
 import { fetchTripPlanning, fetchGeolocation, fetchRoutes, recieveGeoLocation } from '../../actions';
 
 const mapStateToProps = state =>{
 	return {
 		stations:stationsList(state),
 		closestStation:closestStation(state),
+		isClosestStationFetching:geoLocationIsFetching(state),
 	}
 }
 

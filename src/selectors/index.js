@@ -542,6 +542,16 @@ export const elevatorInfoResponse = createSelector(getElevatorInfoSelector,eleva
 
 const getGeolocation = state => state.geolocation;
 
+export const geoLocationIsFetching = createSelector(getGeolocation,geolocation =>{
+
+	if( geolocation.hasOwnProperty('isFetching'))
+	{
+		return geolocation.isFetching;
+	}
+
+	return false;
+});
+
 export const closestStation = createSelector(
 	[getGeolocation,stationsList],
 	(geolocation, stationsList) =>{

@@ -1,5 +1,8 @@
 node_modules/**/*
 .expo/*
+.expo-shared/*
+export/*
+source_images/*
 npm-debug.*
 *.jks
 *.p12

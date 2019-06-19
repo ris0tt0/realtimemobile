@@ -22,9 +22,9 @@ const DATEBYLIST = [DEPART,ARRIVE];
 
 class Planner extends Component {
 	static propTypes = {
-		isFetching:PropTypes.bool,
-		stations:PropTypes.array,
-		closestStation:PropTypes.object,
+		isClosestStationFetching:PropTypes.bool.isRequired,
+		stations:PropTypes.array.isRequired,
+		closestStation:PropTypes.object.isRequired,
 		onSearch:PropTypes.func.isRequired,
 		onLocation:PropTypes.func.isRequired,
 		clearClosestStation:PropTypes.func.isRequired,

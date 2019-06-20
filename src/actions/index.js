@@ -1,5 +1,5 @@
 import { normalize, schema } from 'normalizr';
-import { RECIEVE_ELEVATOR_INFO, RECIEVE_GEOLOCATION, RECIEVE_ROUTES, RECIEVE_RTE, RECIEVE_SERVICE_ADVISORY, RECIEVE_STATIONS, RECIEVE_STATION_ACCESS, RECIEVE_STATION_DETAIL, RECIEVE_TRAIN_COUNT, RECIEVE_TRIP_PLANNING, REQUEST_ELEVATOR_INFO, REQUEST_ERROR_ELEVATOR_INFO, REQUEST_ERROR_GEOLOCATOIN, REQUEST_ERROR_ROUTES, REQUEST_ERROR_RTE, REQUEST_ERROR_STATIONS, REQUEST_ERROR_STATION_ACCESS, REQUEST_ERROR_STATION_DETAIL, REQUEST_ERROR_TRAIN_COUNT, REQUEST_ERROR_TRIP_PLANNING, REQUEST_GEOLOCATION, REQUEST_ROUTES, REQUEST_RTE, REQUEST_SERVICE_ADVISORY, REQUEST_STATIONS, REQUEST_STATION_ACCESS, REQUEST_STATION_DETAIL, REQUEST_TRIP_PLANNING, SET_CLOSEST_STATION, UPDATE_STATION_ACCESS_STATION_ID, UPDATE_STATION_DETAIL_STATIONID, UPDATE_TRIP_PLANNING_TRIPID } from './ActionTypes';
+import { RECIEVE_ELEVATOR_INFO, RECIEVE_GEOLOCATION, RECIEVE_ROUTES, RECIEVE_RTE, RECIEVE_SERVICE_ADVISORY, RECIEVE_STATIONS, RECIEVE_STATION_ACCESS, RECIEVE_STATION_DETAIL, RECIEVE_TRAIN_COUNT, RECIEVE_TRIP_PLANNING, REQUEST_ELEVATOR_INFO, REQUEST_ERROR_ELEVATOR_INFO, REQUEST_ERROR_GEOLOCATOIN, REQUEST_ERROR_ROUTES, REQUEST_ERROR_RTE, REQUEST_ERROR_STATIONS, REQUEST_ERROR_STATION_ACCESS, REQUEST_ERROR_STATION_DETAIL, REQUEST_ERROR_TRAIN_COUNT, REQUEST_ERROR_TRIP_PLANNING, REQUEST_GEOLOCATION, REQUEST_ROUTES, REQUEST_RTE, REQUEST_SERVICE_ADVISORY, REQUEST_STATIONS, REQUEST_STATION_ACCESS, REQUEST_STATION_DETAIL, REQUEST_TRIP_PLANNING, SET_CLOSEST_STATION, UPDATE_STATION_ACCESS_STATION_ID, UPDATE_STATION_DETAIL_STATIONID, UPDATE_TRIP_PLANNING_TRIPID, REQUEST_ERROR_SERVICE_ADVISORY } from './ActionTypes';
 
 import Logger from 'js-logger';
 import { getBartApiDateMonth, getBartApiDateTime } from '../Utils';
@@ -49,10 +49,10 @@ export function fetchRoutes()
 			.then( response => response.json(),error => dispatch(requestErrorRoutes(error)) )
 			.then( json =>
 			{
-				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
+				const uriSchema = new schema.Entity('uri',{},{idAttribute: () => 'uriId'});
 				const routeSchema = new schema.Entity('route',{},{idAttribute:item => item.routeID});
-				const routesSchema = new schema.Entity('routes',{route:[routeSchema]},{idAttribute:item => 'routeId'});
-				const responseSchema = new schema.Entity('response',{routes:routesSchema,uri:uriSchema},{idAttribute:response => 'responseId'});
+				const routesSchema = new schema.Entity('routes',{route:[routeSchema]},{idAttribute:() => 'routeId'});
+				const responseSchema = new schema.Entity('response',{routes:routesSchema,uri:uriSchema},{idAttribute:() => 'responseId'});
 
 				const normalized = normalize(json.root,responseSchema);
 
@@ -106,11 +106,11 @@ export function fetchStationAccess(stationAbbr){
 		return fetch(`https://api.bart.gov/api/stn.aspx?cmd=stnaccess&orig=${stationAbbr}&key=${api_key}&json=y`)
 			.then( response => response.json(), error => dispatch(requestErrorStationDetail(error)) )
 			.then( json => {
-				const id = (value,parent,key) => parent.abbr;
+				const id = (value,parent) => parent.abbr;
 				// just return the #cdata-section property
 				const process = value => value['#cdata-section'];
 
-				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
+				const uriSchema = new schema.Entity('uri',{},{idAttribute: () => 'uriId'});
 				const bikeStationSchema = new schema.Entity('bike_station_text',{},{idAttribute:id,processStrategy:process});
 				const carShareSchema = new schema.Entity('car_share',{},{idAttribute:id,processStrategy:process});
 				const destinationsSchema = new schema.Entity('destinations',{},{idAttribute:id,processStrategy:process});
@@ -131,8 +131,8 @@ export function fetchStationAccess(stationAbbr){
 					parking:parkingSchema,
 					transit_info:transitInfoSchema,
 					},{idAttribute:item => item.abbr});
-				const stationsSchema = new schema.Entity('stations',{station:stationSchema},{idAttribute:item => `stationID`});
-				const responseSchema = new schema.Entity('response',{stations:stationsSchema,uri:uriSchema},{idAttribute:response => 'responseId'});
+				const stationsSchema = new schema.Entity('stations',{station:stationSchema},{idAttribute:() => `stationID`});
+				const responseSchema = new schema.Entity('response',{stations:stationsSchema,uri:uriSchema},{idAttribute:() => 'responseId'});
 
 				const normalized = normalize(json.root,responseSchema);
 
@@ -185,7 +185,7 @@ export function fetchStationDetail(stationAbbr){
 			.then( response => response.json(), error => dispatch(requestErrorStationDetail(error)) )
 			.then( json => {
 
-				const id = (value,parent,key) => parent.abbr;
+				const id = (value,parent) => parent.abbr;
 				const processCdata = value => value['#cdata-section'];
 				const processRoutes = value => value.route;
 				const processPlatform = value => value.platform;
@@ -202,7 +202,7 @@ export function fetchStationDetail(stationAbbr){
 				const attractionSchema = new schema.Entity('attraction',{},{idAttribute:id,processStrategy:processCdata});
 				const linkSchema = new schema.Entity('link',{},{idAttribute:id,processStrategy:processCdata});
 
-				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
+				const uriSchema = new schema.Entity('uri',{},{idAttribute: () => 'uriId'});
 				const stationSchema = new schema.Entity('station',{
 					north_routes:northRoutesSchema,
 					south_routes:southRoutesSchema,
@@ -215,8 +215,8 @@ export function fetchStationDetail(stationAbbr){
 					attraction:attractionSchema,
 					link:linkSchema,
 				},{idAttribute:item => item.abbr});
-				const stationsSchema = new schema.Entity('stations',{station:stationSchema},{idAttribute:item => `stationID`})
-				const responseSchema = new schema.Entity('response',{stations:stationsSchema,uri:uriSchema},{idAttribute:response => 'responseId'});
+				const stationsSchema = new schema.Entity('stations',{station:stationSchema},{idAttribute:() => `stationID`})
+				const responseSchema = new schema.Entity('response',{stations:stationsSchema,uri:uriSchema},{idAttribute:() => 'responseId'});
 
 				const normalized = normalize(json.root,responseSchema);
 
@@ -255,10 +255,10 @@ export function fetchStations()
 			.then( response => response.json())
 			.then( json =>
 			{
-				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
+				const uriSchema = new schema.Entity('uri',{},{idAttribute: () => 'uriId'});
 				const stationSchema = new schema.Entity('station',{},{idAttribute: station => `${station.abbr}`});
-				const stationsSchema = new schema.Entity('stations',{station:[stationSchema]},{idAttribute:station => `stationId`});
-				const responseSchema = new schema.Entity('response',{stations:stationsSchema,uri:uriSchema},{idAttribute:response => 'responseId'});
+				const stationsSchema = new schema.Entity('stations',{station:[stationSchema]},{idAttribute:() => `stationId`});
+				const responseSchema = new schema.Entity('response',{stations:stationsSchema,uri:uriSchema},{idAttribute:() => 'responseId'});
 				// normalize the station data.
 				const normalized = normalize(json.root, responseSchema);
 
@@ -292,8 +292,8 @@ export function fetchTrainCount()
 		return fetch(`http://api.bart.gov/api/bsa.aspx?cmd=count&key=${api_key}&json=y`)
 			.then( response => response.json(), error => dispatch(requestErrorTrainCount(error)) )
 			.then( json => {
-				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
-				const responseSchema = new schema.Entity('response',{uri:uriSchema},{idAttribute:train => `responseId`});
+				const uriSchema = new schema.Entity('uri',{},{idAttribute: () => 'uriId'});
+				const responseSchema = new schema.Entity('response',{uri:uriSchema},{idAttribute:() => `responseId`});
 				const data = normalize(json.root,responseSchema);
 
 				dispatch(recieveTrainCount(data));
@@ -338,7 +338,7 @@ export function fetchRTE(station)
 
 					return `${color}-${bikeflag}-${delay}-${direction}-${hexcolor}-${length}-${minutes}-${platform}`;
 				} });
-				const uriSchema = new schema.Entity('uri',{},{idAttribute: uri => 'uriId'});
+				const uriSchema = new schema.Entity('uri',{},{idAttribute: () => 'uriId'});
 				const etdSchema = new schema.Entity('etd',{estimate:[estimateSchema]},{idAttribute: etd => etd.destination})
 				const stationSchema = new schema.Entity('station',{etd:[etdSchema]},{idAttribute: station => station.abbr });
 				const responseSchema = new schema.Entity('response',{uri:uriSchema,station:[stationSchema]},{idAttribute:response => response.time});
@@ -422,7 +422,7 @@ export function fetchTripPlanning(startingAbbr,destinationAbbr,dateby='depart',d
 					idAttribute: value => `${value['@origTimeMin']}-${value['@destTimeMin']}ID`,
 					processStrategy:tripProcess});
 
-				const requestSchema = new schema.Entity('request',{trip:[tripSchema]},{idAttribute: value => 'requestID'});
+				const requestSchema = new schema.Entity('request',{trip:[tripSchema]},{idAttribute: () => 'requestID'});
 				const scheduleSchema = new schema.Entity('schedule',{request:requestSchema},{idAttribute: value => `${value.time}-${value.date}ID`});
 				const responseSchema = new schema.Entity('response',{schedule:scheduleSchema},{idAttribute: value => `${value.origin}-${value.destination}ID`});
 

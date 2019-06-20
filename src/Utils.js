@@ -9,7 +9,7 @@ function getClosestCoordIndex(coord,coords)
 	let minDif = 99999;
   let closest;
 
-	for (index = 0; index < coords.length; ++index)
+	for (let index = 0; index < coords.length; ++index)
 	{
 		const c = coords[index];
     const dif = PythagorasEquirectangular(

@@ -10,8 +10,8 @@ function PlannerResults({navigation:{navigate},isFetching,originStation,destinat
 
 	if(isFetching) return <WaitingScreen />
 
-	const resultRenderItem = ({item,index}) =>(
-		<TouchableOpacity key={index} style={styles.listItem} onPress={() =>{
+	function resultRenderItem({item,index}){
+		return <TouchableOpacity key={index} style={styles.listItem} onPress={() =>{
 			onTrip(item.id);	
 			navigate('PlannerDetails',{name:`${item.origTimeMin}-${item.destTimeMin}`});
 		}} >
@@ -32,7 +32,12 @@ function PlannerResults({navigation:{navigate},isFetching,originStation,destinat
 				<View style={{paddingLeft:5,paddingRight:5}}>{ListItemArrowForward()}</View>
 			</View>
 		</TouchableOpacity>
-	);
+	}
+
+	resultRenderItem.propTypes = {
+		item:PropTypes.object.isRequired,
+		index:PropTypes.number.isRequired,
+	};
 
 	return (
 		<View style={styles.container}>
@@ -53,11 +58,18 @@ function PlannerResults({navigation:{navigate},isFetching,originStation,destinat
 }
 
 PlannerResults.propTypes = {
-
-}
+	navigation:PropTypes.shape({
+		navigate:PropTypes.func.isRequired,
+	}).isRequired,
+	isFetching:PropTypes.bool.isRequired,
+	originStation:PropTypes.object.isRequired,
+	destinationStation:PropTypes.object.isRequired,
+	schedule:PropTypes.object.isRequired,
+	trip:PropTypes.array.isRequired,
+	onTrip:PropTypes.func.isRequired,
+};
 
 export {PlannerResults}
-
 
 const styles = StyleSheet.create({
 	container:{

@@ -1,4 +1,4 @@
-import React,{Component} from 'react'
+import React from 'react'
 import {Platform} from 'react-native'
 import PropTypes from 'prop-types'
 import {Button, DatePickerIOS, DatePickerAndroid, Picker,View,Text,StyleSheet,TimePickerAndroid,TouchableOpacity} from 'react-native'
@@ -8,6 +8,8 @@ import {StationLocation,StationSwap, PlannerDownArrow, PlannerUpArrow} from '../
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import { getDateLabel } from '../../Utils';
 import { WaitingScreen } from '../../components';
+
+const isIOS = Platform.OS === 'ios';
 
 const TEN_DAYS_MS = 864000000;
 const EIGHT_WEEKS_MS = 4838360000;
@@ -20,7 +22,7 @@ const ARRIVE = 'Arrive';
 const DEPART = 'Depart';
 const DATEBYLIST = [DEPART,ARRIVE];
 
-class Planner extends Component {
+class Planner extends React.Component {
 	static propTypes = {
 		isClosestStationFetching:PropTypes.bool.isRequired,
 		stations:PropTypes.array.isRequired,
@@ -28,6 +30,7 @@ class Planner extends Component {
 		onSearch:PropTypes.func.isRequired,
 		onLocation:PropTypes.func.isRequired,
 		clearClosestStation:PropTypes.func.isRequired,
+		navigation:PropTypes.object.isRequired,
 	}
 
 	constructor(props)
@@ -158,7 +161,7 @@ class Planner extends Component {
 		}
 	}
 
-	componentDidUpdate(prevProps){
+	componentDidUpdate(){
 		const {closestStation,clearClosestStation} = this.props;
 
 		if( closestStation.hasOwnProperty('abbr'))
@@ -170,7 +173,6 @@ class Planner extends Component {
 
 	render()
 	{
-		const isIOS = Platform.OS === 'ios';
 		const { isClosestStationFetching } =this.props;
 		const { active,date,startAbbr,endAbbr,items,datebyIndex,dateLabel,mindate,maxdate} = this.state;
 

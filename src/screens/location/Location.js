@@ -5,7 +5,7 @@ import Logger from 'js-logger'
 import { WaitingScreen } from '../../components';
 import { StationInfo, StationRefresh } from '../../components/AIcons';
 
-function renderSectionHeader({item,index,section: {title}}){
+function renderSectionHeader({section: {title}}){
 	return (
 	<View style={styles.renderSectionHeader}>
 		<Text style={styles.renderSectionHeaderText}>platform {title}</Text>
@@ -16,10 +16,12 @@ function renderSectionHeader({item,index,section: {title}}){
 renderSectionHeader.propTypes = {
 	item:PropTypes.object,
 	index:PropTypes.number,
-	section:PropTypes.object,
+	section:PropTypes.shape({
+		title:PropTypes.string.isRequired,
+	}).isRequired,
 }
 	
-function renderItem({item:{abbreviation,destination,estimate}, index, section}){
+function renderItem({item:{destination,estimate}}){
 	const bgcolor = estimate[0] && estimate[0].hexcolor ? estimate[0].hexcolor : 'white';
 
 	return (	
@@ -35,7 +37,11 @@ function renderItem({item:{abbreviation,destination,estimate}, index, section}){
 }
 
 renderItem.propTypes = {
-	item:PropTypes.object,
+	item:PropTypes.shape({
+		abbreviation:PropTypes.string.isRequired,
+		destination:PropTypes.string.isRequired,
+		estimate:PropTypes.string.isRequired,
+	}).isRequired,
 	index:PropTypes.number,
 	section:PropTypes.object,
 }
@@ -60,7 +66,6 @@ destinationTrainInfo.propTypes = {
 	delay: PropTypes.string.isRequired,
 	index: PropTypes.number.isRequired,
 }
-
 
 /**
  * Location screen. displays the bart station real time estimates.
@@ -104,19 +109,31 @@ function Location({navigation:{navigate},onRefresh,onDetails,isFetching,stations
 }
 
 Location.propTypes = {
-
-}
+	navigation:PropTypes.shape({
+		navigate:PropTypes.func.isRequired,
+	}).isRequired,
+	onRefresh:PropTypes.func.isRequired,
+	onDetails:PropTypes.func.isRequired,
+	isFetching:PropTypes.bool.isRequired,
+	stationsData:PropTypes.array.isRequired,
+	locationScreenData:PropTypes.shape({
+		date:PropTypes.string,
+		time:PropTypes.string,
+		message:PropTypes.string,
+		name:PropTypes.string,
+		abbr:PropTypes.string,
+		platformSections:PropTypes.array,
+	})
+};
 
 function LocationScreenListHeader({
 	onRefresh,
 	onDetails,
-	abbr,
 	name,
 	address,
 	city,
 	state,
 	zipcode,
-	county,
 	time,
 	date,
 }) {
@@ -143,7 +160,9 @@ function LocationScreenListHeader({
 }
 
 LocationScreenListHeader.propTypes = {
-	name : PropTypes.string.isRequired,
+	onRefresh:PropTypes.func.isRequired,
+	onDetails:PropTypes.func.isRequired,
+	name:PropTypes.string.isRequired,
 	abbr:PropTypes.string.isRequired,
 	gtfs_latitude:PropTypes.string.isRequired,
 	gtfs_longitude:PropTypes.string.isRequired,
@@ -189,7 +208,7 @@ const styles = StyleSheet.create({
 		// borderColor:'gray',
 		// borderColor:'red',
 		// borderWidth:1,
-		justifyContent:'flex-end',
+		// justifyContent:'flex-end',
 	},
 });
 

@@ -46,45 +46,45 @@ function LocationDetails({isFetching,details,routes,access}) {
 
 	if(access.entering.length > 0)
 	{
-		sections.push({title:'access',data:[<HTML onLinkPress={onlinkpress} html={access.entering} />]});
+		sections.push({title:'access',data:[<HTML key={0} onLinkPress={onlinkpress} html={access.entering} />]});
 	}
 	if( access.exiting.length > 0)
 	{
-		sections.push({title:'exiting',data:[<HTML onLinkPress={onlinkpress} html={access.exiting} />]});
+		sections.push({title:'exiting',data:[<HTML key={0} onLinkPress={onlinkpress} html={access.exiting} />]});
 	}
 	if(access.lockers.length > 0)
 	{
-		sections.push({title:'lockers',data:[<HTML onLinkPress={onlinkpress} html={access.lockers} />]});
+		sections.push({title:'lockers',data:[<HTML key={0} onLinkPress={onlinkpress} html={access.lockers} />]});
 	}
 	if( access.parking.length > 0)
 	{
-		sections.push({title:'parking',data:[<HTML onLinkPress={onlinkpress} html={access.parking} />]});
+		sections.push({title:'parking',data:[<HTML key={0} onLinkPress={onlinkpress} html={access.parking} />]});
 	}
 
 	if(access.bikeStation && access.bikeStation.length > 0)
 	{
-		sections.push({title:'bike',data:[<HTML onLinkPress={onlinkpress} html={access.bikeStation}/>]})
+		sections.push({title:'bike',data:[<HTML key={0} onLinkPress={onlinkpress} html={access.bikeStation}/>]})
 	}
 	if(access.carShare.length > 0)
 	{
-		sections.push({title:'car share',data:[<HTML onLinkPress={onlinkpress} html={access.carShare} />]})
+		sections.push({title:'car share',data:[<HTML key={0} onLinkPress={onlinkpress} html={access.carShare} />]})
 	}
 	if(access.destinations.length > 0)
 	{
-		sections.push({title:'destinations',data:[<HTML onLinkPress={onlinkpress} html={access.destinations} />]})
+		sections.push({title:'destinations',data:[<HTML key={0} onLinkPress={onlinkpress} html={access.destinations} />]})
 	}
 
 	if(access.fillTime.length > 0)
 	{
-		sections.push({title:'fill time',data:[<HTML onLinkPress={onlinkpress} html={access.fillTime} />]});
+		sections.push({title:'fill time',data:[<HTML key={0} onLinkPress={onlinkpress} html={access.fillTime} />]});
 	}
 
 	if(access.transitInfo.length > 0)
 	{
-		sections.push({title:'transit information',data:[<HTML onLinkPress={onlinkpress} html={access.transitInfo} />]})
+		sections.push({title:'transit information',data:[<HTML key={0} onLinkPress={onlinkpress} html={access.transitInfo} />]})
 	}
 
-	sections.push({title:'routes',data:[<View style={{flexDirection:'column'}}>{routeNames}</View>]});
+	sections.push({title:'routes',data:[<View key={0} style={{flexDirection:'column'}}>{routeNames}</View>]});
 
 	return (
 		<View style={styles.container}>
@@ -122,6 +122,7 @@ LocationDetails.propTypes = {
 		name:PropTypes.string.isRequired,
 		routeID:PropTypes.string.isRequired,
 	})).isRequired,
+	access:PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({

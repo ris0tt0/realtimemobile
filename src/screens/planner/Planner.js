@@ -6,7 +6,7 @@ import Logger from 'js-logger'
 import Colors from '../../constants/Colors'
 import {StationLocation,StationSwap, PlannerDownArrow, PlannerUpArrow} from '../../components/AIcons'
 import SegmentedControlTab from 'react-native-segmented-control-tab'
-import { getDateLabel } from '../../Utils';
+import { getDateLabel,getDateLabelSimple } from '../../Utils';
 import { WaitingScreen } from '../../components';
 
 const isIOS = Platform.OS === 'ios';
@@ -109,7 +109,7 @@ class Planner extends React.Component {
 	setDate = date => this.setState({date,...this.getDateStateProps(date)});
 
 	getDateStateProps = date => {
-		const dateLabel = date instanceof Date ? getDateLabel(date) : date;
+		const dateLabel = date instanceof Date ? Platform.OS === 'android' ? getDateLabelSimple(date) : getDateLabel(date) : date;
 
 		const mindate = new Date(Date.now() - TEN_DAYS_MS);
 		const maxdate = new Date(Date.now() + EIGHT_WEEKS_MS);

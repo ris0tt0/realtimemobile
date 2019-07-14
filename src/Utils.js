@@ -1,5 +1,5 @@
-import Logger from 'js-logger';
-import { Platform } from 'expo-core';
+// import Logger from 'js-logger';
+// import { Platform } from 'expo-core';
 
 /**
  * This function returns a promise with a value station ABBR.
@@ -43,18 +43,16 @@ function PythagorasEquirectangular(lat1, lon1, lat2, lon2) {
   return d;
 }
 
+function getDateLabelSimple(date){
+	//TODO quick fix for android
+	const m = date.toLocaleDateString();
+	return `${m}, ${getDateTime(date)}`;
+}
 /**
  * Returns label in 'Jume 8, 1:55 PM'
  * @param {Date} date date objet to generate date label
  */
 function getDateLabel(date){
-	//TODO quick fix for android
-	if( Platform.OS === 'android')
-	{
-		const m = date.toLocaleDateString();
-
-		return `${m}, ${getDateTime(date)}`;
-	}
 
 	const d = new Intl.DateTimeFormat('en-US',{month: 'long', day: 'numeric',hour: 'numeric', minute: 'numeric'}).format(date);
 	
@@ -94,7 +92,15 @@ function getBartApiDateTime(date)
 		if( hours > 12)
 		{
 			hours-=12;
-			ampm = 'pm';
+			ampm = 'PM';
+		}
+		if(hours === 12)
+		{
+			ampm = 'PM';
+		}
+		if(hours === 0)
+		{
+			hours = 12;
 		}
 		return `${hours}:${date.getMinutes()}+${ampm}`;
 	}
@@ -111,7 +117,15 @@ function getDateTime(date)
 		if( hours > 12)
 		{
 			hours-=12;
-			ampm = 'pm';
+			ampm = 'PM';
+		}
+		if(hours === 12)
+		{
+			ampm = 'PM';
+		}
+		if( hours === 0)
+		{
+			hours = 12;
 		}
 		return `${hours}:${date.getMinutes()} ${ampm}`;
 	}
@@ -142,4 +156,4 @@ function getHoursMinutes(minutes)
 }
 
 
-export {getDateLabel, getDateTime, getClosestCoordIndex,getHoursMinutes,getMinutes,getBartApiDateMonth,getBartApiDateTime};
+export {getDateLabel, getDateLabelSimple, getDateTime, getClosestCoordIndex,getHoursMinutes,getMinutes,getBartApiDateMonth,getBartApiDateTime};

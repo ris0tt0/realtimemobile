@@ -87,6 +87,7 @@ function getBartApiDateTime(date)
 	if( date instanceof Date)
 	{
 		let hours = date.getHours();
+		let min = date.getMinutes();
 		let ampm = 'AM';
 
 		if( hours > 12)
@@ -102,7 +103,11 @@ function getBartApiDateTime(date)
 		{
 			hours = 12;
 		}
-		return `${hours}:${date.getMinutes()}+${ampm}`;
+		if(min < 10)
+		{
+			min=`0${min}`;
+		}
+		return `${hours}:${min}+${ampm}`;
 	}
 	return 'now';
 }
@@ -112,6 +117,7 @@ function getDateTime(date)
 	if( date instanceof Date)
 	{
 		let hours = date.getHours();
+		let min = date.getMinutes();
 		let ampm = 'AM';
 
 		if( hours > 12)
@@ -127,7 +133,11 @@ function getDateTime(date)
 		{
 			hours = 12;
 		}
-		return `${hours}:${date.getMinutes()} ${ampm}`;
+		if(min < 10)
+		{
+			min=`0${min}`;
+		}
+		return `${hours}:${min} ${ampm}`;
 	}
 	return 'now';
 }

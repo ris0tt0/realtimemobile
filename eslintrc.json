@@ -6,7 +6,8 @@
 	},
 	"extends": [
 		"eslint:recommended",
-		"plugin:react/recommended"],
+		"plugin:react/recommended",
+		"plugin:jest/recommended"],
 	"globals": {
 		"Atomics": "readonly",
 		"SharedArrayBuffer": "readonly",
@@ -21,7 +22,8 @@
 	},
 	"plugins": [
 		"react",
-		"babel"
+		"babel",
+		"jest"
 	],
 	"parser": "babel-eslint",
 	"rules": {

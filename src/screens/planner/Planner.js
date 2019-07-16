@@ -56,6 +56,8 @@ class Planner extends React.Component {
 			datebyIndex:0,
 			...p,
 		};
+		// Logger.info('ctor')
+		// Logger.info(this.state);
 	}
 
 	onTextClick(selected)
@@ -122,6 +124,7 @@ class Planner extends React.Component {
 	setActive = active => this.setState({active});
 
 	async showAndroidDatePicker(mindate,maxdate){
+		// Logger.info(`mindate:${mindate} maxdate:${maxdate} ----${this.state}`);
 		let {date} = this.state;
 		date =  date instanceof Date ? date : new Date();
 
@@ -176,96 +179,51 @@ class Planner extends React.Component {
 		const { isClosestStationFetching } =this.props;
 		const { active,date,startAbbr,endAbbr,items,datebyIndex,dateLabel,mindate,maxdate} = this.state;
 
-		if( isClosestStationFetching) return <WaitingScreen />
+		if( isClosestStationFetching) return <WaitingScreen title='locating' />;
+
+		// Logger.info('render')
+		// Logger.info(date);
 
 		return(
 			<View style={style.container}>
-				<View style={{paddingTop:10}}>
-					<View style={style.stationContainer}>
-						<Text>A</Text>
-						<View style={active === START ? style.selectedStation : style.station }>
-							{isIOS ?
-							<Text
-								style={active === START ? style.selectedStationText : style.stationText}
-								onPress={()=>this.onTextClick(START)}
-								>{this.getTextLabel(startAbbr)}</Text> : 
-							<Picker
-								selectedValue={startAbbr}
-								onValueChange={this.setStartAbbr}
-							>{items}</Picker>}
-						</View>
-						<TouchableOpacity onPress={this.onStationLocation}>
-							<StationLocation />
-						</TouchableOpacity>
-					</View>
-					<View style={style.stationContainer}>
-						<Text>B</Text>
-						<View style={active === END ? style.selectedStation : style.station }>
-							{isIOS ?
-							<Text
-								style={active === END ? style.selectedStationText : style.stationText}
-								onPress={()=>this.onTextClick(END)}
-								>{this.getTextLabel(endAbbr)}</Text> :
-							<Picker
-								selectedValue={endAbbr}
-								onValueChange={this.setEndAbbr}
-								>{items}</Picker>}
-						</View>
-						<TouchableOpacity onPress={this.onSwapStations}>
-							<StationSwap />
-						</TouchableOpacity>
-					</View>
+				<View style={{flex:1,paddingTop:10}}>
+					<ChooseStationsComponent 
+						active={active}
+						endAbbr={endAbbr}
+						getTextLabel={this.getTextLabel}
+						items={items}
+						key='choose station'
+						onStationLocation={this.onStationLocation}
+						onSwapStations={this.onSwapStations}
+						onTextClick={this.onTextClick}
+						setEndAbbr={this.setEndAbbr}
+						setStartAbbr={this.setStartAbbr}
+						startAbbr={startAbbr}
+					/>
+					<ChooseDateComponent 
+						active={active}
+						date={date}
+						dateLabel={dateLabel}
+						datebyIndex={datebyIndex}
+						handleIndexChange={this.handleIndexChange}
+						key='choose date'
+						maxdate={maxdate}
+						mindate={mindate}
+						setActive={this.setActive}
+						setDate={this.setDate}
+						showAndroidDatePicker={(min,max)=>this.showAndroidDatePicker(min,max)}
+						showAndroidTimePicker={()=>this.showAndroidTimePicker()}
+					/>
 
-					<View style={{marginLeft:30,marginRight:46}}>
-						<View style={{marginTop:10,marginBottom:10}}>
-							<TouchableOpacity
-								style={{flexDirection:'row',alignItems:'center'}}
-								onPress={() => this.setActive(active === DATE ? '' : DATE)}
-							>
-								<Text style={{marginRight:15}}>{DATEBYLIST[datebyIndex]} {dateLabel}</Text>
-								{active === DATE ?
-									<PlannerUpArrow /> :
-									<PlannerDownArrow />}
-								{date instanceof Date ? 
-									<View style={{marginLeft:10 }}>
-										<Text onPress={()=>this.setDate('Now')}>Now</Text>
-									</View> : 
-									null}
-							</TouchableOpacity>
-						</View>
-						{active === DATE ?
-						<View>
-							<View style={{alignItems:'center'}}>
-								<SegmentedControlTab
-										values={DATEBYLIST}
-										selectedIndex={this.state.datebyIndex}
-										onTabPress={this.handleIndexChange}
-								/>
-							</View>
-							{ isIOS ?
-							<View>
-								<DatePickerIOS 
-									date={date instanceof Date ? date : new Date()}
-									onDateChange={this.setDate}
-									minimumDate={mindate}
-									maximumDate={maxdate}
-								/>
-							</View> :
-							<View style={{marginTop:10,marginBottom:10,flexDirection:'row', justifyContent:'space-evenly'}}>
-								<View ><Button onPress={() => this.showAndroidDatePicker(mindate,maxdate)} title='select date' /></View>
-								<View ><Button onPress={() => this.showAndroidTimePicker()} title='select time' /></View>
-							</View>
-							}
-						</View> : null}
-					</View>
-
-					<View style={{marginLeft:30,marginRight:46}}>
+					<View style={{
+								flex:1,marginLeft:30,marginRight:46}}>
 						<Button
 							title='Search Routes'
 							disabled={this.isSubmitButtonDisabled()}
 							onPress={this.onSubmit}
 						/>
 					</View>
+
 					{active === '' || active === DATE ? null :
 					<View>
 						<Picker
@@ -274,6 +232,7 @@ class Planner extends React.Component {
 							onValueChange={this.onPickerSelected}
 						>{items}</Picker>
 					</View>}
+
 				</View>
 			</View>
 		);
@@ -284,7 +243,20 @@ const style = StyleSheet.create({
 	container:{
 		flex:1,
 	},
-	stationContainer:{
+	chooseStationContainer:{
+		// flex:1,
+		justifyContent:'flex-start',
+		// borderRadius:4,
+		// borderColor:'gray',
+		// borderWidth:1,
+	},
+	chooseDateContainer:{
+		borderRadius:4,
+		borderColor:'gray',
+		borderWidth:1,
+	},
+	stationSelectionContainer:{
+		// flex:1,
 		// borderColor:'black',
 		// borderWidth:1,
 		alignItems:'center',
@@ -325,7 +297,175 @@ const style = StyleSheet.create({
 		margin:5,
 	},
 	date:{fontSize:18,borderColor:'black',borderWidth:1},
-	dateSelected:{fontSize:18,borderColor:'black',borderWidth:1}
+	dateSelected:{fontSize:18,borderColor:'black',borderWidth:1},
+	chooseDateComponentContainer:{
+		// flex:1,
+		// justifyContent:'flex-start',
+		marginLeft:30,
+		marginRight:46,
+		// borderRadius:4,
+		// borderColor:'red',
+		// borderWidth:1,
+	},
+	chooseDateLabelContainer:{
+		// flex:4,
+		marginTop:10,
+		marginBottom:10,
+		// borderRadius:4,
+		// borderColor:'purple',
+		// borderWidth:1,
+	},
+	chooseDateLabel:{
+		marginRight:15,
+		textDecorationLine:'underline',
+		// borderRadius:4,
+		// borderColor:'blue',
+		// borderWidth:1,
+	},
+	chooseDateNowLabel:{
+		textDecorationLine:'underline',
+		// borderRadius:4,
+		// borderColor:'yellow',
+		// borderWidth:1,
+	},
+
+	chooseDateSegmentedControlContainer:{
+		alignItems:'center',
+		// borderRadius:4,
+		// borderColor:'black',
+		// borderWidth:1,
+	},
+	chooseDatePressControlsContainer:{
+		// borderRadius:4,
+		// borderColor:'gray',
+		// borderWidth:1,
+		// flex:1,
+		marginTop:10,
+		marginBottom:30,
+		flexDirection:'row',
+		justifyContent:'space-evenly'
+	}
 });
+
+function ChooseStationsComponent({active,startAbbr,items,endAbbr,onTextClick,getTextLabel,setStartAbbr,setEndAbbr,onSwapStations,onStationLocation}) {
+	return (
+		<View style={style.chooseStationContainer}>
+			<View style={style.stationSelectionContainer}>
+				<Text>A</Text>
+				<View style={active === START ? style.selectedStation : style.station }>
+				{isIOS ?
+				<Text
+					style={active === START ? style.selectedStationText : style.stationText}
+					onPress={()=>onTextClick(START)}
+					>{getTextLabel(startAbbr)}</Text> : 
+				<Picker
+					selectedValue={startAbbr}
+					onValueChange={setStartAbbr}
+				>{items}</Picker>}
+			</View>
+			<TouchableOpacity onPress={onStationLocation}>
+				<StationLocation />
+			</TouchableOpacity>
+		</View>
+		<View style={style.stationSelectionContainer}>
+			<Text>B</Text>
+			<View style={active === END ? style.selectedStation : style.station }>
+				{isIOS ?
+				<Text
+					style={active === END ? style.selectedStationText : style.stationText}
+					onPress={()=>onTextClick(END)}
+					>{getTextLabel(endAbbr)}</Text> :
+				<Picker
+					selectedValue={endAbbr}
+					onValueChange={setEndAbbr}
+					>{items}</Picker>}
+			</View>
+			<TouchableOpacity onPress={onSwapStations}>
+				<StationSwap />
+			</TouchableOpacity>
+		</View>
+	</View>
+	);
+}
+
+ChooseStationsComponent.propTypes = {
+	active:PropTypes.string.isRequired,
+	startAbbr:PropTypes.string.isRequired,
+	items:PropTypes.array.isRequired,
+	endAbbr:PropTypes.string.isRequired,
+	onTextClick:PropTypes.func.isRequired,
+	getTextLabel:PropTypes.func.isRequired,
+	setStartAbbr:PropTypes.func.isRequired,
+	setEndAbbr:PropTypes.func.isRequired,
+	onSwapStations:PropTypes.func.isRequired,
+	onStationLocation:PropTypes.func.isRequired,
+}
+
+function ChooseDateComponent({active,datebyIndex,dateLabel,date,mindate,maxdate,setActive,setDate,handleIndexChange,showAndroidDatePicker,showAndroidTimePicker}) {
+	return (
+		<View style={style.chooseDateComponentContainer}>
+
+			<View style={style.chooseDateLabelContainer}>
+				<TouchableOpacity
+					style={{flexDirection:'row',alignItems:'center'}}
+					onPress={() => setActive(active === DATE ? '' : DATE)}
+				>
+					<Text style={style.chooseDateLabel}>{DATEBYLIST[datebyIndex]} {dateLabel}</Text>
+					{active === DATE ?
+						<PlannerUpArrow /> :
+						<PlannerDownArrow />}
+					{date instanceof Date ? 
+						<View style={{marginLeft:10 }}>
+							<Text style={style.chooseDateNowLabel} onPress={()=>setDate('Now')}>NOW</Text>
+						</View> : 
+						null}
+				</TouchableOpacity>
+			</View>
+
+			{active === DATE ?
+			<View>
+				<View style={style.chooseDateSegmentedControlContainer}>
+					<SegmentedControlTab
+							values={DATEBYLIST}
+							selectedIndex={datebyIndex}
+							onTabPress={handleIndexChange}
+					/>
+				</View>
+
+				{ isIOS ?
+				<View>
+					<DatePickerIOS 
+						date={date instanceof Date ? date : new Date()}
+						onDateChange={setDate}
+						minimumDate={mindate}
+						maximumDate={maxdate}
+					/>
+				</View> :
+				<View style={style.chooseDatePressControlsContainer}>
+					<View style={{flex:1,marginRight:5}}><Button onPress={() => showAndroidDatePicker(mindate,maxdate)} title='select date' /></View>
+					<View  style={{flex:1,marginLeft:5}}><Button onPress={() => showAndroidTimePicker()} title='select time' /></View>
+				</View> }
+		</View> : null}
+	</View>
+	);
+}
+
+ChooseDateComponent.propTypes = {
+	active:PropTypes.string.isRequired,
+	datebyIndex:PropTypes.number.isRequired,
+	dateLabel:PropTypes.string.isRequired,
+	date:PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.date,
+	]),
+	mindate:PropTypes.object.isRequired,
+	maxdate:PropTypes.object.isRequired,
+	setActive:PropTypes.func.isRequired,
+	setDate:PropTypes.func.isRequired,
+	handleIndexChange:PropTypes.func.isRequired,
+	showAndroidDatePicker:PropTypes.func.isRequired,
+	showAndroidTimePicker:PropTypes.func.isRequired,
+}
+
 
 export default Planner

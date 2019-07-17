@@ -403,7 +403,7 @@ export function fetchTripPlanning(startingAbbr,destinationAbbr,dateby='depart',d
 					return {
 						origin:value['@origin'],
 						destination:value['@destination'],
-						fare:value['@fare'],
+						tripfare:value['@fare'],
 						origTimeMin:value['@origTimeMin'],
 						origTimeDate:value['@origTimeDate'],
 						destTimeMin:value['@destTimeMin'],
@@ -411,12 +411,21 @@ export function fetchTripPlanning(startingAbbr,destinationAbbr,dateby='depart',d
 						clipper:value['@clipper'],
 						tripTime:value['@tripTime'],
 						leg:value.leg,
+						fares:value.fares,
 						id:`${value['@origTimeMin']}-${value['@destTimeMin']}ID`
+					}
+				};
+
+				const fareProcess = value =>{
+					return{
+						amount:value['@amount'],
+						class:value['@class'],
+						name:value['@name']
 					}
 				}
 				// start to normalize the json response.
-				const fareSchema = new schema.Entity('fare',{},{idAttribute: value => `${value['@name']}ID`});
-				const faresSchema = new schema.Entity('fares',{fare:[fareSchema]},{idAttribute: value => `${value['@level']}-${value.fare.length}ID`});
+				const fareSchema = new schema.Entity('fare',{},{idAttribute: value => `${value['@name']}ID`,processStrategy:fareProcess});
+				const faresSchema = new schema.Entity('fares',{fare:fareSchema},{idAttribute: value => `${value['@level']}ID`});
 				const legSchema = new schema.Entity('leg',{},{idAttribute: value => `${value['@origTimeMin']}-${value['@destTimeMin']}ID`,processStrategy:legProcess});
 				const tripSchema = new schema.Entity('trip',{fares:faresSchema,leg:[legSchema]},{
 					idAttribute: value => `${value['@origTimeMin']}-${value['@destTimeMin']}ID`,

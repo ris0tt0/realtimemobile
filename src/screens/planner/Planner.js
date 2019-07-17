@@ -456,7 +456,7 @@ ChooseDateComponent.propTypes = {
 	dateLabel:PropTypes.string.isRequired,
 	date:PropTypes.oneOfType([
 		PropTypes.string,
-		PropTypes.date,
+		PropTypes.object
 	]),
 	mindate:PropTypes.object.isRequired,
 	maxdate:PropTypes.object.isRequired,

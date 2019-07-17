@@ -66,7 +66,7 @@ function PlannerDetails({isFetching,details}) {
 			<View style={{paddingBottom:10,flexDirection:'row',justifyContent:'space-around'}}>
 				<TripDuration duration={getHoursMinutes(parseInt(details.tripTime))} />
 				<TripChanges changes={details.leg.length} />
-				<TripFare fare={details.fare} />
+				<TripFare fare={details.tripfare} />
 			</View>
 			<View style={styles.flatListContainer}>
 				<FlatList

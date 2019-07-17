@@ -26,7 +26,7 @@ function PlannerResults({navigation:{navigate},isFetching,originStation,destinat
 					</View>
 					<View style={styles.renderItemBottom}>
 						<TripDuration duration={getHoursMinutes(parseInt(item.tripTime,10))}/>
-						<TripFare fare={item.fare}/>
+						<TripFare fare={item.tripfare}/>
 					</View>
 				</View>
 				<View style={{paddingLeft:5,paddingRight:5}}>{ListItemArrowForward()}</View>

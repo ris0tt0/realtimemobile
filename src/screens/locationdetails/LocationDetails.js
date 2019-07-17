@@ -114,6 +114,7 @@ LocationDetails.propTypes = {
 		platform_info:PropTypes.string,
 		state:PropTypes.string,
 		zipcode:PropTypes.string,
+		cross_street:PropTypes.string,
 	}).isRequired,
 	routes:PropTypes.arrayOf(PropTypes.shape({
 		abbr:PropTypes.string.isRequired,

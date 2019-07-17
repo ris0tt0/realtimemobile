@@ -203,7 +203,8 @@ const styles = StyleSheet.create({
 	renderItemDestnation:{
 		flex:1,
 		flexDirection:'row',
-		justifyContent:'flex-start',
+		justifyContent:'flex-end',
+		flexWrap:'wrap',
 		// borderRightWidth:1,
 		// borderColor:'gray',
 		// borderColor:'red',
